@@ -1,5 +1,6 @@
 import 'package:chat_app/core/utils/validators.dart';
-import 'package:chat_app/presentation/auth/screens/sign_up_email.dart';
+import 'package:chat_app/presentation/auth/screens/reset_password_page.dart';
+import 'package:chat_app/presentation/auth/screens/sign_up_email_page.dart';
 import 'package:chat_app/presentation/auth/widgets/auth_input_field.dart';
 import 'package:chat_app/presentation/auth/widgets/custom_app_bar.dart';
 import 'package:chat_app/presentation/auth/widgets/custom_filled_button.dart';
@@ -22,13 +23,29 @@ class _SignInEmailState extends State<SignInEmail> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    if(_formKey.currentState!.validate()){
-
+    if (_formKey.currentState!.validate()) {
+      //send request to login
     }
-
   }
 
-  void _onForgotPassword() {}
+  void _onForgotPassword() {
+    //go to page refresh password
+    final email = _emailController.text;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ResetPassword(
+                  email: isValidEmail(email) ? email : null,
+                )));
+  }
+
+  bool isValidEmail(String email) {
+    final RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegExp.hasMatch(email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,58 +99,56 @@ class _SignInEmailState extends State<SignInEmail> {
                   ),
                 ),
                 SizedBox(
-                        height: 10,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: _onForgotPassword,
-                          style: ButtonStyle(
-                              overlayColor: WidgetStateColor.transparent),
-                          child: Text(
-                            'Forgot password?',
-                            style: themeData.textTheme.bodySmall?.copyWith(
-                                height: 1.5,
-                                fontSize: 12,
-                                decoration: TextDecoration.underline,
-                                decorationColor:
-                                    themeData.textTheme.bodyLarge?.color),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.25),
-                      SizedBox(
-                          height: 55,
-                          child: CustomFilledButton(
-                              titleColor: Colors.white,
-                              title: 'Sign in',
-                              onPressed: _onSubmit,
-                              backgroundColor: themeData.primaryColor)),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Don't have an account?",
-                        style: themeData.textTheme.bodySmall,
-                      ),
-                      TextButton(
-                          onPressed: (){
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignUpEmail()),
-                            );
-                            },
-                          child: Text(
-                            'Sign up here',
-                            style: themeData.textTheme.bodyMedium?.copyWith(
-                                color: themeData.primaryColor,
-                                fontWeight: FontWeight.w600),
-                          )),
-                      SizedBox(
-                        height: 30,
-                      )
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: _onForgotPassword,
+                    style:
+                        ButtonStyle(overlayColor: WidgetStateColor.transparent),
+                    child: Text(
+                      'Forgot password?',
+                      style: themeData.textTheme.bodySmall?.copyWith(
+                          height: 1.5,
+                          fontSize: 12,
+                          decoration: TextDecoration.underline,
+                          decorationColor:
+                              themeData.textTheme.bodyLarge?.color),
+                    ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+                SizedBox(
+                    height: 55,
+                    child: CustomFilledButton(
+                        titleColor: Colors.white,
+                        title: 'Sign in',
+                        onPressed: _onSubmit,
+                        backgroundColor: themeData.primaryColor)),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Don't have an account?",
+                  style: themeData.textTheme.bodySmall,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpEmail()),
+                      );
+                    },
+                    child: Text(
+                      'Sign up here',
+                      style: themeData.textTheme.bodyMedium?.copyWith(
+                          color: themeData.primaryColor,
+                          fontWeight: FontWeight.w600),
+                    )),
+                SizedBox(
+                  height: 30,
+                )
               ],
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:chat_app/core/utils/validators.dart';
 import 'package:chat_app/presentation/auth/bloc/sign_up_cubit/sign_up_cubit.dart';
-import 'package:chat_app/presentation/auth/screens/sign_in_email.dart';
+import 'package:chat_app/presentation/auth/screens/sign_in_email_page.dart';
 import 'package:chat_app/presentation/auth/widgets/auth_input_field.dart';
 import 'package:chat_app/presentation/auth/widgets/custom_app_bar.dart';
 import 'package:chat_app/presentation/auth/widgets/custom_filled_button.dart';
@@ -38,7 +38,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
       } else if (state is SignUpInputNameAndLastnameSuccess) {
         _signUpCubit.addEmailAndPassword();
       }else if(state is SignUpInputEmailAndPasswordSuccess){
-        //send request to register
+        //Todo: send request to register
 
       }
     }

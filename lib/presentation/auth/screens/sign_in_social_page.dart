@@ -1,4 +1,4 @@
-import 'package:chat_app/presentation/auth/screens/sign_in_email.dart';
+import 'package:chat_app/presentation/auth/screens/sign_in_email_page.dart';
 import 'package:chat_app/presentation/auth/widgets/custom_filled_button.dart';
 import 'package:flutter/material.dart';
 
