@@ -19,12 +19,8 @@ String? validatePassword(String? value) {
     return 'Password cannot be empty.';
   }
 
-  if (value.length < 8) {
+  if (value.length < 6) {
     return 'Password must be at least 8 characters long.';
-  }
-
-  if (!RegExp(r'^(?=.*[A-Z])(?=.*\d).{8,}$').hasMatch(value)) {
-    return 'Must contain at least 1 uppercase letter and 1 digit.';
   }
 
   return null;
@@ -54,5 +50,5 @@ String? validateName(String? value) {
     return 'Must start with a capital letter and contain only letters.';
   }
 
-  return null; // Все ок
+  return null; 
 }

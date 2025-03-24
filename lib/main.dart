@@ -1,5 +1,15 @@
-import 'package:chat_app/presentation/auth/bloc/reset_password/reset_password_cubit.dart';
-import 'package:chat_app/presentation/auth/screens/sign_in_social_page.dart';
+import 'package:chat_app/presentation/blocs/reset_password/reset_password_cubit.dart';
+import 'package:chat_app/presentation/blocs/sign_in/sign_in_cubit.dart';
+import 'package:chat_app/presentation/screens/bottom_navigation_bar_page.dart';
+import 'package:chat_app/presentation/screens/chats_and_calls_page.dart';
+import 'package:chat_app/presentation/screens/friends_page.dart';
+import 'package:chat_app/presentation/screens/page_not_found.dart';
+import 'package:chat_app/presentation/screens/profile_page.dart';
+import 'package:chat_app/presentation/screens/reset_password_page.dart';
+import 'package:chat_app/presentation/screens/settings_page.dart';
+import 'package:chat_app/presentation/screens/sign_in_email_page.dart';
+import 'package:chat_app/presentation/screens/sign_in_social_page.dart';
+import 'package:chat_app/presentation/screens/sign_up_email_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,8 +21,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ResetPasswordCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ResetPasswordCubit>(
+          create: (context) => ResetPasswordCubit(),
+        ),
+        BlocProvider<SignInCubit>(
+          create: (context) => SignInCubit(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Talky',
         debugShowCheckedModeBanner: false,
@@ -40,7 +57,23 @@ class MyApp extends StatelessWidget {
                 style: ButtonStyle(
                     shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)))))),
-        home: SignInSocial(),
+        onGenerateRoute: (RouteSettings settings) {
+          final routeName = settings.name ?? '';
+          switch (routeName) {
+            case '/auth':
+              return MaterialPageRoute(builder: (_) => SignInSocial());
+            case '/auth/sign_in':
+              return MaterialPageRoute(builder: (_) => SignInEmail());
+            case '/auth/sign_in/forgot_password':
+              return MaterialPageRoute(builder: (_) => ResetPassword(email: settings.arguments as String?));
+            case '/auth/sign_up':
+              return MaterialPageRoute(builder: (_) => SignUpEmail());
+            case '/main':
+              return MaterialPageRoute(
+                  builder: (_) => BottomNavigationBarPage());
+          }
+        },
+        initialRoute: '/auth',
       ),
     );
   }
