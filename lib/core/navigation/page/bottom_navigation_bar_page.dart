@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class BottomNavigationBarPage extends StatefulWidget {
-  const BottomNavigationBarPage({super.key});
+  const BottomNavigationBarPage({super.key, required this.child});
+  final Widget child;
 
   @override
   State<BottomNavigationBarPage> createState() =>
@@ -17,6 +18,7 @@ class BottomNavigationBarPage extends StatefulWidget {
 class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   late final ValueNotifier<int> _currentIndexNotifier;
   late final List<GlobalKey<NavigatorState>> _navKeys;
+  
 
   @override
   void initState() {
@@ -36,14 +38,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
         valueListenable: _currentIndexNotifier,
         builder: (context, currentIndex, _) {
           return Scaffold(
-            body: IndexedStack(
-              index: currentIndex,
-              children: [
-                _buildFriendsNavigator(_navKeys[0]),
-                _buildChatsNavigator(_navKeys[1]),
-                _buildSettingsNavigator(_navKeys[2]),
-              ],
-            ),
+            body: widget.child,
             bottomNavigationBar: Container(
               height: 65,
               decoration: BoxDecoration(
