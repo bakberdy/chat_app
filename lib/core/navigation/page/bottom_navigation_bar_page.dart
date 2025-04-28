@@ -1,14 +1,10 @@
-import 'package:chat_app/features/chats_and_calls/presentation/screens/chats_and_calls_page.dart';
-import 'package:chat_app/features/users/presentation/screens/users_page.dart';
-import 'package:chat_app/core/error/pages/page_not_found.dart';
-import 'package:chat_app/features/settings/profile/presentation/screens/profile_page.dart';
-import 'package:chat_app/features/settings/presentation/screens/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomNavigationBarPage extends StatefulWidget {
-  const BottomNavigationBarPage({super.key, required this.child});
-  final Widget child;
+  const BottomNavigationBarPage({super.key, required this.navigationShell});
+  final StatefulNavigationShell navigationShell;
 
   @override
   State<BottomNavigationBarPage> createState() =>
@@ -17,19 +13,21 @@ class BottomNavigationBarPage extends StatefulWidget {
 
 class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   late final ValueNotifier<int> _currentIndexNotifier;
-  late final List<GlobalKey<NavigatorState>> _navKeys;
-  
+  // late final List<GlobalKey<NavigatorState>> _navKeys;
 
   @override
   void initState() {
-    _currentIndexNotifier = ValueNotifier(0);
-    _navKeys = [
-      GlobalKey<NavigatorState>(),
-      GlobalKey<NavigatorState>(),
-      GlobalKey<NavigatorState>()
-    ];
+    _currentIndexNotifier = ValueNotifier(1);
     super.initState();
   }
+
+  void _goBranch(int index) {
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +36,12 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
         valueListenable: _currentIndexNotifier,
         builder: (context, currentIndex, _) {
           return Scaffold(
-            body: widget.child,
+            body: widget.navigationShell,
             bottomNavigationBar: Container(
               height: 65,
               decoration: BoxDecoration(
-                border: Border(top: BorderSide(width: 1, color: Colors.grey[300]!))
-              ),
+                  border: Border(
+                      top: BorderSide(width: 1, color: Colors.grey[300]!))),
               child: Theme(
                 data: Theme.of(context).copyWith(
                   splashColor: Colors.transparent,
@@ -52,13 +50,8 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
                 child: BottomNavigationBar(
                     elevation: 0,
                     onTap: (value) {
-                      if (value == currentIndex) {
-                        _navKeys[value]
-                            .currentState
-                            ?.popUntil((route) => route.isFirst);
-                      } else {
                         _currentIndexNotifier.value = value;
-                      }
+                        _goBranch(value);
                     },
                     currentIndex: currentIndex,
                     selectedItemColor: themeData.primaryColor,
@@ -69,36 +62,12 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
                     unselectedLabelStyle:
                         themeData.textTheme.bodySmall?.copyWith(fontSize: 12),
                     items: [
-                      BottomNavigationBarItem(
-                          icon: SvgPicture.asset(
-                            'lib/assets/icons/friends.svg',
-                            colorFilter: ColorFilter.mode(
-                                currentIndex == 0
-                                    ? themeData.primaryColor
-                                    : themeData.canvasColor,
-                                BlendMode.srcIn),
-                          ),
-                          label: 'Friends'),
-                      BottomNavigationBarItem(
-                          icon: SvgPicture.asset(
-                            'lib/assets/icons/message.svg',
-                            colorFilter: ColorFilter.mode(
-                                currentIndex == 1
-                                    ? themeData.primaryColor
-                                    : themeData.canvasColor,
-                                BlendMode.srcIn),
-                          ),
-                          label: 'Chats'),
-                      BottomNavigationBarItem(
-                          icon: SvgPicture.asset(
-                            'lib/assets/icons/settings.svg',
-                            colorFilter: ColorFilter.mode(
-                                currentIndex == 2
-                                    ? themeData.primaryColor
-                                    : themeData.canvasColor,
-                                BlendMode.srcIn),
-                          ),
-                          label: 'Settings'),
+                      _navigationBarItem(currentIndex, themeData, 'Friends',
+                          'lib/assets/icons/friends.svg', 0),
+                      _navigationBarItem(currentIndex, themeData, 'Chats',
+                          'lib/assets/icons/message.svg', 1),
+                      _navigationBarItem(currentIndex, themeData, 'Settings',
+                          'lib/assets/icons/settings.svg', 2),
                     ]),
               ),
             ),
@@ -106,55 +75,17 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
         });
   }
 
-  Widget _buildFriendsNavigator(GlobalKey<NavigatorState> key) {
-    return Navigator(
-      key: key,
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(builder: (context) => UsersPage());
-          case '/profile':
-            return MaterialPageRoute(builder: (context) => ProfilePage(userId: settings.arguments as String?));
-          default:
-            return MaterialPageRoute(builder: (context) => PageNotFound());
-        }
-      },
-    );
-  }
-
-  Widget _buildChatsNavigator(GlobalKey<NavigatorState> key) {
-    return Navigator(
-      key: key,
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(builder: (context) => ChatsAndCalls());
-          default:
-            return MaterialPageRoute(builder: (context) => PageNotFound());
-        }
-      },
-    );
-  }
-
-  Widget _buildSettingsNavigator(GlobalKey<NavigatorState> key) {
-    return Navigator(
-      key: key,
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        final String? userId = settings.arguments as String?;
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(builder: (context) => SettingsPage());
-          case '/profile':
-            return MaterialPageRoute(
-                builder: (context) => ProfilePage(userId: userId));
-
-          default:
-            return MaterialPageRoute(builder: (context) => PageNotFound());
-        }
-      },
-    );
+  BottomNavigationBarItem _navigationBarItem(
+      int currentIndex, ThemeData themeData, String label, String svgIconPath, int index) {
+    return BottomNavigationBarItem(
+        icon: SvgPicture.asset(
+          svgIconPath,
+          colorFilter: ColorFilter.mode(
+              currentIndex == index
+                  ? themeData.primaryColor
+                  : themeData.canvasColor,
+              BlendMode.srcIn),
+        ),
+        label: label);
   }
 }

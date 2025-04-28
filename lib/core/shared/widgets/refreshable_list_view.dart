@@ -47,6 +47,11 @@ class _RefreshableListViewState extends State<RefreshableListView> {
       });
     }
   }
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {

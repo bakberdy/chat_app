@@ -9,9 +9,9 @@ class UsersState {
   final StateStatus friendsStatus;
 
   const UsersState(
-      {this.allUsersStatus = const InitialStatus(),
-      this.friendsStatus = const InitialStatus(),
-      this.status = const InitialStatus(),
+      {this.allUsersStatus = StateStatus.initial,
+      this.friendsStatus = StateStatus.initial,
+      this.status = StateStatus.initial,
       this.friends = const [],
       this.allUsers = const []});
 

@@ -1,4 +1,6 @@
+import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/utils/validators.dart';
+import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
 import 'package:chat_app/features/auth/presentation/blocs/sign_up/sign_up_cubit.dart';
 import 'package:chat_app/features/auth/presentation/screens/sign_in_email_page.dart';
 import 'package:chat_app/features/auth/presentation/widgets/auth_input_field.dart';
@@ -27,20 +29,18 @@ class _SignUpEmailState extends State<SignUpEmail> {
 
   late final SignUpCubit _signUpCubit;
 
-  void _onSubmit(context, state) {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
-    final firstName = _firstNameController.text;
-    final lastName = _lastNameController.text;
+  void _register(context, state) {
+    final signUpData = SignUpWithEmailEntity(
+        email: _emailController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        password: _passwordController.text);
 
     if (_formKey1.currentState!.validate()) {
       if (state is SignUpInitial) {
         _signUpCubit.addNameAndLastname();
       } else if (state is SignUpNameGot) {
-        _signUpCubit.signUpWithEmailAndPassword();
-      } else if (state is SignUpSuccess) {
-        //Todo: send request to register
+        _signUpCubit.register(signUpData);
       }
     }
   }
@@ -69,7 +69,9 @@ class _SignUpEmailState extends State<SignUpEmail> {
     return BlocProvider<SignUpCubit>.value(
       value: _signUpCubit,
       child: Scaffold(
-        appBar: CustomAppBar(pageContext: context,),
+        appBar: CustomAppBar(
+          pageContext: context,
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 28),
@@ -114,11 +116,12 @@ class _SignUpEmailState extends State<SignUpEmail> {
                     child: BlocBuilder<SignUpCubit, SignUpState>(
                       builder: (context, state) {
                         return CustomFilledButton(
+                          isLoading: state is SignUpLoading,
                             titleColor: Colors.white,
                             title:
                                 (state is SignUpInitial) ? "Next" : 'Sign up',
                             onPressed: () {
-                              _onSubmit(context, state);
+                              _register(context, state);
                             },
                             backgroundColor: themeData.primaryColor);
                       },
@@ -132,7 +135,7 @@ class _SignUpEmailState extends State<SignUpEmail> {
                 ),
                 TextButton(
                     onPressed: () {
-                      context.replace('/auth/sign_in');
+                      context.replace('${AppPaths.auth}${AppPaths.signIn}');
                     },
                     child: Text(
                       'Sign in here',

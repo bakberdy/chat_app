@@ -1,4 +1,5 @@
 
+import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/features/auth/presentation/screens/sign_in_email_page.dart';
 import 'package:chat_app/core/shared/widgets/custom_filled_button.dart';
 import 'package:flutter/material.dart';
@@ -80,9 +81,9 @@ class SignInSocial extends StatelessWidget {
                 ),
                 SizedBox(height: 30),
                 CustomFilledButton(
-                    title: 'Continue with email',
+                    title: 'Continue with email',   
                     onPressed: () {
-                      context.push('/auth/sign_in');
+                      context.push('${AppPaths.auth}${AppPaths.signIn}');
                     },
                     backgroundColor: Colors.white),
                 SizedBox(

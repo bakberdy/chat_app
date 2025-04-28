@@ -1,7 +1,10 @@
 import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
-import 'package:chat_app/features/settings/presentation/widgets/buttons_list.dart';
+import 'package:chat_app/core/utils/error_toast.dart';
+import 'package:chat_app/core/utils/validators.dart';
+import 'package:chat_app/features/settings/profile/presentation/widgets/labeled_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId;
@@ -12,11 +15,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late final user;
+  late final UserEntity user;
+
+  late final TextEditingController _nameController;
+  late final TextEditingController _lastNameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _birthDateController;
 
   @override
   void initState() {
-    print('guuuuuuuuuuuuuuuuuuuu');
+    print('user id: ${widget.userId}');
     if (widget.userId != null) {
       //send query to get user
       user = UserEntity(
@@ -39,64 +47,124 @@ class _ProfilePageState extends State<ProfilePage> {
           lastOnline: DateTime.now(),
           userStatus: '');
     }
+    _nameController = TextEditingController(text: user.firstName);
+    _lastNameController = TextEditingController(text: user.lastName);
+    _emailController = TextEditingController(text: user.email);
+    _birthDateController =
+        TextEditingController(text: user.lastOnline.toString());
     super.initState();
   }
 
+  final _dateTimeFormatter = MaskTextInputFormatter(
+      mask: '##/##/####', filter: {"#": RegExp(r'[0-9]')});
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return Scaffold(
-        backgroundColor: Color(0xffF7F7F9),
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          backgroundColor: Color(0xffF7F7F9),
-          foregroundColor: Color.fromARGB(255, 1, 1, 236),
           shadowColor: Colors.white,
+          actions: [
+            TextButton(
+              style: ButtonStyle(
+                textStyle: WidgetStatePropertyAll(TextStyle(color: themeData.primaryColor))
+              ),
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    print('validated');
+                  } else {
+                    print("not validated");
+                    showErrorToast('Please enter valid data', context);
+                  }
+                },
+                child: Text('Done', style: TextStyle(color: themeData.primaryColor),))
+          ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              Center(
-                child: AvatarWidget(user: user, size: 80),
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      '${user.lastName} ${user.firstName}',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      user.email,
-                      style: TextStyle(fontSize: 16, color: Colors.black45),
-                    ),
-                  ],
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: _formKey,
+            child: ListView(
+              children: [
+                SizedBox(height: 15),
+                _avatarWidget(onTap: () {}),
+                SizedBox(height: 20),
+                Text('Main info',
+                    style: TextStyle(
+                        color: themeData.canvasColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16)),
+                SizedBox(
+                  height: 5,
                 ),
-              ),
-              SizedBox(height: 25),
-              ButtonsList(
-                children: [
-                  ButtonDetails(
-                      onTap: () {},
-                      title: 'Talky Features',
-                      prefixIcon: SizedBox(
-                          height: 25,
-                          width: 25,
-                          child: Image.asset('lib/assets/icons/feature.png'))),
-                  ButtonDetails(
-                      onTap: () {},
-                      title: 'Talky FAQ',
-                      prefixIcon: SizedBox(
-                          height: 25,
-                          width: 25,
-                          child: Image.asset('lib/assets/icons/question.png')))
-                ],
-              )
-            ],
+                LabeledTextFormField(
+                  label: 'Name',
+                  themeData: themeData,
+                  controller: _nameController,
+                  validator: validateName,
+                ),
+                Divider(
+                  height: 1,
+                  color: themeData.hintColor.withAlpha(70),
+                ),
+                LabeledTextFormField(
+                  label: 'Last Name',
+                  themeData: themeData,
+                  validator: validateName,
+                  controller: _lastNameController,
+                ),
+                Divider(
+                  height: 1,
+                  color: themeData.hintColor.withAlpha(70),
+                ),
+                LabeledTextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  label: 'Email',
+                  themeData: themeData,
+                  controller: _emailController,
+                  validator: validateEmail,
+                ),
+                Divider(
+                  height: 1,
+                  color: themeData.hintColor.withAlpha(70),
+                ),
+                LabeledTextFormField(
+                  keyboardType: TextInputType.datetime,
+                  label: 'Date of Birth',
+                  themeData: themeData,
+                  controller: _birthDateController,
+                  validator: validateDate,
+                  inputFormatters: [_dateTimeFormatter],
+                ),
+              ],
+            ),
           ),
         ));
+  }
+
+  Center _avatarWidget({required VoidCallback onTap}) {
+    return Center(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AvatarWidget(size: 80, user: user),
+            SizedBox(height: 10),
+            Text(
+              'Change user avatar',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -14,6 +14,37 @@ String? validateEmail(String? value) {
   return null;
 }
 
+String? validateDate(String? input) {
+    if (input == null || input.length < 10) return 'Please enter full date';
+
+    try {
+      final parts = input.split('/');
+      final day = int.parse(parts[0]);
+      final month = int.parse(parts[1]);
+      final year = int.parse(parts[2]);
+
+      // Basic date validation
+      if (day < 1 || day > 31) return 'Invalid day';
+      if (month < 1 || month > 12) return 'Invalid month';
+
+      final enteredDate = DateTime(year, month, day);
+      final now = DateTime.now();
+      final hundredYearsAgo = DateTime(now.year - 100, now.month, now.day);
+
+      if (enteredDate.isAfter(now)) {
+        return 'Date cannot be in the future';
+      }
+
+      if (enteredDate.isBefore(hundredYearsAgo)) {
+        return 'Date cannot be older than 100 years';
+      }
+
+      return null;
+    } catch (e) {
+      return 'Invalid date format';
+    }
+  }
+
 String? validatePassword(String? value) {
   if (value == null || value.isEmpty) {
     return 'Password cannot be empty.';

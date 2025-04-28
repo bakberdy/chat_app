@@ -9,21 +9,32 @@ import 'package:meta/meta.dart';
 part 'users_event.dart';
 part 'users_state.dart';
 
-
 @singleton
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   UsersBloc() : super(UsersState()) {
-    on<LoadAllUsersRequested>((event, emit) async{
-      emit(state.copyWith(status: LoadingStatus(), allUsersStatus: LoadingStatus()));
+    on<LoadAllUsersRequested>((event, emit) async {
+      emit(state.copyWith(
+        status: StateStatus.loading,
+        allUsersStatus: StateStatus.loading,
+      ));
       final users = await TempData.getAllUsers();
       await Future.delayed(Duration(seconds: 2));
-      emit(state.copyWith(status: SuccessStatus(), allUsersStatus: SuccessStatus(),allUsers: users));
+      emit(state.copyWith(
+          status: StateStatus.loaded,
+          allUsersStatus: StateStatus.loaded,
+          allUsers: users));
     });
-    on<LoadFriendsRequested>((event, emit) async{
-       emit(state.copyWith(status: LoadingStatus(), friendsStatus: LoadingStatus()));
+    on<LoadFriendsRequested>((event, emit) async {
+      emit(state.copyWith(
+        status: StateStatus.loading,
+        friendsStatus: StateStatus.loading,
+      ));
       final users = await TempData.getFriends();
       await Future.delayed(Duration(seconds: 2));
-      emit(state.copyWith(status: SuccessStatus(), friends: users, friendsStatus: SuccessStatus()));
+      emit(state.copyWith(
+          status: StateStatus.loaded,
+          friends: users,
+          friendsStatus: StateStatus.loaded));
     });
   }
 }

@@ -1,11 +1,13 @@
 import 'package:chat_app/core/bloc/state_status.dart';
+import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/shared/widgets/cupertino_segmented_menu.dart';
 import 'package:chat_app/features/users/presentation/blocs/users_bloc/users_bloc.dart';
-import 'package:chat_app/features/users/widgets/users_list.dart';
+import 'package:chat_app/features/users/presentation/widgets/users_list.dart';
 import 'package:chat_app/core/shared/widgets/scrollable_page_with_app_bar.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -28,21 +30,23 @@ class UsersPageContent extends StatefulWidget {
 
 class _UsersPageContentState extends State<UsersPageContent>
     with SingleTickerProviderStateMixin {
-  late final TabController tabController;
-  final ValueNotifier<int> currentPageNotifier = ValueNotifier<int>(0);
-  final searchController = TextEditingController();
+  late final TabController _tabController;
+  final ValueNotifier<int> _currentPageNotifier = ValueNotifier<int>(0);
+  final _searchController = TextEditingController();
+  // final _friendsScrollController = ScrollController();
+  // final _allUsersScrollController = ScrollController();
 
   @override
   void initState() {
     context.read<UsersBloc>()
       ..add(LoadFriendsRequested())
       ..add(LoadAllUsersRequested());
-    tabController = TabController(length: 2, vsync: this);
-    tabController.animation!.addListener(() {
-      final value = tabController.animation!.value;
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.animation!.addListener(() {
+      final value = _tabController.animation!.value;
       final newIndex = value.round();
-      if (currentPageNotifier.value != newIndex) {
-        currentPageNotifier.value = newIndex;
+      if (_currentPageNotifier.value != newIndex) {
+        _currentPageNotifier.value = newIndex;
       }
     });
     super.initState();
@@ -50,9 +54,9 @@ class _UsersPageContentState extends State<UsersPageContent>
 
   @override
   void dispose() {
-    tabController.dispose();
-    currentPageNotifier.dispose();
-    searchController.dispose();
+    _tabController.dispose();
+    _currentPageNotifier.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -63,10 +67,10 @@ class _UsersPageContentState extends State<UsersPageContent>
     return Scaffold(
         backgroundColor: Color(0xffF7F7F9),
         body: ScrollablePageWithAppBar(
-          searchController: searchController,
+          searchController: _searchController,
           appBarTitle: 'Friends',
           body: ValueListenableBuilder<int>(
-            valueListenable: currentPageNotifier,
+            valueListenable: _currentPageNotifier,
             builder: (context, currentPage, _) {
               return Material(
                 color: Colors.white,
@@ -80,11 +84,11 @@ class _UsersPageContentState extends State<UsersPageContent>
                         onValueChanged: (int? value) {
                           if (value != null) {
                             if (currentPage != value) {
-                              tabController.animateTo(value,
+                              _tabController.animateTo(value,
                                   duration: Duration(milliseconds: 300),
                                   curve: Curves.linear);
                             }
-                            currentPageNotifier.value = value;
+                            _currentPageNotifier.value = value;
                           }
                         },
                         groupValue: currentPage,
@@ -115,18 +119,20 @@ class _UsersPageContentState extends State<UsersPageContent>
                           final friends = state.friends;
                           final allUsers = state.allUsers;
                           return TabBarView(
-                            controller: tabController,
+                            controller: _tabController,
                             children: [
                               UsersList(
                                 users: friends,
-                                onTap: (String uuid) {},
+                                onTap: (String uuid) {
+                                  context.push('${AppPaths.users}${AppPaths.profile}/$uuid');
+                                },
                                 onRefresh: () async {
                                   print('refreshed friends');
                                   context
                                       .read<UsersBloc>()
                                       .add(LoadFriendsRequested());
                                 },
-                                isLoading: state.friendsStatus is LoadingStatus,
+                                isLoading: state.friendsStatus == StateStatus.loading,
                               ),
                               UsersList(
                                 users: allUsers,
@@ -139,7 +145,7 @@ class _UsersPageContentState extends State<UsersPageContent>
                                       .add(LoadAllUsersRequested());
                                 },
                                 isLoading:
-                                    state.allUsersStatus is LoadingStatus,
+                                    state.allUsersStatus == StateStatus.loading,
                               ),
                             ],
                           );

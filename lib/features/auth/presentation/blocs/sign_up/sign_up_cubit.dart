@@ -1,3 +1,4 @@
+import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,7 +12,10 @@ class SignUpCubit extends Cubit<SignUpState> {
     emit(SignUpNameGot());
   }
 
-  void signUpWithEmailAndPassword() {
+  void register(SignUpWithEmailEntity signUpParams) async {
+    emit(SignUpLoading());
+    await Future.delayed(Duration(seconds: 2));
+    print(signUpParams.toString());
     emit(SignUpSuccess());
   }
 }

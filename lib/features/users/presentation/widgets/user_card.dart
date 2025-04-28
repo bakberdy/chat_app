@@ -2,10 +2,8 @@
 import 'package:chat_app/core/extensions/time_extensions.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
-import 'package:chat_app/features/users/widgets/users_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({
@@ -55,15 +53,6 @@ class UserCard extends StatelessWidget {
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             leading: AvatarWidget(size: 25, user: user),
-            trailing: true
-                ? IconButton(
-                    tooltip: 'ADD TO FRIEND',
-                    onPressed: onAddToFriend == null
-                        ? null
-                        : () => onAddToFriend!(user.uid),
-                    icon: const Icon(Icons.add_circle_outline),
-                  )
-                : null,
             title: Text(
               '${user.firstName} ${user.lastName}',
               style: themeData.textTheme.bodyMedium?.copyWith(

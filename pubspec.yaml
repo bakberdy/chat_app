@@ -13,7 +13,6 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   flutter_svg: 2.0.17
-  freezed: ^2.5.8
   flutter_bloc: ^9.0.0
   fluttertoast: ^8.2.11
   toastification: ^2.3.0
@@ -25,6 +24,14 @@ dependencies:
   get_it: ^8.0.3
   provider: ^6.1.4
   go_router: ^15.0.0
+  swipeable_page_route: ^0.4.7
+  mask_text_input_formatter: ^2.9.0
+  json_annotation: ^4.9.0
+  freezed_annotation: ^3.0.0
+  dartz: ^0.10.1
+  mocktail: ^1.0.4
+  equatable: ^2.0.7
+  supabase_flutter: ^2.8.4
 
 dev_dependencies:
   flutter_test:
@@ -32,7 +39,9 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
   injectable_generator:
-  build_runner:  
+  build_runner: ^2.4.15  
+  json_serializable: ^6.9.5
+  freezed: ^3.0.6
 
 
 flutter:

@@ -1,5 +1,5 @@
 import 'package:chat_app/core/shared/widgets/refreshable_list_view.dart';
-import 'package:chat_app/features/users/widgets/user_card.dart';
+import 'package:chat_app/features/users/presentation/widgets/user_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';

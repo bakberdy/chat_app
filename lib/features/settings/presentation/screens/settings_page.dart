@@ -1,34 +1,39 @@
 import 'package:chat_app/core/auth/auth_listener.dart';
 import 'package:chat_app/core/auth/auth_service.dart';
+import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
-import 'package:chat_app/features/settings/profile/presentation/screens/profile_page.dart';
-import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
+import 'package:chat_app/core/shared/widgets/user_info_widget.dart';
 import 'package:chat_app/features/settings/presentation/widgets/buttons_list.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class SettingsPage extends StatelessWidget {
-  SettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
   final user = UserEntity(
-      email: "bakberdy.ye@gmail.com",
-      firstName: 'Bakberdi',
-      lastName: 'Yessentay',
-      uid: 'sjhwjbw',
-      userAvatar:
-          'https://images.vexels.com/media/users/3/145908/raw/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.jpg',
-      lastOnline: DateTime.now(),
-      userStatus: 'Be a good human');
+      firstName: 'firstName',
+      email: 'email',
+      lastName: 'lastName',
+      uid: 'uid',
+      userAvatar: 'userAvatar',
+      lastOnline: DateTime.now());
+
+  final _refreshController = RefreshController();
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     print('build settings page');
     return Scaffold(
-        backgroundColor: Color(0xffF7F7F9),
         appBar: AppBar(
-          backgroundColor: Color(0xffF7F7F9),
-          foregroundColor: Color(0xffF7F7F9),
           shadowColor: Colors.white,
           actions: [
             Row(
@@ -63,66 +68,70 @@ class SettingsPage extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              Center(
-                child: AvatarWidget(
+          child: SmartRefresher(
+            onRefresh: () async {
+              await Future.delayed(Duration(seconds: 3));
+              _refreshController.refreshCompleted();
+            },
+            header: ClassicHeader(
+              refreshingIcon: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: themeData.hintColor,
+                    strokeWidth: 2,
+                  )),
+              completeIcon: Icon(Icons.check, weight: 2, color: Colors.green),
+              failedIcon: Icon(Icons.error, color: Colors.red),
+            ),
+            controller: _refreshController,
+            child: ListView(
+              children: [
+                SizedBox(height: 15),
+                UserInfoWidget(
                   user: user,
-                  size: 80
-                )
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Column(
+                  isLoading: true,
+                ),
+                SizedBox(height: 25),
+                ButtonsList(
                   children: [
-                    Builder(
-                      builder: (context) {
-                        return Text(
-                          '${Provider.of<AuthListener>(context).uuid}',
-                          style: TextStyle(fontSize: 20),
-                        );
-                      }
-                    ),
-                    Text(
-                      user.email,
-                      style: TextStyle(fontSize: 16, color: Colors.black45),
-                    ),
+                    ButtonDetails(
+                        onTap: () {
+                          context.push(
+                              '${AppPaths.settings}${AppPaths.profile}/${context.read<AuthListener>().uuid}');
+                        },
+                        title: 'Profile',
+                        prefixIcon: SizedBox(
+                            height: 25,
+                            width: 25,
+                            child:
+                                Image.asset('lib/assets/icons/profile.png'))),
                   ],
                 ),
-              ),
-              SizedBox(height: 25),
-              ButtonsList(
-                children: [
-                  ButtonDetails(
-                    onTap: () => Navigator.pushNamed(context, '/profile', arguments: null),
-                    title: 'Profile',
-                    prefixIcon: SizedBox(height: 25, width: 25,child: Image.asset('lib/assets/icons/profile.png'))
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              ButtonsList(
-                children: [
-                  ButtonDetails(
-                    onTap: () {},
-                    title: 'Talky Features',
-                    prefixIcon: SizedBox(height: 25, width: 25,child: Image.asset('lib/assets/icons/feature.png'))
-                  ),
-                  ButtonDetails(
-                    onTap: () {},
-                    title: 'Talky FAQ',
-                    prefixIcon: SizedBox(height: 25, width: 25,child: Image.asset('lib/assets/icons/question.png'))
-                  )
-                ],
-              )
-            ],
+                SizedBox(height: 20),
+                ButtonsList(
+                  children: [
+                    ButtonDetails(
+                        onTap: () {},
+                        title: 'Talky Features',
+                        prefixIcon: SizedBox(
+                            height: 25,
+                            width: 25,
+                            child:
+                                Image.asset('lib/assets/icons/feature.png'))),
+                    ButtonDetails(
+                        onTap: () {},
+                        title: 'Talky FAQ',
+                        prefixIcon: SizedBox(
+                            height: 25,
+                            width: 25,
+                            child:
+                                Image.asset('lib/assets/icons/question.png')))
+                  ],
+                )
+              ],
+            ),
           ),
         ));
   }
 }
-
-
-
-

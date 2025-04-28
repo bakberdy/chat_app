@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static final lightTheme = ThemeData(
     primaryColor: Color(0xff377DFF),
+    appBarTheme: AppBarTheme(backgroundColor: Colors.white,foregroundColor: Color(0xff377DFF),),
     scaffoldBackgroundColor: Colors.white,
     hintColor: Color(0xffAAB0B7),
     canvasColor: Color(0xff58616A),
