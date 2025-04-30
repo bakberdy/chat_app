@@ -1,14 +1,33 @@
 import 'package:chat_app/core/usecase/usecase.dart';
 import 'package:chat_app/core/utils/typedef.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
 import 'package:chat_app/features/auth/domain/repository/auth_repository.dart';
+import 'package:injectable/injectable.dart';
 
-class SignUpWithEmail extends Usecase<void, SignUpWithEmailEntity>{
+
+@singleton
+class SignUpWithEmail extends Usecase<void, SignUpParams> {
   final AuthRepository repository;
 
   SignUpWithEmail(this.repository);
   @override
-  ResultFuture<void> call(SignUpWithEmailEntity p) {
-    return repository.signUpWithEmail(p);
+  ResultFuture<void> call(SignUpParams p) {
+    return repository.signUpWithEmail(
+        email: p.email,
+        password: p.password,
+        firstName: p.firstName,
+        lastName: p.lastName);
   }
+}
+
+class SignUpParams {
+  final String email;
+  final String password;
+  final String firstName;
+  final String lastName;
+
+  SignUpParams(
+      {required this.email,
+      required this.password,
+      required this.firstName,
+      required this.lastName});
 }

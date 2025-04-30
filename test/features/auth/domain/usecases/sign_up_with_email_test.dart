@@ -8,7 +8,6 @@ import 'package:mocktail/mocktail.dart';
 
 import 'auth_repository.mock.dart';
 
-
 void main() {
   late SignUpWithEmail usecase;
   late AuthRepository repository;
@@ -17,23 +16,34 @@ void main() {
     repository = MockAuthRepository();
     usecase = SignUpWithEmail(repository);
   });
-  final params = SignUpWithEmailEntity(
-      email: 'test@email.com',
-      password: 'password',
-      firstName: 'test',
-      lastName: 'test');
-  test('should call the [AuthRepository.signUpWithEmail] and returns a message' , () async {
+  final tEmail = 'test@email.com';
+  final tPassword = 'password';
+  final tFirstName = 'test';
+  final tLastName = 'test';
+  test('should call the [AuthRepository.signUpWithEmail] and returns a message',
+      () async {
     // Arrange
-    when(() => repository.signUpWithEmail(params))
+    when(() => repository.signUpWithEmail(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+            firstName: any(named: 'firstName'),
+            lastName: any(named: 'lastName')))
         .thenAnswer((_) async => const Right(null)); // Use async
 
     // Act
-    final result = await usecase(params);
+    final result = await usecase(SignUpParams(
+        email: tEmail,
+        password: tPassword,
+        firstName: tFirstName,
+        lastName: tLastName));
 
     // Assert
-    expect(result,
-        const Right<Failure, void>(null)); // Specify Failure type
-    verify(() => repository.signUpWithEmail(params)).called(1);
+    expect(result, const Right<Failure, void>(null)); // Specify Failure type
+    verify(() => repository.signUpWithEmail(
+        email: tEmail,
+        password: tPassword,
+        firstName: tFirstName,
+        lastName: tLastName)).called(1);
     verifyNoMoreInteractions(repository);
   });
 }

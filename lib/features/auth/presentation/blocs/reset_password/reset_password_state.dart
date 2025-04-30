@@ -1,19 +1,17 @@
-part of 'reset_password_cubit.dart';
+// part of 'reset_password_cubit.dart';
 
-@immutable
-sealed class ResetPasswordState {}
+// @freezed
+// class ResetPasswordState with _$ResetPasswordState {
+//   const factory ResetPasswordState(
+//       {@Default(StateStatus.initial) StateStatus status,
+//       int? count,
+//       String? errorMessage}) = _ResetPasswordState;
+// }
 
-final class ResetPasswordInitial extends ResetPasswordState {}
-final class ResetPasswordError extends ResetPasswordState {
-  final String message;
-
-  ResetPasswordError({required this.message});
-}
-final class ResetPasswordLoading extends ResetPasswordState {}
-final class ResetPasswordWaitingTimer extends ResetPasswordState {
-  final int seconds;
-
-  ResetPasswordWaitingTimer({required this.seconds});
-}
-final class ResetPasswordMessageSent extends ResetPasswordState {}
-final class ResetPasswordTryAgain extends ResetPasswordState {}
+// enum ResetPasswordStateStatus {
+//   initial,
+//   loading,
+//   waitingTimer,
+//   tryAgain,
+//   error
+// }

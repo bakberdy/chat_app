@@ -10,12 +10,12 @@ import 'auth_repository.mock.dart';
 
 
 void main() {
-  late SignInWithApple usecase;
+  late SignInWithAppleUseCase usecase;
   late AuthRepository repository;
 
   setUp(() {
     repository = MockAuthRepository();
-    usecase = SignInWithApple(repository);
+    usecase = SignInWithAppleUseCase(repository);
   });
 
   test('should call the [AuthRepository.signInWithApple] and returns a message', () async {

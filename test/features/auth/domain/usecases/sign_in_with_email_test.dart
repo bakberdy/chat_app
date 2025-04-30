@@ -10,7 +10,6 @@ import 'package:mocktail/mocktail.dart';
 
 import 'auth_repository.mock.dart';
 
-
 void main() {
   late SignInWithEmail usecase;
   late AuthRepository repository;
@@ -19,20 +18,20 @@ void main() {
     repository = MockAuthRepository();
     usecase = SignInWithEmail(repository);
   });
-  final params =
-      SignInWithEmailEntity(email: 'test@email.com', password: 'password');
-  test('should call the [AuthRepository.signInWithEmail] and returns a message', () async {
+  final tEmail = 'test@email.com';
+  final tPassword = 'testPassword';
+  test('should call the [AuthRepository.signInWithEmail] and returns a message',
+      () async {
     // Arrange
-    when(() => repository.signInWithEmail(params))
+    when(() => repository.signInWithEmail(email: any(named: 'email'), password: any(named: 'password')))
         .thenAnswer((_) async => const Right(null)); // Use async
 
     // Act
-    final result = await usecase(params);
+    final result = await usecase(SignInParams(email: tEmail, password: tPassword));
 
     // Assert
-    expect(result,
-        const Right<Failure, void>(null)); // Specify Failure type
-    verify(() => repository.signInWithEmail(params)).called(1);
+    expect(result, const Right<Failure, void>(null)); // Specify Failure type
+    verify(() => repository.signInWithEmail(email: tEmail, password: tPassword)).called(1);
     verifyNoMoreInteractions(repository);
   });
 }

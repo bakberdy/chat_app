@@ -13,13 +13,10 @@ class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 void main() {
   late AuthRemoteDataSource dataSource;
   late AuthRepositoryImpl repoImpl;
-  final SignInWithEmailModel signInParams =
-      SignInWithEmailModel(email: 'test@gmail.com', password: 'password');
-  final SignUpWithEmailModel signUpParams = SignUpWithEmailModel(
-      email: 'test@gmail.com',
-      password: 'password',
-      firstName: 'firstName',
-      lastName: 'lastName');
+  final tEmail = 'test@email.com';
+  final tPassword = 'password';
+  final tFirstName = 'firstName';
+  final tLastName = 'lastName';
 
   setUp(() {
     dataSource = MockAuthRemoteDataSource();
@@ -32,15 +29,19 @@ void main() {
         'successfully when AuthRemoteDatasource completes successfully',
         () async {
       //arrange
-      when(() => dataSource.signInWithEmail(signInParams))
+      when(() => dataSource.signInWithEmail(
+              email: any(named: 'email'), password: any(named: 'password')))
           .thenAnswer((_) async => Future.value());
 
       //act
-      final result = await repoImpl.signInWithEmail(signInParams);
+      final result =
+          await repoImpl.signInWithEmail(email: tEmail, password: tPassword);
 
       //assert
       expect(result, equals(const Right<Failure, void>(null)));
-      verify(() => dataSource.signInWithEmail(signInParams)).called(1);
+      verify(() =>
+              dataSource.signInWithEmail(email: tEmail, password: tPassword))
+          .called(1);
       verifyNoMoreInteractions(dataSource);
     });
 
@@ -48,16 +49,23 @@ void main() {
         'should call [AuthRepositoryImpl.signInWithEmail] returns failure'
         'failure when AuthRemoteDatasource completes with exception', () async {
       //arrange
-      when(() => dataSource.signInWithEmail(signInParams))
+      when(() => dataSource.signInWithEmail(
+              email: any(
+                named: 'email',
+              ),
+              password: any(named: 'password')))
           .thenThrow(UnknownException('error'));
 
       //act
-      final result = await repoImpl.signInWithEmail(signInParams);
+      final result =
+          await repoImpl.signInWithEmail(email: tEmail, password: tPassword);
 
       //assert
       expect(result, isA<Left<Failure, void>>());
       expect((result as Left<Failure, void>).value.message, equals('error'));
-      verify(() => dataSource.signInWithEmail(signInParams)).called(1);
+      verify(() =>
+              dataSource.signInWithEmail(email: tEmail, password: tPassword))
+          .called(1);
       verifyNoMoreInteractions(dataSource);
     });
   });
@@ -190,16 +198,27 @@ void main() {
         'should [AuthRepository.signUpWithEmail] '
         'when AuthRemoteDatasource completes with success', () async {
       //arrange
-      when(() => dataSource.signUpWithEmail(signUpParams))
-          .thenAnswer((_) async {});
+      when(() => dataSource.signUpWithEmail(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          firstName: any(named: 'firstName'),
+          lastName: any(named: 'lastName'))).thenAnswer((_) async {});
 
       //act
-      final result = await repoImpl.signUpWithEmail(signUpParams);
+      final result = await repoImpl.signUpWithEmail(
+          email: tEmail,
+          password: tPassword,
+          firstName: tFirstName,
+          lastName: tLastName);
 
       //assert
       expect(result, equals(Right<Failure, void>(null)));
       verify(
-        () => dataSource.signUpWithEmail(signUpParams),
+        () => dataSource.signUpWithEmail(
+            email: tEmail,
+            password: tPassword,
+            firstName: tFirstName,
+            lastName: tLastName),
       ).called(1);
       verifyNoMoreInteractions(dataSource);
     });
@@ -208,18 +227,30 @@ void main() {
         'when AuthRempoteDatasource completes with Exception', () async {
       //arrange
       when(
-        () => dataSource.signUpWithEmail(signUpParams),
+        () => dataSource.signUpWithEmail(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+            firstName: any(named: 'firstName'),
+            lastName: any(named: 'lastName')),
       ).thenThrow(UnknownException('error message'));
 
       //act
-      final result = await repoImpl.signUpWithEmail(signUpParams);
+      final result = await repoImpl.signUpWithEmail(
+          email: tEmail,
+          password: tPassword,
+          firstName: tFirstName,
+          lastName: tLastName);
 
       //assert
       expect(result, isA<Left<Failure, void>>());
       expect((result as Left<Failure, void>).value.message,
           equals('error message'));
       verify(
-        () => dataSource.signUpWithEmail(signUpParams),
+        () => dataSource.signUpWithEmail(
+            email: tEmail,
+            password: tPassword,
+            firstName: tFirstName,
+            lastName: tLastName),
       ).called(1);
       verifyNoMoreInteractions(dataSource);
     });

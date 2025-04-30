@@ -1,3 +1,6 @@
-enum StateStatus { initial, loading, loaded, error}
-
-
+enum StateStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+}

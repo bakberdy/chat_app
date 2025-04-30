@@ -2,13 +2,11 @@ import 'package:chat_app/core/error/exception.dart';
 import 'package:chat_app/core/error/failure.dart';
 import 'package:chat_app/core/utils/typedef.dart';
 import 'package:chat_app/features/auth/data/datasource/auth_remote_data_source.dart';
-import 'package:chat_app/features/auth/data/models/sign_in_with_email_model.dart';
-import 'package:chat_app/features/auth/data/models/sign_up_with_email_model.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_in_with_email_entity.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
 import 'package:chat_app/features/auth/domain/repository/auth_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 
+@Singleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
   const AuthRepositoryImpl(this.authRemoteDataSource);
@@ -38,10 +36,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultVoid signInWithEmail(SignInWithEmailEntity signInParams) async {
+  ResultVoid signInWithEmail({required String email, required String password}) async {
     try {
       await authRemoteDataSource
-          .signInWithEmail(SignInWithEmailModel.fromEntity(signInParams));
+          .signInWithEmail(email: email, password: password);
       return Right(null);
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));
@@ -63,10 +61,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultVoid signUpWithEmail(SignUpWithEmailEntity signUpParams) async {
+  ResultVoid signUpWithEmail({required String email, required String password, required String firstName, required String lastName}) async {
     try {
       await authRemoteDataSource
-          .signUpWithEmail(SignUpWithEmailModel.fromEntity(signUpParams));
+          .signUpWithEmail(email: email, password: password, firstName: firstName, lastName: lastName);
       return Right(null);
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));

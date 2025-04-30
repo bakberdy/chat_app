@@ -14,7 +14,6 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_svg: 2.0.17
   flutter_bloc: ^9.0.0
-  fluttertoast: ^8.2.11
   toastification: ^2.3.0
   faker: ^2.2.0
   shimmer: ^3.0.0
@@ -32,6 +31,10 @@ dependencies:
   mocktail: ^1.0.4
   equatable: ^2.0.7
   supabase_flutter: ^2.8.4
+  sign_in_with_apple: ^7.0.1
+  google_sign_in: ^6.3.0
+  crypto: ^3.0.6
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -41,6 +44,7 @@ dev_dependencies:
   injectable_generator:
   build_runner: ^2.4.15  
   json_serializable: ^6.9.5
+  bloc_test: ^10.0.0
   freezed: ^3.0.6
 
 
@@ -48,6 +52,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - lib/assets/icons/
     - lib/assets/illustrations/
 

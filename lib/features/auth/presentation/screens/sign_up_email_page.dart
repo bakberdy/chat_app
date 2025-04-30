@@ -1,8 +1,7 @@
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
+import 'package:chat_app/core/utils/error_toast.dart';
 import 'package:chat_app/core/utils/validators.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
-import 'package:chat_app/features/auth/presentation/blocs/sign_up/sign_up_cubit.dart';
-import 'package:chat_app/features/auth/presentation/screens/sign_in_email_page.dart';
+import 'package:chat_app/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:chat_app/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
 import 'package:chat_app/core/shared/widgets/custom_filled_button.dart';
@@ -27,27 +26,27 @@ class _SignUpEmailState extends State<SignUpEmail> {
 
   final _formKey1 = GlobalKey<FormState>();
 
-  late final SignUpCubit _signUpCubit;
-
-  void _register(context, state) {
-    final signUpData = SignUpWithEmailEntity(
-        email: _emailController.text,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        password: _passwordController.text);
+  void _register(context, {required AuthState state, required AuthBloc bloc}) {
+    final email = _emailController.text;
+    final firstName = _firstNameController.text;
+    final lastName = _lastNameController.text;
+    final password = _passwordController.text;
 
     if (_formKey1.currentState!.validate()) {
-      if (state is SignUpInitial) {
-        _signUpCubit.addNameAndLastname();
-      } else if (state is SignUpNameGot) {
-        _signUpCubit.register(signUpData);
+      if (state.signUpStatus == SignUpStatus.initial) {
+        bloc.add(AuthEvent.changeSignUpStatus(status: SignUpStatus.nameGot));
+      } else if (state.signUpStatus == SignUpStatus.nameGot) {
+        bloc.add(AuthEvent.signUp(
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName));
       }
     }
   }
 
   @override
   void initState() {
-    _signUpCubit = sl<SignUpCubit>();
     super.initState();
   }
 
@@ -58,100 +57,104 @@ class _SignUpEmailState extends State<SignUpEmail> {
     _confirmPasswordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _signUpCubit.close();
     super.dispose();
+  }
+
+  void _authBlocListener(BuildContext context, AuthState state) {
+    if (state.resetPassword == ResetPasswordStatus.error) {
+      showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-
-    return BlocProvider<SignUpCubit>.value(
-      value: _signUpCubit,
-      child: Scaffold(
-        appBar: CustomAppBar(
-          pageContext: context,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28),
-            child: Column(
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                Center(
-                  child: RichText(
-                      text: TextSpan(
+    final authBloc = sl<AuthBloc>();
+    return BlocProvider<AuthBloc>.value(
+        value: authBloc,
+        child: BlocListener<AuthBloc, AuthState>(
+          bloc: authBloc,
+          listener: _authBlocListener,
+          child: Scaffold(
+            appBar: CustomAppBar(pageContext: context),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 28),
+                child: Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    Center(
+                      child: RichText(
+                          text: TextSpan(
+                              style: themeData.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 40, fontWeight: FontWeight.w700),
+                              children: [
+                            TextSpan(text: 'Talky'),
+                            TextSpan(
+                                text: '.',
+                                style: TextStyle(color: themeData.primaryColor))
+                          ])),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                    Text(
+                      'Sign up with email',
+                      style: themeData.textTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                    Form(
+                      key: _formKey1,
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        bloc: authBloc,
+                        builder: (context, state) {
+                          if (state.signUpStatus == SignUpStatus.initial) {
+                            return _firstnameLastnameInput();
+                          } else if (state.signUpStatus ==
+                              SignUpStatus.nameGot) {
+                            return _emailAndPasswordInput();
+                          }
+                          return SizedBox();
+                        },
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.22),
+                    SizedBox(
+                        height: 55,
+                        child: BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return CustomFilledButton(
+                                isLoading:
+                                    state.signUpStatus == SignUpStatus.loading,
+                                titleColor: Colors.white,
+                                title:
+                                    (state.signUpStatus == SignUpStatus.initial)
+                                        ? "Next"
+                                        : 'Sign up',
+                                onPressed: () => _register(context,
+                                    bloc: authBloc, state: state),
+                                backgroundColor: themeData.primaryColor);
+                          },
+                        )),
+                    SizedBox(height: 20),
+                    Text('Already have an account?',
+                        style: themeData.textTheme.bodySmall),
+                    TextButton(
+                        onPressed: () {
+                          context.replace('${AppPaths.auth}${AppPaths.signIn}');
+                        },
+                        child: Text(
+                          'Sign in here',
                           style: themeData.textTheme.bodyMedium?.copyWith(
-                              fontSize: 40, fontWeight: FontWeight.w700),
-                          children: [
-                        TextSpan(text: 'Talky'),
-                        TextSpan(
-                            text: '.',
-                            style: TextStyle(color: themeData.primaryColor))
-                      ])),
+                              color: themeData.primaryColor,
+                              fontWeight: FontWeight.w600),
+                        )),
+                    SizedBox(height: 30)
+                  ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                Text(
-                  'Sign up with email',
-                  style: themeData.textTheme.bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-                Form(
-                  key: _formKey1,
-                  child: BlocBuilder<SignUpCubit, SignUpState>(
-                    builder: (context, state) {
-                      if (state is SignUpInitial) {
-                        return _firstnameLastnameInput();
-                      } else if (state is SignUpNameGot) {
-                        return _emailAndPasswordInput();
-                      }
-                      return SizedBox();
-                    },
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.22),
-                SizedBox(
-                    height: 55,
-                    child: BlocBuilder<SignUpCubit, SignUpState>(
-                      builder: (context, state) {
-                        return CustomFilledButton(
-                          isLoading: state is SignUpLoading,
-                            titleColor: Colors.white,
-                            title:
-                                (state is SignUpInitial) ? "Next" : 'Sign up',
-                            onPressed: () {
-                              _register(context, state);
-                            },
-                            backgroundColor: themeData.primaryColor);
-                      },
-                    )),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Already have an account?',
-                  style: themeData.textTheme.bodySmall,
-                ),
-                TextButton(
-                    onPressed: () {
-                      context.replace('${AppPaths.auth}${AppPaths.signIn}');
-                    },
-                    child: Text(
-                      'Sign in here',
-                      style: themeData.textTheme.bodyMedium?.copyWith(
-                          color: themeData.primaryColor,
-                          fontWeight: FontWeight.w600),
-                    )),
-                SizedBox(
-                  height: 30,
-                )
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Column _firstnameLastnameInput() {
