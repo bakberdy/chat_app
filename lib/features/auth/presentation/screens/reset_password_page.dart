@@ -1,7 +1,7 @@
 import 'package:chat_app/core/shared/widgets/app_logo_type.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
 import 'package:chat_app/core/utils/validators.dart';
-import 'package:chat_app/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chat_app/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
 import 'package:chat_app/injection/injection.dart';
@@ -36,7 +36,7 @@ class _ResetPasswordContentState extends State<ResetPasswordContent> {
   void onSent({required AuthBloc bloc}) async {
     final email = _emailController.text;
     if (_formKey.currentState!.validate()) {
-      bloc.add(AuthEvent.sendResetCode(email: email));
+      bloc.add(AuthEvent.sendResetMessageToEmail(email: email));
     }
   }
 

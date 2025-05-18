@@ -1,22 +1,42 @@
+import 'package:chat_app/core/auth/auth_listener.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
+import 'package:chat_app/core/shared/pages/page_not_authorized.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
 import 'package:chat_app/core/utils/validators.dart';
 import 'package:chat_app/features/settings/profile/presentation/widgets/labeled_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 
-class ProfilePage extends StatefulWidget {
-  final String? userId;
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, required this.userId});
-
+  final String? userId;
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  Widget build(BuildContext context) {
+    if (userId == 'me') {
+      return Consumer<AuthListener>(builder: (context, authListener, _) {
+        if (authListener.currentUser == null) {
+          return PageNotAuthorized();
+        } else {
+          return ProfilePageContent(user: authListener.currentUser!);
+        }
+      });
+    } else {
+      return ProfilePageContent(user: UserEntity.empty());
+    }
+  }
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  late final UserEntity user;
+class ProfilePageContent extends StatefulWidget {
+  final UserEntity user;
+  const ProfilePageContent({super.key, required this.user});
 
+  @override
+  State<ProfilePageContent> createState() => _ProfilePageContentState();
+}
+
+class _ProfilePageContentState extends State<ProfilePageContent> {
   late final TextEditingController _nameController;
   late final TextEditingController _lastNameController;
   late final TextEditingController _emailController;
@@ -24,35 +44,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    print('user id: ${widget.userId}');
-    if (widget.userId != null) {
-      //send query to get user
-      user = UserEntity(
-          email: "bakberdy.ye@gmail.com",
-          firstName: 'Bakberdi',
-          lastName: 'Yessentay',
-          uid: 'sjhwjbw',
-          userAvatar:
-              'https://images.vexels.com/media/users/3/145908/raw/52eabf633ca6414e60a7677b0b917d92-male-avatar-maker.jpg',
-          lastOnline: DateTime.now(),
-          userStatus: 'Be a good human');
-    } else {
-      user = UserEntity(
-          email: "Please return back and try again",
-          firstName: "User doesn't exist",
-          lastName: '',
-          uid: 'sjhwjbw',
-          userAvatar:
-              'https://www.evolvefish.com/assets/images/Decals/EF-VDC-00035(Black).jpg',
-          lastOnline: DateTime.now(),
-          userStatus: '');
-    }
-    _nameController = TextEditingController(text: user.firstName);
-    _lastNameController = TextEditingController(text: user.lastName);
-    _emailController = TextEditingController(text: user.email);
-    _birthDateController =
-        TextEditingController(text: user.lastOnline.toString());
+    _nameController = TextEditingController(text: widget.user.firstName);
+    _lastNameController = TextEditingController(text: widget.user.lastName);
+    _emailController = TextEditingController(text: widget.user.email);
+
+    _birthDateController = TextEditingController(text: widget.user.birthDate);
     super.initState();
+  }
+
+  void _onSubmit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      print('validated');
+    } else {
+      print("not validated");
+      showErrorToast('Please enter valid data', context);
+    }
   }
 
   final _dateTimeFormatter = MaskTextInputFormatter(
@@ -69,18 +75,14 @@ class _ProfilePageState extends State<ProfilePage> {
           shadowColor: Colors.white,
           actions: [
             TextButton(
-              style: ButtonStyle(
-                textStyle: WidgetStatePropertyAll(TextStyle(color: themeData.primaryColor))
-              ),
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    print('validated');
-                  } else {
-                    print("not validated");
-                    showErrorToast('Please enter valid data', context);
-                  }
-                },
-                child: Text('Done', style: TextStyle(color: themeData.primaryColor),))
+                style: ButtonStyle(
+                    textStyle: WidgetStatePropertyAll(
+                        TextStyle(color: themeData.primaryColor))),
+                onPressed: _onSubmit,
+                child: Text(
+                  'Done',
+                  style: TextStyle(color: themeData.primaryColor),
+                ))
           ],
         ),
         body: Padding(
@@ -135,6 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 LabeledTextFormField(
                   keyboardType: TextInputType.datetime,
                   label: 'Date of Birth',
+                  hintText: 'dd/mm/yyyy',
                   themeData: themeData,
                   controller: _birthDateController,
                   validator: validateDate,
@@ -153,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AvatarWidget(size: 80, user: user),
+            AvatarWidget(size: 80, user: widget.user),
             SizedBox(height: 10),
             Text(
               'Change user avatar',

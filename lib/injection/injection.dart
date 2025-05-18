@@ -20,5 +20,5 @@ abstract class AppModule {
   SupabaseClient get supabaseClient => Supabase.instance.client;
 
   @singleton
-  GoogleSignIn get googleSignIn => GoogleSignIn();
+  GoogleSignIn get googleSignIn => GoogleSignIn()..signInSilently();
 }

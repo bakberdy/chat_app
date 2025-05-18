@@ -1,6 +1,6 @@
 part of 'users_bloc.dart';
 
-@immutable
+
 class UsersState {
   final List<UserEntity> friends;
   final List<UserEntity> allUsers;

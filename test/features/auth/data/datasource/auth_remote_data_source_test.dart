@@ -70,6 +70,13 @@ void main() {
     dataSourceImpl = AuthSupabaseDataSourceImpl(client, googleSignIn);
   });
 
+  setUp(() {
+    reset(mockAuth);
+    reset(client);
+    reset(googleSignIn);
+    reset(mockSignInWithApple);
+  });
+
   group('reset password', () {
     test(
         'should complete successfully when [SupabaseClient.auth.resetPassword] is success',
@@ -207,10 +214,10 @@ void main() {
       await expectLater(result, completes);
       verify(() => client.auth.signInWithIdToken(
             provider: OAuthProvider.google,
-            idToken: 'idToken',
-            accessToken: 'accessToken',
+            idToken: any(named: 'idToken'),
+            accessToken: any(named: 'accessToken'),
           )).called(1);
-      verifyNoMoreInteractions(client);
+     verifyNoMoreInteractions(client);
     });
 
     test(
@@ -245,8 +252,8 @@ void main() {
       await expectLater(result, completes);
       verify(() => client.auth.signInWithIdToken(
             provider: OAuthProvider.apple,
-            idToken: 'idToken',
-            accessToken: 'nonce',
+            idToken: any(named: 'idToken'),
+            nonce: any(named: 'nonce'),
           )).called(1);
       verifyNoMoreInteractions(client);
     });

@@ -38,7 +38,9 @@ class AppRoutes {
 
   static GoRoute signUpRoute() {
     return GoRoute(
-        path: AppPaths.signUp, builder: (context, state) => SignUpEmail());
+        path: AppPaths.signUp, builder: (context, state) => SignUpEmail(), routes: [
+          GoRoute(path: '/sign_up_content',builder: (context, state) => SignInEmailContent(),)
+        ]);
   }
 
   static GoRoute resetPasswordRoute() {
@@ -73,8 +75,11 @@ class AppRoutes {
           routes: [
             GoRoute(
                 path: '${AppPaths.profile}/:user_id',
-                builder: (context, state) =>
-                    ProfilePage(userId: state.pathParameters['user_id']),
+                // builder: (context, state) {
+                //   final userId = state.pathParameters['user_id'];
+                //   if(userId==null) return;
+                //   return ProfilePage(userId: userId);
+                // },
                 pageBuilder: (context, state) => SwipeablePage(
                     canOnlySwipeFromEdge: true,
                     builder: (context) =>
@@ -103,12 +108,10 @@ class AppRoutes {
           routes: [
             GoRoute(
                 path: '${AppPaths.profile}/:user_id',
-                builder: (context, state) =>
-                    ProfilePage(userId: state.pathParameters['user_id']),
                 pageBuilder: (context, state) => SwipeablePage(
                     canOnlySwipeFromEdge: true,
                     builder: (context) =>
-                        ProfilePage(userId: state.pathParameters['user_id']))),
+                        ProfilePage(userId: 'me'))),
           ]),
     ]);
   }

@@ -37,7 +37,7 @@ class UserInfoWidget extends StatelessWidget {
                           )))
                   : Text(
                       '${user.lastName} ${user.firstName}',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 18),
                     ),
               isLoading
                   ? Shimmer.fromColors(

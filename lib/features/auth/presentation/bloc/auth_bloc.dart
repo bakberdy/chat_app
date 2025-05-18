@@ -36,8 +36,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   StreamSubscription<int>? _timerSubscription;
 
   @override
-  Future<void> close() {
-    _timerSubscription?.cancel();
+  Future<void> close() async {
+    await _timerSubscription?.cancel();
     return super.close();
   }
 
@@ -97,7 +97,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         resetPassword: ResetPasswordStatus.error,
         errorMessage: failure.message,
       )),
-      (_) => _startTimer(emit),
+      (_) async {
+        await _startTimer(emit);
+      },
     );
   }
 
@@ -118,7 +120,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onGoogleSignIn(Emitter<AuthState> emit) async {
     emit(state.copyWith(signInStatus: StateStatus.loading));
 
-    final failureOrSuccess = await signInWithApple(NoParams());
+    final failureOrSuccess = await signInWithGoogle(NoParams());
 
     failureOrSuccess.fold(
       (failure) => emit(state.copyWith(
@@ -146,31 +148,37 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: password,
             firstName: firstName,
             lastName: lastName);
-      case _SendResetCode(:final email):
+      case _SendResetMessageToEmail(:final email):
         return await _onSendResetCode(emit, email: email);
 
       case _AppleSignIn():
         return await _onAppleSignIn(emit);
       case _GoogleSignIn():
         return await _onGoogleSignIn(emit);
+      case _ChangeTimeDuration(:final timeDuration):
+        return _onChangeTimeDuration(emit, timeDuration);
     }
   }
 
-  void _startTimer(Emitter emit) {
-    _timerSubscription?.cancel();
+  Future<void> _startTimer(Emitter emit) async {
     emit(state.copyWith(resetPassword: ResetPasswordStatus.waitingTimer));
-    if (state.timerDuration != null) {
-      _timerSubscription = Stream.periodic(Duration(seconds: 1), (tick) => tick)
-          .take(state.timerDuration!)
-          .listen((tick) {
-        final remaining = state.timerDuration! - tick - 1;
-        if (remaining < 0) {
-          emit(state.copyWith(resetPassword: ResetPasswordStatus.tryAgain));
-          return;
-        } else {
-          emit(state.copyWith(timerDuration: remaining));
-        }
-      });
+    await for (int i in _timerStream(60)) {
+      add(AuthEvent.changeTimeDuration(timeDuration: i));
+    }
+  }
+
+  Stream<int> _timerStream(int durationInSecond) async* {
+    for (int i = durationInSecond; i >= 0; i--) {
+      yield i;
+      await Future.delayed(Duration(seconds: 1));
+    }
+  }
+
+  void _onChangeTimeDuration(Emitter<AuthState> emit, int timeDuration) {
+    if (timeDuration == 0) {
+      emit(state.copyWith(resetPassword: ResetPasswordStatus.tryAgain));
+    } else {
+      emit(state.copyWith(timerDuration: timeDuration));
     }
   }
 }

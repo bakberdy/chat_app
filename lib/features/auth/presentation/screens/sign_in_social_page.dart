@@ -1,6 +1,7 @@
+import 'package:chat_app/core/bloc/state_status.dart';
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
-import 'package:chat_app/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:chat_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chat_app/core/shared/widgets/custom_filled_button.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class SignInSocial extends StatelessWidget {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.resetPassword == ResetPasswordStatus.error) {
+    if (state.signInStatus == StateStatus.error) {
       showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
     }
   }

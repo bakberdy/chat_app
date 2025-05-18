@@ -46,6 +46,7 @@ dev_dependencies:
   json_serializable: ^6.9.5
   bloc_test: ^10.0.0
   freezed: ^3.0.6
+  bloc_lint: 0.2.0-dev.0
 
 
 flutter:

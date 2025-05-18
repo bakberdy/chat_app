@@ -1,5 +1,4 @@
 import 'package:chat_app/core/shared/widgets/cupertino_segmented_menu.dart';
-import 'package:chat_app/core/shared/widgets/custom_search_bar.dart';
 import 'package:chat_app/features/chats_and_calls/chats/domain/entities/chat_entity.dart';
 import 'package:chat_app/features/chats_and_calls/chats/domain/entities/message_entity.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
@@ -60,30 +59,18 @@ class _ChatsAndCallsState extends State<ChatsAndCalls>
     chat = ChatEntity(
       chatId: faker.guid.guid(),
       messages: messages,
-      sender: UserEntity(
-        email: "",
-        firstName: 'firstName',
-        lastName: 'lastName',
-        uid: 'uuid',
-        userAvatar: 'https://theteam.blog/wp-content/uploads/2024/01/'
-            'jeff-bezos-leadership-style-1024x1024.jpg',
-        lastOnline: DateTime.now(),
-      ),
-      lastMessage: messages[0],
+      sender: UserEntity.empty(),
+      lastMessage: MessageEntity(
+          messsage: 'messsage',
+          senderUuid: 'senderUuid',
+          receiverUuid: 'receiverUuid',
+          createdAt: DateTime(0)),
     );
 
     chat2 = ChatEntity(
       chatId: faker.guid.guid(),
       messages: messages,
-      sender: UserEntity(
-        firstName: 'FFFFFFFFFFFFFFf',
-        lastName: 'lastName',
-        uid: 'uuid7',
-        userAvatar: 'https://theteam.blog/wp-content/uploads/2024/01/'
-            'jeff-bezos-leadership-style-1024x1024.jpg',
-        lastOnline: DateTime.now(),
-        email: '',
-      ),
+      sender: UserEntity.empty(),
       lastMessage: messages[0],
     );
   }

@@ -40,12 +40,12 @@ class AvatarWidget extends StatelessWidget {
 
   Widget _buildAvatarContent() {
     if (!useHeroAnimation) {
-      return _buildAvatarWithBorder(user.userAvatar);
+      return _buildAvatarWithBorder(user.profilePicture);
     }
 
     return Hero(
       tag: heroTag ?? '${user.firstName}_${user.lastName}_avatar',
-      child: _buildAvatarWithBorder(user.userAvatar),
+      child: _buildAvatarWithBorder(user.profilePicture),
     );
   }
 
@@ -64,10 +64,16 @@ class AvatarWidget extends StatelessWidget {
           ClipOval(
             child: _buildNetworkAvatarOrFallback(avatarUrl),
           ),
-          if (user.isOnline) _buildOnlineIndicator(),
+          if (_checkIsonline(user)) _buildOnlineIndicator(),
         ],
       ),
     );
+  }
+
+  _checkIsonline(final UserEntity user) {
+    final now = DateTime.now();
+    final diff = now.difference(user.lastOnline);
+    return diff.inSeconds < 60;
   }
 
   Widget _buildNetworkAvatarOrFallback(String? avatarUrl) {
@@ -115,8 +121,8 @@ class AvatarWidget extends StatelessWidget {
   }
 
   String _extractInitials() {
-    final first = user.firstName.isNotEmpty ? user.firstName[0] : '';
-    final last = user.lastName.isNotEmpty ? user.lastName[0] : '';
+    final first = (user.firstName??'A').isNotEmpty ? (user.firstName??'A')[0] : '';
+    final last = (user.lastName??'A').isNotEmpty ? (user.lastName??'A')[0] : '';
     return (first + last).toUpperCase();
   }
 

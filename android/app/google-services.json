@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "694423775164",
+    "project_id": "chat-app-c87e4",
+    "storage_bucket": "chat-app-c87e4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694423775164:android:c957493e2fc5a6aab26db9",
+        "android_client_info": {
+          "package_name": "com.bakberdi.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSNyXYyMX8L-Sum-ce1ApapB90CYaQjWs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-import 'package:chat_app/core/error/pages/page_not_found.dart';
+import 'package:chat_app/core/shared/pages/page_not_found.dart';
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/navigation/routing/app_routes.dart';
 import 'package:go_router/go_router.dart';

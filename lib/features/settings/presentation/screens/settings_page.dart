@@ -1,10 +1,8 @@
 import 'package:chat_app/core/auth/auth_listener.dart';
-import 'package:chat_app/core/auth/auth_service.dart';
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/widgets/user_info_widget.dart';
 import 'package:chat_app/features/settings/presentation/widgets/buttons_list.dart';
-import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -18,51 +16,29 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final user = UserEntity(
-      firstName: 'firstName',
-      email: 'email',
-      lastName: 'lastName',
-      uid: 'uid',
-      userAvatar: 'userAvatar',
-      lastOnline: DateTime.now());
+  final user = UserEntity.empty();
 
   final _refreshController = RefreshController();
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    print('build settings page');
+    print('builded page');
     return Scaffold(
         appBar: AppBar(
           shadowColor: Colors.white,
           actions: [
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    sl<AuthService>().updateAuthState(null);
-                  },
-                  style: ButtonStyle(
-                      enableFeedback: true,
-                      padding: WidgetStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.grey.shade200)),
-                  child: Text('log out'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    sl<AuthService>().updateAuthState("Bakberdi");
-                  },
-                  style: ButtonStyle(
-                      enableFeedback: true,
-                      padding: WidgetStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.grey.shade200)),
-                  child: Text('log in'),
-                ),
-              ],
+            TextButton(
+              onPressed: () {
+                context.read<AuthListener>().signOut();
+              },
+              style: ButtonStyle(
+                  enableFeedback: true,
+                  padding: WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 0)),
+                  backgroundColor:
+                      WidgetStatePropertyAll(Colors.grey.shade200)),
+              child: Text('log out'),
             )
           ],
         ),
@@ -88,9 +64,16 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ListView(
               children: [
                 SizedBox(height: 15),
-                UserInfoWidget(
-                  user: user,
-                  isLoading: true,
+                Consumer<AuthListener>(
+                  builder: (context, authlistener, _) {
+                    print('builded consiumer');
+                    final user = authlistener.currentUser;
+                    if(user == null) return Text('User not authorized');
+                    return UserInfoWidget(
+                      user: user,
+                      isLoading: !authlistener.isAuthorized,
+                    );
+                  }
                 ),
                 SizedBox(height: 25),
                 ButtonsList(

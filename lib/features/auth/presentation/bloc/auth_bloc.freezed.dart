@@ -302,8 +302,8 @@ class _AppleSignIn implements AuthEvent {
 
 /// @nodoc
 
-class _SendResetCode implements AuthEvent {
-  const _SendResetCode({required this.email});
+class _SendResetMessageToEmail implements AuthEvent {
+  const _SendResetMessageToEmail({required this.email});
 
   final String email;
 
@@ -311,14 +311,15 @@ class _SendResetCode implements AuthEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SendResetCodeCopyWith<_SendResetCode> get copyWith =>
-      __$SendResetCodeCopyWithImpl<_SendResetCode>(this, _$identity);
+  _$SendResetMessageToEmailCopyWith<_SendResetMessageToEmail> get copyWith =>
+      __$SendResetMessageToEmailCopyWithImpl<_SendResetMessageToEmail>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _SendResetCode &&
+            other is _SendResetMessageToEmail &&
             (identical(other.email, email) || other.email == email));
   }
 
@@ -327,27 +328,27 @@ class _SendResetCode implements AuthEvent {
 
   @override
   String toString() {
-    return 'AuthEvent.sendResetCode(email: $email)';
+    return 'AuthEvent.sendResetMessageToEmail(email: $email)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$SendResetCodeCopyWith<$Res>
+abstract mixin class _$SendResetMessageToEmailCopyWith<$Res>
     implements $AuthEventCopyWith<$Res> {
-  factory _$SendResetCodeCopyWith(
-          _SendResetCode value, $Res Function(_SendResetCode) _then) =
-      __$SendResetCodeCopyWithImpl;
+  factory _$SendResetMessageToEmailCopyWith(_SendResetMessageToEmail value,
+          $Res Function(_SendResetMessageToEmail) _then) =
+      __$SendResetMessageToEmailCopyWithImpl;
   @useResult
   $Res call({String email});
 }
 
 /// @nodoc
-class __$SendResetCodeCopyWithImpl<$Res>
-    implements _$SendResetCodeCopyWith<$Res> {
-  __$SendResetCodeCopyWithImpl(this._self, this._then);
+class __$SendResetMessageToEmailCopyWithImpl<$Res>
+    implements _$SendResetMessageToEmailCopyWith<$Res> {
+  __$SendResetMessageToEmailCopyWithImpl(this._self, this._then);
 
-  final _SendResetCode _self;
-  final $Res Function(_SendResetCode) _then;
+  final _SendResetMessageToEmail _self;
+  final $Res Function(_SendResetMessageToEmail) _then;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -355,11 +356,76 @@ class __$SendResetCodeCopyWithImpl<$Res>
   $Res call({
     Object? email = null,
   }) {
-    return _then(_SendResetCode(
+    return _then(_SendResetMessageToEmail(
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _ChangeTimeDuration implements AuthEvent {
+  const _ChangeTimeDuration({required this.timeDuration});
+
+  final int timeDuration;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ChangeTimeDurationCopyWith<_ChangeTimeDuration> get copyWith =>
+      __$ChangeTimeDurationCopyWithImpl<_ChangeTimeDuration>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ChangeTimeDuration &&
+            (identical(other.timeDuration, timeDuration) ||
+                other.timeDuration == timeDuration));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, timeDuration);
+
+  @override
+  String toString() {
+    return 'AuthEvent.changeTimeDuration(timeDuration: $timeDuration)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ChangeTimeDurationCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$ChangeTimeDurationCopyWith(
+          _ChangeTimeDuration value, $Res Function(_ChangeTimeDuration) _then) =
+      __$ChangeTimeDurationCopyWithImpl;
+  @useResult
+  $Res call({int timeDuration});
+}
+
+/// @nodoc
+class __$ChangeTimeDurationCopyWithImpl<$Res>
+    implements _$ChangeTimeDurationCopyWith<$Res> {
+  __$ChangeTimeDurationCopyWithImpl(this._self, this._then);
+
+  final _ChangeTimeDuration _self;
+  final $Res Function(_ChangeTimeDuration) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? timeDuration = null,
+  }) {
+    return _then(_ChangeTimeDuration(
+      timeDuration: null == timeDuration
+          ? _self.timeDuration
+          : timeDuration // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }

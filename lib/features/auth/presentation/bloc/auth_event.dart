@@ -12,5 +12,6 @@ class AuthEvent with _$AuthEvent {
   const factory AuthEvent.changeSignUpStatus({required SignUpStatus status}) = _ChangeSignUpStatus;
   const factory AuthEvent.googleSignIn() = _GoogleSignIn;
   const factory AuthEvent.appleSignIn() = _AppleSignIn;
-  const factory AuthEvent.sendResetCode({required String email}) = _SendResetCode;
+  const factory AuthEvent.sendResetMessageToEmail({required String email}) = _SendResetMessageToEmail;
+  const factory AuthEvent.changeTimeDuration({required int timeDuration}) = _ChangeTimeDuration;
 }

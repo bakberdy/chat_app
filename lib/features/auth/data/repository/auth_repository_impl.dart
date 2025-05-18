@@ -56,6 +56,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));
     } catch (e) {
+      print(e.toString());
       return Left(UnknownFailure(e.toString()));
     }
   }

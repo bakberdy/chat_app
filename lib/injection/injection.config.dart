@@ -24,7 +24,7 @@ import '../features/auth/domain/usecases/sign_in_with_apple.dart' as _i538;
 import '../features/auth/domain/usecases/sign_in_with_email.dart' as _i33;
 import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i345;
 import '../features/auth/domain/usecases/sign_up_with_email.dart' as _i588;
-import '../features/auth/presentation/blocs/auth/auth_bloc.dart' as _i174;
+import '../features/auth/presentation/bloc/auth_bloc.dart' as _i59;
 import '../features/users/presentation/blocs/users_bloc/users_bloc.dart'
     as _i900;
 import 'injection.dart' as _i464;
@@ -41,10 +41,11 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final appModule = _$AppModule();
-    gh.singleton<_i542.AuthService>(() => _i542.AuthService());
-    gh.singleton<_i900.UsersBloc>(() => _i900.UsersBloc());
+    gh.factory<_i900.UsersBloc>(() => _i900.UsersBloc());
     gh.singleton<_i454.SupabaseClient>(() => appModule.supabaseClient);
     gh.singleton<_i116.GoogleSignIn>(() => appModule.googleSignIn);
+    gh.singleton<_i542.AuthService>(
+        () => _i542.AuthService(gh<_i454.SupabaseClient>()));
     gh.singleton<_i900.AuthListener>(
         () => _i900.AuthListener(gh<_i542.AuthService>()));
     gh.singleton<_i342.AuthRemoteDataSource>(
@@ -64,7 +65,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i345.SignInWithGoogle(gh<_i267.AuthRepository>()));
     gh.singleton<_i588.SignUpWithEmail>(
         () => _i588.SignUpWithEmail(gh<_i267.AuthRepository>()));
-    gh.factory<_i174.AuthBloc>(() => _i174.AuthBloc(
+    gh.factory<_i59.AuthBloc>(() => _i59.AuthBloc(
           gh<_i73.ResetPassword>(),
           gh<_i33.SignInWithEmail>(),
           gh<_i588.SignUpWithEmail>(),
