@@ -66,7 +66,6 @@ class _LabeledTextFormFieldState extends State<LabeledTextFormField> {
             )),
         Expanded(
           child: TextFormField(
-            
             inputFormatters: widget.inputFormatters,
             focusNode: _focusNode,
             validator: widget.validator,
@@ -80,9 +79,9 @@ class _LabeledTextFormFieldState extends State<LabeledTextFormField> {
                 overflow: TextOverflow.ellipsis),
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(10),
-                focusedErrorBorder: UnderlineInputBorder(
+                focusedErrorBorder: OutlineInputBorder(
                     borderSide: BorderSide(width: 2, color: Colors.red)),
-                errorBorder: UnderlineInputBorder(
+                errorBorder: OutlineInputBorder(
                     borderSide: BorderSide(width: 2, color: Colors.red)),
                 errorStyle:
                     TextStyle(color: Colors.red, height: 0, fontSize: 0),

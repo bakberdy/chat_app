@@ -11,9 +11,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await Supabase.initialize(
-    anonKey: dotenv.get('SUPABASE_ANON_KEY'),
-    url: dotenv.get('SUPABASE_URL'),
-  );
+      anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+      url: dotenv.get('SUPABASE_URL'));
   configureDependencies();
   runApp(const MyApp());
 }
