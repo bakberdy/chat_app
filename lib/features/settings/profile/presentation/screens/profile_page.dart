@@ -3,11 +3,14 @@ import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/pages/page_not_authorized.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
+import 'package:chat_app/core/utils/show_bottom_sheet_with_buttons.dart';
 import 'package:chat_app/core/utils/validators.dart';
 import 'package:chat_app/features/settings/profile/presentation/widgets/labeled_text_form_field.dart';
+import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key, required this.userId});
@@ -54,9 +57,9 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
 
   void _onSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      print('validated');
+      sl<Talker>().info('validated');
     } else {
-      print("not validated");
+      sl<Talker>().info("not validated");
       showErrorToast('Please enter valid data', context);
     }
   }
@@ -88,12 +91,25 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: AutovalidateMode.onUnfocus,
             key: _formKey,
             child: ListView(
               children: [
                 SizedBox(height: 15),
-                _avatarWidget(onTap: () {}),
+                _avatarWidget(onTap: () {
+                  showBottomSheetWithButtons(context,
+                      title: 'Avatar',
+                      actions: [
+                        BottomSheetActionItem(
+                            onTap: () {},
+                            text: 'Take a photo',
+                            icon: Icons.camera_alt_rounded),
+                        BottomSheetActionItem(
+                            onTap: () {},
+                            text: 'Select from gallery',
+                            icon: Icons.photo_album_rounded)
+                      ]);
+                }),
                 SizedBox(height: 20),
                 Text('Main info',
                     style: TextStyle(

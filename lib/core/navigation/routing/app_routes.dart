@@ -14,17 +14,11 @@ import 'package:swipeable_page_route/swipeable_page_route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class AppRoutes {
-  static final GlobalKey<NavigatorState> _rootKey = GlobalKey<NavigatorState>();
-  static final _shellNavigatorFriends = GlobalKey<NavigatorState>();
-  static final _shellNavigatorSettings = GlobalKey<NavigatorState>();
-  static final _shellNavigatorChatsAndCalls = GlobalKey<NavigatorState>();
-  static GlobalKey<NavigatorState> get rootKey => _rootKey;
-
   ///auth routes
-  static GoRoute get authRoutes => GoRoute(
+  static GoRoute authRoutes(GlobalKey<NavigatorState> key) => GoRoute(
           path: AppPaths.auth,
           builder: (context, state) => SignInSocial(),
-          parentNavigatorKey: _rootKey,
+          parentNavigatorKey: key,
           routes: [
             GoRoute(
                 path: AppPaths.signIn,
@@ -42,8 +36,9 @@ class AppRoutes {
 
   ///branches for bottom navigation bar
   static StatefulShellBranch usersBranch(
-          {required TalkerRouteObserver observer}) =>
-      StatefulShellBranch(navigatorKey: _shellNavigatorFriends, observers: [
+          {required TalkerRouteObserver observer,
+          required GlobalKey<NavigatorState> key}) =>
+      StatefulShellBranch(navigatorKey: key, observers: [
         observer
       ], routes: [
         GoRoute(
@@ -60,9 +55,10 @@ class AppRoutes {
       ]);
 
   static StatefulShellBranch chatsAndCallsBranch(
-          {required TalkerRouteObserver observer}) =>
+          {required TalkerRouteObserver observer,
+          required GlobalKey<NavigatorState> key}) =>
       StatefulShellBranch(
-        navigatorKey: _shellNavigatorChatsAndCalls,
+        navigatorKey: key,
         observers: [observer],
         routes: [
           GoRoute(
@@ -73,9 +69,10 @@ class AppRoutes {
       );
 
   static StatefulShellBranch settingsBranch(
-          {required TalkerRouteObserver observer}) =>
+          {required TalkerRouteObserver observer,
+          required GlobalKey<NavigatorState> key}) =>
       StatefulShellBranch(
-        navigatorKey: _shellNavigatorSettings,
+        navigatorKey: key,
         observers: [observer],
         routes: [
           GoRoute(
