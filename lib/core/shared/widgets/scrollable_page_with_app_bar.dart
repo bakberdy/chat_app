@@ -27,7 +27,7 @@ class ScrollablePageWithAppBar extends StatelessWidget {
               expandedHeight: 120,
               snap: true,
               floating: true,
-              //pinned: true,
+              pinned: true,
               backgroundColor: Colors.white,
               centerTitle: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -36,15 +36,15 @@ class ScrollablePageWithAppBar extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.only(bottom: 10.0, top: 20),
-                          child: Text(
-                            appBarTitle,
-                            style: themeData.textTheme.bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(bottom: 10.0, top: 20),
+                        child: Text(
+                          appBarTitle,
+                          style: themeData.textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w700),
                         ),
+                      ),
                       if (showSearchBar)
                         Container(
                           decoration: BoxDecoration(
