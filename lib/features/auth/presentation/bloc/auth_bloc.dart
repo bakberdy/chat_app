@@ -78,10 +78,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         lastName: lastName));
 
     failureOrSuccess.fold(
-      (failure) => emit(state.copyWith(
-        signUpStatus: SignUpStatus.error,
-        errorMessage: failure.message,
-      )),
+      (failure) {
+        emit(state.copyWith(
+            signUpStatus: SignUpStatus.error, errorMessage: failure.message));
+        emit(state.copyWith(signUpStatus: SignUpStatus.nameGot));
+      },
       (_) => emit(state.copyWith(signUpStatus: SignUpStatus.success)),
     );
   }

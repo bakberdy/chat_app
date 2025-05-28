@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> signUpWithEmail(
@@ -23,16 +24,19 @@ abstract class AuthRemoteDataSource {
 class AuthSupabaseDataSourceImpl implements AuthRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final GoogleSignIn _googleSignIn;
-  const AuthSupabaseDataSourceImpl(this._supabaseClient, this._googleSignIn);
+  final Talker talkerLogger;
+  const AuthSupabaseDataSourceImpl(
+      this._supabaseClient, this._googleSignIn, this.talkerLogger);
 
   @override
   Future<void> resetPassword(String email) async {
     try {
       await _supabaseClient.auth.resetPasswordForEmail(email);
-    } on AuthException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
+    } catch (e, s) {
+      _handleError(
+          error: e,
+          stackTrace: s,
+          contextMessage: 'AuthSupabaseDataSourceImpl.resetPassword');
     }
   }
 
@@ -42,10 +46,11 @@ class AuthSupabaseDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _supabaseClient.auth
           .signInWithPassword(password: password, email: email);
-    } on AuthException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
+    } catch (e, s) {
+      _handleError(
+          error: e,
+          stackTrace: s,
+          contextMessage: 'AuthSupabaseDataSourceImpl.signInWithEmail');
     }
   }
 
@@ -70,16 +75,11 @@ class AuthSupabaseDataSourceImpl implements AuthRemoteDataSource {
         "last_name": lastName,
         "email": email,
       });
-    } on AuthException catch (e) {
-      throw ServerException(e.message);
-    } on PostgrestException catch (e) {
-      throw ServerException(e.message);
-    } on ServerException {
-      rethrow;
-    } on Exception catch (e) {
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
-    } catch (e) {
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
+    } catch (e, s) {
+      _handleError(
+          error: e,
+          stackTrace: s,
+          contextMessage: 'AuthSupabaseDataSourceImpl.signUpWithEmail');
     }
   }
 
@@ -119,15 +119,11 @@ class AuthSupabaseDataSourceImpl implements AuthRemoteDataSource {
           provider: OAuthProvider.google,
           accessToken: accessToken,
           idToken: idToken);
-    } on AuthException catch (e) {
-      print(e.toString());
-      throw ServerException(e.message);
-    } on UnknownException catch (e) {
-      print(e.toString());
-      rethrow;
-    } catch (e) {
-      print(e.toString());
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
+    } catch (e, s) {
+      _handleError(
+          error: e,
+          stackTrace: s,
+          contextMessage: 'AuthSupabaseDataSourceImpl.signInWithGoogle');
     }
   }
 
@@ -156,10 +152,31 @@ class AuthSupabaseDataSourceImpl implements AuthRemoteDataSource {
         idToken: idToken,
         nonce: rawNonce,
       );
-    } on AuthException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw UnknownException('Unknown error occurred: ${e.toString()}');
+    } catch (e, s) {
+      _handleError(
+          error: e,
+          stackTrace: s,
+          contextMessage: 'AuthSupabaseDataSourceImpl.signInWithApple');
+    }
+  }
+
+  void _handleError({
+    required Object error,
+    required StackTrace stackTrace,
+    required String contextMessage,
+  }) {
+    if (error is AuthException) {
+      talkerLogger.error(error.message, error, stackTrace);
+      throw ServerException(error.message);
+    } else if (error is PostgrestException) {
+      talkerLogger.error(error.message, error, stackTrace);
+      throw ServerException(error.message);
+    } else if (error is ServerException) {
+      talkerLogger.error(error.message, error, stackTrace);
+      throw error;
+    } else {
+      talkerLogger.error(contextMessage, error, stackTrace);
+      throw UnknownException('Unknown error occurred: ${error.toString()}');
     }
   }
 }

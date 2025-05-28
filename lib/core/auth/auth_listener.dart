@@ -5,19 +5,19 @@ import 'package:injectable/injectable.dart';
 
 @singleton
 class AuthListener with ChangeNotifier {
-  UserEntity? _currentUser; 
+  UserEntity? _currentUser;
   final AuthService _authService;
 
   AuthListener(this._authService) {
     _authService.authStateStream.listen((user) {
       _currentUser = user;
-      notifyListeners(); 
+      notifyListeners();
     });
   }
 
   UserEntity? get currentUser => _currentUser;
 
-  bool get isAuthorized => _currentUser != null; 
+  bool get isAuthorized => _currentUser != null;
 
   String? get uuid => _currentUser?.uid;
 

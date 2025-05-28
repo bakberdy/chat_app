@@ -1,3 +1,4 @@
+import "package:chat_app/core/auth/auth_service.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get_it/get_it.dart";
@@ -16,7 +17,10 @@ final sl = GetIt.instance;
   preferRelativeImports: true,
   asExtension: true,
 )
-void configureDependencies() => sl.init();
+void configureDependencies() {
+  sl.init();
+  sl<AuthService>().init();
+}
 
 @module
 abstract class AppModule {

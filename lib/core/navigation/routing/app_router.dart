@@ -7,24 +7,25 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 class AppRouter {
   final bool isAuthenticated;
-  final TalkerRouteObserver observer;
+  final Talker talker;
 
   AppRouter({
     required this.isAuthenticated,
-    required this.observer,
+    required this.talker,
   });
 
   GoRouter get router => GoRouter(
-        observers: [observer],
+        observers: [TalkerRouteObserver(talker)],
         navigatorKey: AppRoutes.rootKey,
         initialLocation: AppPaths.chatsAndCalls,
         routes: [
           AppRoutes.authRoutes,
           _bottomNavShellRoute(
             branches: [
-              AppRoutes.usersBranch(observer: observer),
-              AppRoutes.chatsAndCallsBranch(observer: observer),
-              AppRoutes.settingsBranch(observer: observer),
+              AppRoutes.usersBranch(observer: TalkerRouteObserver(talker)),
+              AppRoutes.chatsAndCallsBranch(
+                  observer: TalkerRouteObserver(talker)),
+              AppRoutes.settingsBranch(observer: TalkerRouteObserver(talker)),
             ],
             isAuthenticated: isAuthenticated,
           ),

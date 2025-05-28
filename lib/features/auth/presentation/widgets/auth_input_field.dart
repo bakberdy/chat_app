@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AuthInputField extends StatefulWidget {
-  const AuthInputField({
-    super.key,
-    required this.hintText,
-    this.controller,
-    this.isPassword = false,
-    this.validator,
-    this.enabled= true
-  });
+  const AuthInputField(
+      {super.key,
+      required this.hintText,
+      this.controller,
+      this.isPassword = false,
+      this.validator,
+      this.enabled = true});
 
   final String hintText;
-  final bool enabled ;
+  final bool enabled;
   final TextEditingController? controller;
   final bool isPassword;
   final String? Function(String?)? validator;
@@ -30,6 +29,7 @@ class _AuthInputFieldState extends State<AuthInputField> {
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(width: 1, color: themeData.hintColor));
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: widget.enabled,
       validator: widget.validator,
       obscureText: (obscuredText && widget.isPassword),

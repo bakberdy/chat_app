@@ -49,15 +49,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i207.Talker>(() => appModule.talker);
     gh.singleton<_i331.BlocObserver>(() => appModule.talkerBlocLogger);
     gh.singleton<_i207.TalkerRouteObserver>(() => appModule.routeObserver);
-    gh.singleton<_i542.AuthService>(
-        () => _i542.AuthService(gh<_i454.SupabaseClient>()));
-    gh.singleton<_i900.AuthListener>(
-        () => _i900.AuthListener(gh<_i542.AuthService>()));
     gh.singleton<_i342.AuthRemoteDataSource>(
         () => _i342.AuthSupabaseDataSourceImpl(
               gh<_i454.SupabaseClient>(),
               gh<_i116.GoogleSignIn>(),
+              gh<_i207.Talker>(),
             ));
+    gh.singleton<_i542.AuthService>(() => _i542.AuthService(
+          gh<_i454.SupabaseClient>(),
+          gh<_i207.Talker>(),
+        ));
+    gh.singleton<_i900.AuthListener>(
+        () => _i900.AuthListener(gh<_i542.AuthService>()));
     gh.singleton<_i267.AuthRepository>(
         () => _i920.AuthRepositoryImpl(gh<_i342.AuthRemoteDataSource>()));
     gh.singleton<_i345.SignInWithGoogle>(

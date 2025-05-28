@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
+import 'package:chat_app/core/utils/validators.dart';
 import 'package:chat_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chat_app/features/auth/presentation/widgets/auth_input_field.dart';
 import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
@@ -77,11 +80,21 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final authBloc = context.read<AuthBloc>();
-    return BlocListener<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       bloc: authBloc,
       listener: _authBlocListener,
-      child: Scaffold(
-        appBar: CustomAppBar(pageContext: context),
+      builder: (context, state) => Scaffold(
+        appBar: CustomAppBar(
+          pageContext: context,
+          onBackTap: () {
+            if (state.signUpStatus != SignUpStatus.initial) {
+              authBloc.add(
+                  AuthEvent.changeSignUpStatus(status: SignUpStatus.initial));
+            } else {
+              GoRouter.of(context).pop();
+            }
+          },
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 28),
@@ -107,20 +120,15 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-                Form(
-                  // key: _formKey1,
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    bloc: authBloc,
-                    builder: (context, state) {
-                      ;
-                      if (state.signUpStatus == SignUpStatus.initial) {
-                        return _firstnameLastnameInput();
-                      } else if (state.signUpStatus == SignUpStatus.nameGot) {
-                        return _emailAndPasswordInput();
-                      }
-                      return SizedBox();
-                    },
-                  ),
+                BlocBuilder<AuthBloc, AuthState>(
+                  bloc: authBloc,
+                  builder: (context, state) {
+                    if (state.signUpStatus == SignUpStatus.initial) {
+                      return _firstnameLastnameInput();
+                    } else {
+                      return _emailAndPasswordInput();
+                    }
+                  },
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.22),
                 SizedBox(
@@ -165,13 +173,15 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     return Column(
       children: [
         AuthInputField(
-          // validator: validateName,
+          key: UniqueKey(),
+          validator: validateName,
           controller: _firstNameController,
           hintText: 'Enter firstname',
         ),
         SizedBox(height: 15),
         AuthInputField(
-          // validator: validateName,
+          key: UniqueKey(),
+          validator: validateName,
           controller: _lastNameController,
           hintText: 'Enter lastname',
         ),
@@ -186,21 +196,24 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     return Column(
       children: [
         AuthInputField(
-          // validator: validateEmail,
+          key: UniqueKey(),
+          validator: validateEmail,
           controller: _emailController,
           hintText: 'Enter your email address',
         ),
         SizedBox(height: 15),
         AuthInputField(
-          // validator: validatePassword,
+          key: UniqueKey(),
+          validator: validatePassword,
           controller: _passwordController,
           isPassword: true,
           hintText: 'Enter password',
         ),
         SizedBox(height: 15),
         AuthInputField(
-          // validator: (value) =>
-          //     validateConfirmPassword(value, _passwordController.text),
+          key: UniqueKey(),
+          validator: (value) =>
+              validateConfirmPassword(value, _passwordController.text),
           controller: _confirmPasswordController,
           isPassword: true,
           hintText: 'Confirm password',

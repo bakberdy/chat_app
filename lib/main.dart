@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         final isAuthenticated = authListener.isAuthorized;
         final appRouter = AppRouter(
           isAuthenticated: isAuthenticated,
-          observer: sl<TalkerRouteObserver>(),
+          talker: sl<Talker>(),
         );
         return MaterialApp.router(
           title: 'Talky',
