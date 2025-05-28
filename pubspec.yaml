@@ -51,6 +51,10 @@ dependencies:
   # Testing
   mocktail: ^1.0.4
 
+  # Logging
+  talker_flutter: ^4.8.0
+  talker_bloc_logger: ^4.8.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

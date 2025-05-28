@@ -15,7 +15,7 @@ class SignUpEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthBloc>(
-      create:(_)=> sl<AuthBloc>(),
+      create: (_) => sl<AuthBloc>(),
       child: SignUpEmailContent(),
     );
   }
@@ -34,8 +34,6 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
   final _confirmPasswordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-
-  // final _formKey1 = GlobalKey<FormState>();
 
   void _register(context, {required AuthState state, required AuthBloc bloc}) {
     final email = _emailController.text.trim();
@@ -117,8 +115,7 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                       ;
                       if (state.signUpStatus == SignUpStatus.initial) {
                         return _firstnameLastnameInput();
-                      } else if (state.signUpStatus ==
-                          SignUpStatus.nameGot) {
+                      } else if (state.signUpStatus == SignUpStatus.nameGot) {
                         return _emailAndPasswordInput();
                       }
                       return SizedBox();
@@ -134,10 +131,9 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                             isLoading:
                                 state.signUpStatus == SignUpStatus.loading,
                             titleColor: Colors.white,
-                            title:
-                                (state.signUpStatus == SignUpStatus.initial)
-                                    ? "Next"
-                                    : 'Sign up',
+                            title: (state.signUpStatus == SignUpStatus.initial)
+                                ? "Next"
+                                : 'Sign up',
                             onPressed: () => _register(context,
                                 bloc: authBloc, state: state),
                             backgroundColor: themeData.primaryColor);

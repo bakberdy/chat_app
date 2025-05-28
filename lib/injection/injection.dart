@@ -1,14 +1,18 @@
+import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:get_it/get_it.dart";
 import "package:google_sign_in/google_sign_in.dart";
 import "package:injectable/injectable.dart";
 import "package:supabase_flutter/supabase_flutter.dart";
+import "package:talker_bloc_logger/talker_bloc_logger_observer.dart";
+import "package:talker_flutter/talker_flutter.dart";
 
 import 'injection.config.dart';
 
 final sl = GetIt.instance;
 
 @InjectableInit(
-  initializerName: 'init',  
+  initializerName: 'init',
   preferRelativeImports: true,
   asExtension: true,
 )
@@ -21,4 +25,13 @@ abstract class AppModule {
 
   @singleton
   GoogleSignIn get googleSignIn => GoogleSignIn()..signInSilently();
+
+  @singleton
+  Talker get talker => TalkerFlutter.init();
+
+  @singleton
+  BlocObserver get talkerBlocLogger => TalkerBlocObserver(talker: talker);
+
+  @singleton
+  TalkerRouteObserver get routeObserver => TalkerRouteObserver(talker);
 }
