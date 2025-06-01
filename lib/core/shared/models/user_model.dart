@@ -1,4 +1,4 @@
-import 'package:chat_app/core/shared/entities/user_entity.dart';
+import 'package:chat_app/core/shared/entities/entities.dart';
 
 class UserModel extends UserEntity {
   const UserModel(

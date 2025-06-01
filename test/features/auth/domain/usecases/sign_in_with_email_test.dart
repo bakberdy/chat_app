@@ -1,8 +1,5 @@
 import 'package:chat_app/core/error/failure.dart';
-import 'package:chat_app/core/usecase/usecase.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_in_with_email_entity.dart';
 import 'package:chat_app/features/auth/domain/repository/auth_repository.dart';
-import 'package:chat_app/features/auth/domain/usecases/sign_in_with_apple.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_in_with_email.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,15 +20,18 @@ void main() {
   test('should call the [AuthRepository.signInWithEmail] and returns a message',
       () async {
     // Arrange
-    when(() => repository.signInWithEmail(email: any(named: 'email'), password: any(named: 'password')))
+    when(() => repository.signInWithEmail(
+            email: any(named: 'email'), password: any(named: 'password')))
         .thenAnswer((_) async => const Right(null)); // Use async
 
     // Act
-    final result = await usecase(SignInParams(email: tEmail, password: tPassword));
+    final result =
+        await usecase(SignInParams(email: tEmail, password: tPassword));
 
     // Assert
     expect(result, const Right<Failure, void>(null)); // Specify Failure type
-    verify(() => repository.signInWithEmail(email: tEmail, password: tPassword)).called(1);
+    verify(() => repository.signInWithEmail(email: tEmail, password: tPassword))
+        .called(1);
     verifyNoMoreInteractions(repository);
   });
 }

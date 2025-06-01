@@ -1,8 +1,9 @@
-import 'package:chat_app/core/error/exception.dart';
-import 'package:chat_app/core/error/failure.dart';
-import 'package:chat_app/core/utils/typedef.dart';
+//app dependencies
+import 'package:chat_app/core/core.dart';
 import 'package:chat_app/features/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:chat_app/features/auth/domain/repository/auth_repository.dart';
+
+//external dependencies
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
@@ -36,10 +37,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultVoid signInWithEmail({required String email, required String password}) async {
+  ResultVoid signInWithEmail(
+      {required String email, required String password}) async {
     try {
-      await authRemoteDataSource
-          .signInWithEmail(email: email, password: password);
+      await authRemoteDataSource.signInWithEmail(
+          email: email, password: password);
       return Right(null);
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));
@@ -56,16 +58,22 @@ class AuthRepositoryImpl implements AuthRepository {
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));
     } catch (e) {
-      print(e.toString());
       return Left(UnknownFailure(e.toString()));
     }
   }
 
   @override
-  ResultVoid signUpWithEmail({required String email, required String password, required String firstName, required String lastName}) async {
+  ResultVoid signUpWithEmail(
+      {required String email,
+      required String password,
+      required String firstName,
+      required String lastName}) async {
     try {
-      await authRemoteDataSource
-          .signUpWithEmail(email: email, password: password, firstName: firstName, lastName: lastName);
+      await authRemoteDataSource.signUpWithEmail(
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName);
       return Right(null);
     } on AppException catch (e) {
       return Left(Failure.fromAppException(e));

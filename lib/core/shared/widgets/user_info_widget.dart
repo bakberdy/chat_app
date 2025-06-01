@@ -1,4 +1,4 @@
-import 'package:chat_app/core/shared/entities/user_entity.dart';
+import 'package:chat_app/core/shared/entities/entities.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';

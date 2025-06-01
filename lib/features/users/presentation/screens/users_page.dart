@@ -1,13 +1,11 @@
-import 'package:chat_app/core/bloc/state_status.dart';
-import 'package:chat_app/core/navigation/routing/app_paths.dart';
-import 'package:chat_app/core/shared/widgets/cupertino_segmented_menu.dart';
 import 'package:chat_app/features/users/presentation/blocs/users_bloc/users_bloc.dart';
 import 'package:chat_app/features/users/presentation/widgets/users_list.dart';
-import 'package:chat_app/core/shared/widgets/scrollable_page_with_app_bar.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/core.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -124,22 +122,22 @@ class _UsersPageContentState extends State<UsersPageContent>
                               UsersList(
                                 users: friends,
                                 onTap: (String uuid) {
-                                  context.push('${AppPaths.users}${AppPaths.profile}/$uuid');
+                                  context.push(
+                                      '${AppPaths.users}${AppPaths.profile}/$uuid');
                                 },
                                 onRefresh: () async {
-                                  print('refreshed friends');
                                   context
                                       .read<UsersBloc>()
                                       .add(LoadFriendsRequested());
                                 },
-                                isLoading: state.friendsStatus == StateStatus.loading,
+                                isLoading:
+                                    state.friendsStatus == StateStatus.loading,
                               ),
                               UsersList(
                                 users: allUsers,
                                 onTap: (String uuid) {},
                                 onAddToFriend: (String uuid) {},
                                 onRefresh: () async {
-                                  print('refreshed all users');
                                   context
                                       .read<UsersBloc>()
                                       .add(LoadAllUsersRequested());

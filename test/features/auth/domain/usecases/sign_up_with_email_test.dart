@@ -1,5 +1,4 @@
-import 'package:chat_app/core/error/failure.dart';
-import 'package:chat_app/features/auth/domain/enitities/sign_up_with_email_entity.dart';
+import 'package:chat_app/core/core.dart';
 import 'package:chat_app/features/auth/domain/repository/auth_repository.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_up_with_email.dart';
 import 'package:dartz/dartz.dart';

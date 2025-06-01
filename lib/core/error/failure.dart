@@ -1,4 +1,4 @@
-import 'package:chat_app/core/error/exception.dart';
+import 'exception.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
@@ -15,8 +15,8 @@ abstract class Failure extends Equatable {
       return ServerFailure(e.message);
     } else if (e is TimeoutException) {
       return TimeoutFailure(e.message);
-    // } else if (e is AuthException) {
-    //   return AuthFailure(e.message);
+      // } else if (e is AuthException) {
+      //   return AuthFailure(e.message);
     } else {
       return UnknownFailure(e.message);
     }

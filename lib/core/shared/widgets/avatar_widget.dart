@@ -1,4 +1,4 @@
-import 'package:chat_app/core/shared/entities/user_entity.dart';
+import 'package:chat_app/core/shared/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -112,7 +112,7 @@ class AvatarWidget extends StatelessWidget {
       child: Text(
         initials,
         style: TextStyle(
-          fontSize: size-5,
+          fontSize: size - 5,
           fontWeight: FontWeight.w600,
           color: Colors.black54,
         ),
@@ -121,18 +121,20 @@ class AvatarWidget extends StatelessWidget {
   }
 
   String _extractInitials() {
-    final first = (user.firstName??'A').isNotEmpty ? (user.firstName??'A')[0] : '';
-    final last = (user.lastName??'A').isNotEmpty ? (user.lastName??'A')[0] : '';
+    final first =
+        (user.firstName ?? 'A').isNotEmpty ? (user.firstName ?? 'A')[0] : '';
+    final last =
+        (user.lastName ?? 'A').isNotEmpty ? (user.lastName ?? 'A')[0] : '';
     return (first + last).toUpperCase();
   }
 
   Widget _buildOnlineIndicator() {
     return Positioned(
       right: -2,
-      bottom:-2,
+      bottom: -2,
       child: Container(
-        width: size*0.6,
-        height: size*0.6,
+        width: size * 0.6,
+        height: size * 0.6,
         decoration: BoxDecoration(
           color: Colors.green,
           shape: BoxShape.circle,

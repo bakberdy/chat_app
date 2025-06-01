@@ -1,3 +1,5 @@
+part of 'routing.dart';
+
 class AppPaths {
   //auth paths
   static const String auth = '/auth';

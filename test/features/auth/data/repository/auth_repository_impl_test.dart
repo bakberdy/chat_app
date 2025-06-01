@@ -1,8 +1,6 @@
 import 'package:chat_app/core/error/exception.dart';
 import 'package:chat_app/core/error/failure.dart';
 import 'package:chat_app/features/auth/data/datasource/auth_remote_data_source.dart';
-import 'package:chat_app/features/auth/data/models/sign_in_with_email_model.dart';
-import 'package:chat_app/features/auth/data/models/sign_up_with_email_model.dart';
 import 'package:chat_app/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';

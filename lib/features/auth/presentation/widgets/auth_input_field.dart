@@ -7,13 +7,15 @@ class AuthInputField extends StatefulWidget {
       this.controller,
       this.isPassword = false,
       this.validator,
-      this.enabled = true});
+      this.enabled = true,
+      this.keyBoardType});
 
   final String hintText;
   final bool enabled;
   final TextEditingController? controller;
   final bool isPassword;
   final String? Function(String?)? validator;
+  final TextInputType? keyBoardType;
 
   @override
   State<AuthInputField> createState() => _AuthInputFieldState();
@@ -29,6 +31,7 @@ class _AuthInputFieldState extends State<AuthInputField> {
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(width: 1, color: themeData.hintColor));
     return TextFormField(
+      keyboardType: widget.keyBoardType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       enabled: widget.enabled,
       validator: widget.validator,

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AppLogoType extends StatelessWidget {
   const AppLogoType({
-    super.key, this.fontSize = 40,
+    super.key,
+    this.fontSize = 40,
   });
   final double fontSize;
-
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +16,7 @@ class AppLogoType extends StatelessWidget {
                 ?.copyWith(fontSize: fontSize, fontWeight: FontWeight.w700),
             children: [
           TextSpan(text: 'Talky'),
-          TextSpan(
-              text: '.',
-              style: TextStyle(color: themeData.primaryColor))
+          TextSpan(text: '.', style: TextStyle(color: themeData.primaryColor))
         ]));
   }
 }

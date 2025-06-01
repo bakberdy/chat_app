@@ -11,18 +11,30 @@ class InfoWidget extends StatelessWidget {
     final themeData = Theme.of(context);
     return Column(
       children: [
-        imagePath!=null? Image.asset(imagePath!, height: 200, width: 200,):SizedBox(),
-        title!=null? Text(
-              title!,
-              style: themeData.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-            ):SizedBox(),
-            SizedBox(height: 5,),
-        subtitle!=null? Text(
-              subtitle!,
-              style: themeData.textTheme.bodyMedium
-                  ?.copyWith(color: themeData.canvasColor),
-            ):SizedBox(),
-
+        imagePath != null
+            ? Image.asset(
+                imagePath!,
+                height: 200,
+                width: 200,
+              )
+            : SizedBox(),
+        title != null
+            ? Text(
+                title!,
+                style: themeData.textTheme.bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w600),
+              )
+            : SizedBox(),
+        SizedBox(
+          height: 5,
+        ),
+        subtitle != null
+            ? Text(
+                subtitle!,
+                style: themeData.textTheme.bodyMedium
+                    ?.copyWith(color: themeData.canvasColor),
+              )
+            : SizedBox(),
       ],
     );
   }

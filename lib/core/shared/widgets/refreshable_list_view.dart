@@ -1,4 +1,3 @@
-
 import 'package:chat_app/core/shared/widgets/info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -47,6 +46,7 @@ class _RefreshableListViewState extends State<RefreshableListView> {
       });
     }
   }
+
   @override
   void dispose() {
     _refreshController.dispose();
@@ -84,7 +84,7 @@ class _RefreshableListViewState extends State<RefreshableListView> {
         completeIcon: Icon(Icons.check, weight: 2, color: Colors.green),
         failedIcon: Icon(Icons.error, color: Colors.red),
       ),
-      child: widget.itemCount==0
+      child: widget.itemCount == 0
           ? ListView(children: [
               const SizedBox(height: 100),
               widget.isLoading

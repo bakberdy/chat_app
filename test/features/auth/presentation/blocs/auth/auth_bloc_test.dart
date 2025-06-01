@@ -7,7 +7,7 @@ import 'package:chat_app/features/auth/domain/usecases/sign_in_with_apple.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_in_with_email.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_in_with_google.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_up_with_email.dart';
-import 'package:chat_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chat_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -119,6 +119,8 @@ void main() {
                 AuthState(signUpStatus: SignUpStatus.loading),
                 AuthState(
                     signUpStatus: SignUpStatus.error, errorMessage: 'error'),
+                AuthState(
+                    signUpStatus: SignUpStatus.nameGot, errorMessage: 'error'),
               ]);
     });
 
@@ -190,8 +192,12 @@ void main() {
               bloc.add(AuthEvent.sendResetMessageToEmail(email: 'email')),
           expect: () => [
                 AuthState(resetPassword: ResetPasswordStatus.loading),
-                AuthState(resetPassword: ResetPasswordStatus.waitingTimer,),
-                AuthState(resetPassword: ResetPasswordStatus.waitingTimer, timerDuration: 60),
+                AuthState(
+                  resetPassword: ResetPasswordStatus.waitingTimer,
+                ),
+                AuthState(
+                    resetPassword: ResetPasswordStatus.waitingTimer,
+                    timerDuration: 60),
               ]);
 
       blocTest(

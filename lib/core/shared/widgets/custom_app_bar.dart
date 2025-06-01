@@ -1,8 +1,6 @@
-import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -51,7 +49,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
               padding: const EdgeInsets.all(10),
               child: InkWell(
                   onHighlightChanged: (flag) {
-                    sl<Talker>().info(flag);
                     setState(() {
                       isButtonTapped = flag;
                     });

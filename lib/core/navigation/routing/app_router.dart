@@ -1,10 +1,4 @@
-import 'package:chat_app/core/navigation/page/bottom_navigation_bar_page.dart';
-import 'package:chat_app/core/shared/pages/page_not_found.dart';
-import 'package:chat_app/core/navigation/routing/app_paths.dart';
-import 'package:chat_app/core/navigation/routing/app_routes.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+part of 'routing.dart';
 
 class AppRouter {
   final _rootKey = GlobalKey<NavigatorState>();

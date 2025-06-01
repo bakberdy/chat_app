@@ -15,10 +15,10 @@ void showErrorToast(String message, context) {
     borderSide: BorderSide(width: 1, color: Colors.red),
     autoCloseDuration: const Duration(seconds: 2),
     animationBuilder: (context, animation, alignment, child) {
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
-  },
+      return FadeTransition(
+        opacity: animation,
+        child: child,
+      );
+    },
   );
 }

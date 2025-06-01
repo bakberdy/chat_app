@@ -1,17 +1,4 @@
-import 'package:chat_app/core/navigation/page/bottom_navigation_bar_page.dart';
-import 'package:chat_app/core/navigation/routing/app_paths.dart';
-import 'package:chat_app/features/auth/presentation/screens/reset_password_page.dart';
-import 'package:chat_app/features/auth/presentation/screens/sign_in_email_page.dart';
-import 'package:chat_app/features/auth/presentation/screens/sign_in_social_page.dart';
-import 'package:chat_app/features/auth/presentation/screens/sign_up_email_page.dart';
-import 'package:chat_app/features/chats_and_calls/presentation/screens/chats_and_calls_page.dart';
-import 'package:chat_app/features/settings/presentation/screens/settings_page.dart';
-import 'package:chat_app/features/settings/profile/presentation/screens/profile_page.dart';
-import 'package:chat_app/features/users/presentation/screens/users_page.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+part of 'routing.dart';
 
 class AppRoutes {
   ///auth routes
@@ -26,7 +13,7 @@ class AppRoutes {
                 routes: [
                   GoRoute(
                       path: AppPaths.resetPassword,
-                      builder: (context, state) => ResetPassword(
+                      builder: (context, state) => ResetPasswordPage(
                           email: state.uri.queryParameters['email']))
                 ]),
             GoRoute(

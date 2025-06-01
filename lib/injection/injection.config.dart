@@ -26,7 +26,8 @@ import '../features/auth/domain/usecases/sign_in_with_apple.dart' as _i538;
 import '../features/auth/domain/usecases/sign_in_with_email.dart' as _i33;
 import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i345;
 import '../features/auth/domain/usecases/sign_up_with_email.dart' as _i588;
-import '../features/auth/presentation/bloc/auth_bloc.dart' as _i59;
+import '../features/auth/domain/usecases/usecases.dart' as _i11;
+import '../features/auth/presentation/auth_bloc/auth_bloc.dart' as _i186;
 import '../features/users/presentation/blocs/users_bloc/users_bloc.dart'
     as _i900;
 import 'injection.dart' as _i464;
@@ -63,22 +64,22 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i900.AuthListener(gh<_i542.AuthService>()));
     gh.singleton<_i267.AuthRepository>(
         () => _i920.AuthRepositoryImpl(gh<_i342.AuthRemoteDataSource>()));
-    gh.singleton<_i345.SignInWithGoogle>(
+    gh.lazySingleton<_i345.SignInWithGoogle>(
         () => _i345.SignInWithGoogle(gh<_i267.AuthRepository>()));
-    gh.singleton<_i538.SignInWithAppleUseCase>(
+    gh.lazySingleton<_i538.SignInWithAppleUseCase>(
         () => _i538.SignInWithAppleUseCase(gh<_i267.AuthRepository>()));
-    gh.singleton<_i73.ResetPassword>(
+    gh.lazySingleton<_i73.ResetPassword>(
         () => _i73.ResetPassword(gh<_i267.AuthRepository>()));
-    gh.singleton<_i33.SignInWithEmail>(
+    gh.lazySingleton<_i33.SignInWithEmail>(
         () => _i33.SignInWithEmail(gh<_i267.AuthRepository>()));
-    gh.singleton<_i588.SignUpWithEmail>(
+    gh.lazySingleton<_i588.SignUpWithEmail>(
         () => _i588.SignUpWithEmail(gh<_i267.AuthRepository>()));
-    gh.factory<_i59.AuthBloc>(() => _i59.AuthBloc(
-          gh<_i73.ResetPassword>(),
-          gh<_i33.SignInWithEmail>(),
-          gh<_i588.SignUpWithEmail>(),
-          gh<_i538.SignInWithAppleUseCase>(),
-          gh<_i345.SignInWithGoogle>(),
+    gh.factory<_i186.AuthBloc>(() => _i186.AuthBloc(
+          gh<_i11.ResetPassword>(),
+          gh<_i11.SignInWithEmail>(),
+          gh<_i11.SignUpWithEmail>(),
+          gh<_i11.SignInWithAppleUseCase>(),
+          gh<_i11.SignInWithGoogle>(),
         ));
     return this;
   }

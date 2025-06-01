@@ -1,34 +1,34 @@
 import 'dart:async';
 
-import 'package:chat_app/core/bloc/state_status.dart';
+//app dependencies
+import 'package:chat_app/core/bloc/bloc.dart';
 import 'package:chat_app/core/usecase/usecase.dart';
-import 'package:chat_app/features/auth/domain/usecases/reset_password.dart';
-import 'package:chat_app/features/auth/domain/usecases/sign_in_with_apple.dart';
-import 'package:chat_app/features/auth/domain/usecases/sign_in_with_email.dart';
-import 'package:chat_app/features/auth/domain/usecases/sign_in_with_google.dart';
-import 'package:chat_app/features/auth/domain/usecases/sign_up_with_email.dart';
+import 'package:chat_app/features/auth/domain/usecases/usecases.dart';
+
+//external dependencies
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
+//bloc parts
 part 'auth_event.dart';
 part 'auth_state.dart';
 part 'auth_bloc.freezed.dart';
 
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final ResetPassword resetPassword;
-  final SignInWithEmail signInWithEmail;
-  final SignUpWithEmail signUpWithEmail;
-  final SignInWithAppleUseCase signInWithApple;
-  final SignInWithGoogle signInWithGoogle;
+  final ResetPassword _resetPassword;
+  final SignInWithEmail _signInWithEmail;
+  final SignUpWithEmail _signUpWithEmail;
+  final SignInWithAppleUseCase _signInWithApple;
+  final SignInWithGoogle _signInWithGoogle;
 
   AuthBloc(
-    this.resetPassword,
-    this.signInWithEmail,
-    this.signUpWithEmail,
-    this.signInWithApple,
-    this.signInWithGoogle,
+    this._resetPassword,
+    this._signInWithEmail,
+    this._signUpWithEmail,
+    this._signInWithApple,
+    this._signInWithGoogle,
   ) : super(AuthState()) {
     on<AuthEvent>(_handleEvent);
   }
@@ -46,7 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(signInStatus: StateStatus.loading));
 
     final failureOrSuccess =
-        await signInWithEmail(SignInParams(email: email, password: password));
+        await _signInWithEmail(SignInParams(email: email, password: password));
 
     failureOrSuccess.fold(
       (failure) => emit(state.copyWith(
@@ -71,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }) async {
     emit(state.copyWith(signUpStatus: SignUpStatus.loading));
 
-    final failureOrSuccess = await signUpWithEmail(SignUpParams(
+    final failureOrSuccess = await _signUpWithEmail(SignUpParams(
         email: email,
         password: password,
         firstName: firstName,
@@ -91,7 +91,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       {required String email}) async {
     emit(state.copyWith(resetPassword: ResetPasswordStatus.loading));
 
-    final failureOrSuccess = await resetPassword(email);
+    final failureOrSuccess = await _resetPassword(email);
 
     failureOrSuccess.fold(
       (failure) => emit(state.copyWith(
@@ -107,7 +107,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onAppleSignIn(Emitter<AuthState> emit) async {
     emit(state.copyWith(signInStatus: StateStatus.loading));
 
-    final failureOrSuccess = await signInWithApple(NoParams());
+    final failureOrSuccess = await _signInWithApple(NoParams());
 
     failureOrSuccess.fold(
       (failure) => emit(state.copyWith(
@@ -121,7 +121,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onGoogleSignIn(Emitter<AuthState> emit) async {
     emit(state.copyWith(signInStatus: StateStatus.loading));
 
-    final failureOrSuccess = await signInWithGoogle(NoParams());
+    final failureOrSuccess = await _signInWithGoogle(NoParams());
 
     failureOrSuccess.fold(
       (failure) => emit(state.copyWith(

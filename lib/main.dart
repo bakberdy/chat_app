@@ -1,7 +1,4 @@
-import 'package:chat_app/core/auth/auth_listener.dart';
-import 'package:chat_app/core/navigation/routing/app_router.dart';
-import 'package:chat_app/core/theme/app_theme.dart';
-import 'package:chat_app/core/utils/error_toast.dart';
+import 'package:chat_app/core/core.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

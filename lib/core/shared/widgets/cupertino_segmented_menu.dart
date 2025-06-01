@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 
 class CupertinoSegmentedMenu<T extends Object> extends StatelessWidget {
@@ -26,4 +25,3 @@ class CupertinoSegmentedMenu<T extends Object> extends StatelessWidget {
     );
   }
 }
-

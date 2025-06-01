@@ -1,13 +1,10 @@
-import 'package:chat_app/core/auth/auth_listener.dart';
-import 'package:chat_app/core/navigation/routing/app_paths.dart';
-import 'package:chat_app/core/shared/entities/user_entity.dart';
-import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
-import 'package:chat_app/core/shared/widgets/user_info_widget.dart';
 import 'package:chat_app/features/settings/presentation/widgets/buttons_list.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../../../core/core.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -24,7 +21,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    print('builded page');
     return Scaffold(
         appBar: CustomAppBar(
           title: 'Settings',
@@ -68,7 +64,6 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 SizedBox(height: 15),
                 Consumer<AuthListener>(builder: (context, authlistener, _) {
-                  print('builded consiumer');
                   final user = authlistener.currentUser;
                   if (user == null) return Text('User not authorized');
                   return UserInfoWidget(

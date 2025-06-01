@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class MockSupabaseClient extends Mock implements SupabaseClient {
   final MockGoTrueClient _auth;
@@ -38,6 +39,8 @@ class MockGoogleSignInAuth extends Mock implements GoogleSignInAuthentication {
   String? get idToken => 'id_token';
 }
 
+class MockTalker extends Mock implements Talker {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -46,6 +49,7 @@ void main() {
   late final AuthSupabaseDataSourceImpl dataSourceImpl;
   late final GoogleSignIn googleSignIn;
   late MockSignInWithApple mockSignInWithApple;
+  late MockTalker mockTalker;
 
   //test data
   final String tEmail = 'test@email.com';
@@ -65,9 +69,11 @@ void main() {
     client = MockSupabaseClient(mockAuth);
     googleSignIn = MockGoogleSignIn();
     mockSignInWithApple = MockSignInWithApple();
+    mockTalker = MockTalker();
     // Mock the 'auth' property of SupabaseClient to return mockAuth
 
-    dataSourceImpl = AuthSupabaseDataSourceImpl(client, googleSignIn);
+    dataSourceImpl =
+        AuthSupabaseDataSourceImpl(client, googleSignIn, mockTalker);
   });
 
   setUp(() {
@@ -217,7 +223,7 @@ void main() {
             idToken: any(named: 'idToken'),
             accessToken: any(named: 'accessToken'),
           )).called(1);
-     verifyNoMoreInteractions(client);
+      verifyNoMoreInteractions(client);
     });
 
     test(
