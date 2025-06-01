@@ -1,6 +1,7 @@
 import 'package:chat_app/core/auth/auth_listener.dart';
 import 'package:chat_app/core/navigation/routing/app_paths.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
+import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
 import 'package:chat_app/core/shared/widgets/user_info_widget.dart';
 import 'package:chat_app/features/settings/presentation/widgets/buttons_list.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,10 @@ class _SettingsPageState extends State<SettingsPage> {
     final themeData = Theme.of(context);
     print('builded page');
     return Scaffold(
-        appBar: AppBar(
-          shadowColor: Colors.white,
+        appBar: CustomAppBar(
+          title: 'Settings',
+          height: 50,
+          pageContext: context,
           actions: [
             TextButton(
               onPressed: () {
@@ -43,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
           child: SmartRefresher(
             onRefresh: () async {
               await Future.delayed(Duration(seconds: 3));
@@ -64,17 +67,15 @@ class _SettingsPageState extends State<SettingsPage> {
             child: ListView(
               children: [
                 SizedBox(height: 15),
-                Consumer<AuthListener>(
-                  builder: (context, authlistener, _) {
-                    print('builded consiumer');
-                    final user = authlistener.currentUser;
-                    if(user == null) return Text('User not authorized');
-                    return UserInfoWidget(
-                      user: user,
-                      isLoading: !authlistener.isAuthorized,
-                    );
-                  }
-                ),
+                Consumer<AuthListener>(builder: (context, authlistener, _) {
+                  print('builded consiumer');
+                  final user = authlistener.currentUser;
+                  if (user == null) return Text('User not authorized');
+                  return UserInfoWidget(
+                    user: user,
+                    isLoading: !authlistener.isAuthorized,
+                  );
+                }),
                 SizedBox(height: 25),
                 ButtonsList(
                   children: [

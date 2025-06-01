@@ -1,7 +1,9 @@
 import 'package:chat_app/core/auth/auth_listener.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/pages/page_not_authorized.dart';
+import 'package:chat_app/core/shared/widgets/animated_button.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
+import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
 import 'package:chat_app/core/utils/error_toast.dart';
 import 'package:chat_app/core/utils/show_bottom_sheet_with_buttons.dart';
 import 'package:chat_app/core/utils/validators.dart';
@@ -73,20 +75,24 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: true,
-          shadowColor: Colors.white,
+        appBar: CustomAppBar(
+          height: 50,
           actions: [
-            TextButton(
-                style: ButtonStyle(
-                    textStyle: WidgetStatePropertyAll(
-                        TextStyle(color: themeData.primaryColor))),
-                onPressed: _onSubmit,
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: AnimatedButton(
+                onTap: _onSubmit,
                 child: Text(
                   'Done',
-                  style: TextStyle(color: themeData.primaryColor),
-                ))
+                  style: TextStyle(
+                      color: themeData.primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            )
           ],
+          pageContext: context,
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),

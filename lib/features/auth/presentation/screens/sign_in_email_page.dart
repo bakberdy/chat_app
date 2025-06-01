@@ -98,7 +98,6 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
                         ?.copyWith(fontWeight: FontWeight.w600)),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                 Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   key: _formKey,
                   child: Column(
                     children: [

@@ -37,6 +37,8 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
   final _confirmPasswordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _firstFormKey = GlobalKey<FormState>();
+  final _secondFormKey = GlobalKey<FormState>();
 
   void _register(context, {required AuthState state, required AuthBloc bloc}) {
     final email = _emailController.text.trim();
@@ -45,13 +47,17 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     final password = _passwordController.text.trim();
 
     if (state.signUpStatus == SignUpStatus.initial) {
-      bloc.add(AuthEvent.changeSignUpStatus(status: SignUpStatus.nameGot));
+      if (_firstFormKey.currentState?.validate() ?? false) {
+        bloc.add(AuthEvent.changeSignUpStatus(status: SignUpStatus.nameGot));
+      }
     } else if (state.signUpStatus == SignUpStatus.nameGot) {
-      bloc.add(AuthEvent.signUp(
-          email: email,
-          password: password,
-          firstName: firstName,
-          lastName: lastName));
+      if (_secondFormKey.currentState?.validate() ?? false) {
+        bloc.add(AuthEvent.signUp(
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName));
+      }
     }
   }
 
@@ -124,9 +130,15 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                   bloc: authBloc,
                   builder: (context, state) {
                     if (state.signUpStatus == SignUpStatus.initial) {
-                      return _firstnameLastnameInput();
+                      return Form(
+                        child: _firstnameLastnameInput(),
+                        key: _firstFormKey,
+                      );
                     } else {
-                      return _emailAndPasswordInput();
+                      return Form(
+                        child: _emailAndPasswordInput(),
+                        key: _secondFormKey,
+                      );
                     }
                   },
                 ),
@@ -173,14 +185,14 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     return Column(
       children: [
         AuthInputField(
-          key: UniqueKey(),
+          key: ValueKey('firstname'),
           validator: validateName,
           controller: _firstNameController,
           hintText: 'Enter firstname',
         ),
         SizedBox(height: 15),
         AuthInputField(
-          key: UniqueKey(),
+          key: ValueKey('lastname'),
           validator: validateName,
           controller: _lastNameController,
           hintText: 'Enter lastname',
@@ -196,14 +208,14 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     return Column(
       children: [
         AuthInputField(
-          key: UniqueKey(),
+          key: ValueKey('email'),
           validator: validateEmail,
           controller: _emailController,
           hintText: 'Enter your email address',
         ),
         SizedBox(height: 15),
         AuthInputField(
-          key: UniqueKey(),
+          key: ValueKey('password'),
           validator: validatePassword,
           controller: _passwordController,
           isPassword: true,
@@ -211,7 +223,7 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
         ),
         SizedBox(height: 15),
         AuthInputField(
-          key: UniqueKey(),
+          key: ValueKey('confirmPassword'),
           validator: (value) =>
               validateConfirmPassword(value, _passwordController.text),
           controller: _confirmPasswordController,
