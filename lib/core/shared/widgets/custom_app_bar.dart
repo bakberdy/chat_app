@@ -31,7 +31,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AppBar(
-      shadowColor: theme.hintColor.withAlpha(30),
+      shadowColor: theme.hintColor.withAlpha(10),
       actions: widget.actions,
       title: widget.title != null
           ? Text(
@@ -43,7 +43,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       scrolledUnderElevation: 10,
       backgroundColor: Colors.white,
       leadingWidth: 85,
-      elevation: 10,
+      elevation: 0,
       leading: context.canPop()
           ? Padding(
               padding: const EdgeInsets.all(10),
