@@ -28,6 +28,22 @@ import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i345;
 import '../features/auth/domain/usecases/sign_up_with_email.dart' as _i588;
 import '../features/auth/domain/usecases/usecases.dart' as _i11;
 import '../features/auth/presentation/auth_bloc/auth_bloc.dart' as _i186;
+import '../features/settings/profile/data/data_source/profile_remote_data_source.dart'
+    as _i1001;
+import '../features/settings/profile/data/data_source/profile_supabase_data_source.dart'
+    as _i815;
+import '../features/settings/profile/data/repository/profile_repository_impl.dart'
+    as _i793;
+import '../features/settings/profile/domain/repository/profile_repository.dart'
+    as _i988;
+import '../features/settings/profile/domain/usecases/get_user_profile.dart'
+    as _i454;
+import '../features/settings/profile/domain/usecases/update_profile_data.dart'
+    as _i941;
+import '../features/settings/profile/domain/usecases/update_profile_picture.dart'
+    as _i358;
+import '../features/settings/profile/presentation/bloc/profile/profile_bloc.dart'
+    as _i717;
 import '../features/users/presentation/blocs/users_bloc/users_bloc.dart'
     as _i900;
 import 'injection.dart' as _i464;
@@ -50,6 +66,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i207.Talker>(() => appModule.talker);
     gh.singleton<_i331.BlocObserver>(() => appModule.talkerBlocLogger);
     gh.singleton<_i207.TalkerRouteObserver>(() => appModule.routeObserver);
+    gh.singleton<_i1001.ProfileRemoteDataSource>(
+        () => _i815.ProfileSupabaseDataSource(
+              gh<_i454.SupabaseClient>(),
+              gh<_i207.Talker>(),
+            ));
     gh.singleton<_i342.AuthRemoteDataSource>(
         () => _i342.AuthSupabaseDataSourceImpl(
               gh<_i454.SupabaseClient>(),
@@ -62,6 +83,14 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i900.AuthListener>(
         () => _i900.AuthListener(gh<_i542.AuthService>()));
+    gh.lazySingleton<_i988.ProfileRepository>(() =>
+        _i793.ProfileRepositoryImpl(gh<_i1001.ProfileRemoteDataSource>()));
+    gh.lazySingleton<_i941.UpdateProfileData>(
+        () => _i941.UpdateProfileData(gh<_i988.ProfileRepository>()));
+    gh.lazySingleton<_i358.UpdateProfilePicture>(
+        () => _i358.UpdateProfilePicture(gh<_i988.ProfileRepository>()));
+    gh.lazySingleton<_i454.GetUserProfile>(
+        () => _i454.GetUserProfile(gh<_i988.ProfileRepository>()));
     gh.singleton<_i267.AuthRepository>(
         () => _i920.AuthRepositoryImpl(gh<_i342.AuthRemoteDataSource>()));
     gh.lazySingleton<_i345.SignInWithGoogle>(
@@ -74,6 +103,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i33.SignInWithEmail(gh<_i267.AuthRepository>()));
     gh.lazySingleton<_i588.SignUpWithEmail>(
         () => _i588.SignUpWithEmail(gh<_i267.AuthRepository>()));
+    gh.factory<_i717.ProfileBloc>(() => _i717.ProfileBloc(
+          gh<_i941.UpdateProfileData>(),
+          gh<_i358.UpdateProfilePicture>(),
+          gh<_i454.GetUserProfile>(),
+        ));
     gh.factory<_i186.AuthBloc>(() => _i186.AuthBloc(
           gh<_i11.ResetPassword>(),
           gh<_i11.SignInWithEmail>(),

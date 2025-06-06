@@ -20,13 +20,18 @@ class AppTheme {
           displayColor: Color(0xff243443),
         )
         .copyWith(
+          bodySmall: TextStyle(
+              fontSize: 14,
+              color: Color(0xff243443),
+              overflow: TextOverflow.ellipsis),
           bodyMedium: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Color(0xff243443),
-          ),
-          bodySmall: TextStyle(fontSize: 14, color: Color(0xff243443)),
-          bodyLarge: TextStyle(fontSize: 18, color: Color(0xff243443)),
+              fontSize: 16,
+              color: Color(0xff243443),
+              overflow: TextOverflow.ellipsis),
+          bodyLarge: TextStyle(
+              fontSize: 18,
+              color: Color(0xff243443),
+              overflow: TextOverflow.ellipsis),
         ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(

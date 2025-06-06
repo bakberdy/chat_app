@@ -1,13 +1,8 @@
-import 'package:chat_app/core/auth/auth_listener.dart';
-import 'package:chat_app/core/shared/entities/user_entity.dart';
-import 'package:chat_app/core/shared/pages/page_not_authorized.dart';
-import 'package:chat_app/core/shared/widgets/animated_button.dart';
-import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
-import 'package:chat_app/core/shared/widgets/custom_app_bar.dart';
-import 'package:chat_app/core/utils/error_toast.dart';
-import 'package:chat_app/core/utils/show_bottom_sheet_with_buttons.dart';
-import 'package:chat_app/core/utils/validators.dart';
-import 'package:chat_app/features/settings/profile/presentation/widgets/labeled_text_form_field.dart';
+import 'package:chat_app/core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../bloc/profile/profile_bloc.dart';
+import '../widgets/widgets.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -21,21 +16,28 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     if (userId == 'me') {
       return Consumer<AuthListener>(builder: (context, authListener, _) {
-        if (authListener.currentUser == null) {
+        if (authListener.uuid == null) {
           return PageNotAuthorized();
         } else {
-          return ProfilePageContent(user: authListener.currentUser!);
+          return BlocProvider(
+            create: (context) => sl<ProfileBloc>(),
+            child: ProfilePageContent(userId: authListener.uuid!),
+          );
         }
       });
     } else {
-      return ProfilePageContent(user: UserEntity.empty());
+      if (userId != null) {
+        return ProfilePageContent(userId: userId!);
+      } else {
+        return PageNotFound();
+      }
     }
   }
 }
 
 class ProfilePageContent extends StatefulWidget {
-  final UserEntity user;
-  const ProfilePageContent({super.key, required this.user});
+  final String userId;
+  const ProfilePageContent({super.key, required this.userId});
 
   @override
   State<ProfilePageContent> createState() => _ProfilePageContentState();
@@ -46,23 +48,32 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
   late final TextEditingController _lastNameController;
   late final TextEditingController _emailController;
   late final TextEditingController _birthDateController;
+  late final ProfileBloc _profileBloc;
 
   @override
   void initState() {
-    _nameController = TextEditingController(text: widget.user.firstName);
-    _lastNameController = TextEditingController(text: widget.user.lastName);
-    _emailController = TextEditingController(text: widget.user.email);
-
-    _birthDateController = TextEditingController(text: widget.user.birthDate);
+    _nameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _birthDateController = TextEditingController();
+    _profileBloc = context.read<ProfileBloc>()
+      ..add(ProfileEvent.getCurrentUserProfile(userId: widget.userId));
     super.initState();
   }
 
-  void _onSubmit() {
+  void _onSubmit({required String userId, required BuildContext context}) {
     if (_formKey.currentState?.validate() ?? false) {
-      sl<Talker>().info('validated');
+      final firstName = _nameController.text;
+      final lastName = _lastNameController.text;
+      final birthDate = _birthDateController.text;
+      _profileBloc.add(ProfileEvent.updateProfileData(
+          userId: userId,
+          firstName: firstName,
+          lastName: lastName,
+          birthDate: birthDate));
     } else {
-      sl<Talker>().info("not validated");
-      showErrorToast('Please enter valid data', context);
+      sl<Talker>().error("profile form is not correct");
+      showErrorToast('Please enter correct data', context);
     }
   }
 
@@ -72,124 +83,150 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-    return Scaffold(
-        appBar: CustomAppBar(
-          height: 50,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: AnimatedButton(
-                onTap: _onSubmit,
-                child: Text(
-                  'Done',
-                  style: TextStyle(
-                      color: themeData.primaryColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            )
-          ],
-          pageContext: context,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Form(
-            autovalidateMode: AutovalidateMode.onUnfocus,
-            key: _formKey,
-            child: ListView(
-              children: [
-                SizedBox(height: 15),
-                _avatarWidget(onTap: () {
-                  showBottomSheetWithButtons(context,
-                      title: 'Avatar',
-                      actions: [
-                        BottomSheetActionItem(
-                            onTap: () {},
-                            text: 'Take a photo',
-                            icon: Icons.camera_alt_rounded),
-                        BottomSheetActionItem(
-                            onTap: () {},
-                            text: 'Select from gallery',
-                            icon: Icons.photo_album_rounded)
-                      ]);
-                }),
-                SizedBox(height: 20),
-                Text('Main info',
-                    style: TextStyle(
-                        color: themeData.canvasColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16)),
-                SizedBox(
-                  height: 5,
-                ),
-                LabeledTextFormField(
-                  label: 'Name',
-                  themeData: themeData,
-                  controller: _nameController,
-                  validator: validateName,
-                ),
-                Divider(
-                  height: 1,
-                  color: themeData.hintColor.withAlpha(70),
-                ),
-                LabeledTextFormField(
-                  label: 'Last Name',
-                  themeData: themeData,
-                  validator: validateName,
-                  controller: _lastNameController,
-                ),
-                Divider(
-                  height: 1,
-                  color: themeData.hintColor.withAlpha(70),
-                ),
-                LabeledTextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  label: 'Email',
-                  themeData: themeData,
-                  controller: _emailController,
-                  validator: validateEmail,
-                ),
-                Divider(
-                  height: 1,
-                  color: themeData.hintColor.withAlpha(70),
-                ),
-                LabeledTextFormField(
-                  keyboardType: TextInputType.datetime,
-                  label: 'Date of Birth',
-                  hintText: 'dd/mm/yyyy',
-                  themeData: themeData,
-                  controller: _birthDateController,
-                  validator: validateDate,
-                  inputFormatters: [_dateTimeFormatter],
-                ),
-              ],
-            ),
-          ),
-        ));
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _birthDateController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
   }
 
-  Center _avatarWidget({required VoidCallback onTap}) {
-    return Center(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AvatarWidget(size: 80, user: widget.user),
-            SizedBox(height: 10),
-            Text(
-              'Change user avatar',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+  @override
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    return BlocListener<ProfileBloc, ProfileState>(
+      bloc: _profileBloc,
+      listener: _profileBlocListener,
+      child: Scaffold(
+          appBar: CustomAppBar(
+            height: 50,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: AnimatedButton(
+                  onTap: () =>
+                      _onSubmit(userId: widget.userId, context: context),
+                  child: Text('Done',
+                      style: themeData.textTheme.bodyMedium?.copyWith(
+                          color: themeData.primaryColor,
+                          fontWeight: FontWeight.w500)),
+                ),
+              )
+            ],
+            pageContext: context,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: BlocBuilder<ProfileBloc, ProfileState>(
+              bloc: _profileBloc,
+              builder: (context, state) {
+                switch (state) {
+                  case ProfileLoading():
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case ProfileLoaded():
+                    if (state.currentUserProfile != null) {
+                      final user = state.currentUserProfile!;
+                      _nameController.text = user.firstName ?? '';
+                      _lastNameController.text = user.lastName ?? '';
+                      _emailController.text = user.email;
+                      _birthDateController.text = user.birthDate ?? '';
+
+                      return Form(
+                        autovalidateMode: AutovalidateMode.onUnfocus,
+                        key: _formKey,
+                        child: ListView(
+                          children: [
+                            SizedBox(height: 15),
+                            ProfileAvatarWidget(
+                              onTap: _showChangeAvatarBottomSheet,
+                              user: user,
+                            ),
+                            SizedBox(height: 20),
+                            Text('Main info',
+                                style: themeData.textTheme.bodyMedium
+                                    ?.copyWith(color: themeData.canvasColor)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            LabeledTextFormField(
+                              label: 'Name',
+                              themeData: themeData,
+                              controller: _nameController,
+                              validator: validateName,
+                            ),
+                            Divider(
+                              height: 1,
+                              color: themeData.hintColor.withAlpha(70),
+                            ),
+                            LabeledTextFormField(
+                              label: 'Last Name',
+                              themeData: themeData,
+                              validator: validateName,
+                              controller: _lastNameController,
+                            ),
+                            Divider(
+                              height: 1,
+                              color: themeData.hintColor.withAlpha(70),
+                            ),
+                            LabeledTextFormField(
+                              enabled: false,
+                              keyboardType: TextInputType.emailAddress,
+                              label: 'Email',
+                              themeData: themeData,
+                              controller: _emailController,
+                              validator: validateEmail,
+                            ),
+                            Divider(
+                              height: 1,
+                              color: themeData.hintColor.withAlpha(70),
+                            ),
+                            LabeledTextFormField(
+                              keyboardType: TextInputType.datetime,
+                              label: 'Date of Birth',
+                              hintText: 'dd/mm/yyyy',
+                              themeData: themeData,
+                              controller: _birthDateController,
+                              validator: validateDate,
+                              inputFormatters: [_dateTimeFormatter],
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  default:
+                    String message = "Unknown error occured, try again";
+                    if (state is ProfileError) message = state.message;
+                    return InfoWidget(
+                      title: 'Oops, something happened',
+                      subtitle: message,
+                    );
+                }
+              },
             ),
-            SizedBox(
-              height: 5,
-            ),
-          ],
-        ),
-      ),
+          )),
     );
+  }
+
+  void _showChangeAvatarBottomSheet() {
+    showBottomSheetWithButtons(context, title: 'Avatar', actions: [
+      BottomSheetActionItem(
+          onTap: () {}, text: 'Take a photo', icon: Icons.camera_alt_rounded),
+      BottomSheetActionItem(
+          onTap: () {},
+          text: 'Select from gallery',
+          icon: Icons.photo_album_rounded)
+    ]);
+  }
+
+  void _profileBlocListener(BuildContext context, ProfileState state) {
+    if (state is ProfileSuccess) {
+      context.pop();
+    } else if (state is ProfileError) {
+      showErrorToast(state.message, context);
+    }
   }
 }
