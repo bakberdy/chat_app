@@ -7,13 +7,13 @@ class ResetPasswordTimerText extends StatelessWidget {
       required this.resetPasswordStatus,
       required this.themeData,
       required this.remainingTimeInSeconds});
-  final ResetPasswordStatus resetPasswordStatus;
+  final ResetPasswordState resetPasswordStatus;
   final ThemeData themeData;
   final int? remainingTimeInSeconds;
 
   @override
   Widget build(BuildContext context) {
-    return (resetPasswordStatus == ResetPasswordStatus.waitingTimer)
+    return (resetPasswordStatus == ResetPasswordState.waitingTimer)
         ? Text("You can send code again after $remainingTimeInSeconds seconds",
             style: themeData.textTheme.bodySmall
                 ?.copyWith(color: themeData.canvasColor))

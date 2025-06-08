@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 
 class SendCodeButton extends StatelessWidget {
   const SendCodeButton(
-      {super.key, required this.resetPasswordStatus, required this.onPressed});
+      {super.key,
+      required this.resetPasswordState,
+      required this.onPressed,
+      required this.isLoading});
 
-  final ResetPasswordStatus resetPasswordStatus;
+  final ResetPasswordState resetPasswordState;
+  final bool isLoading;
   final VoidCallback onPressed;
 
   @override
@@ -18,16 +22,13 @@ class SendCodeButton extends StatelessWidget {
             style: ButtonStyle(
                 shadowColor: WidgetStatePropertyAll(Colors.black.withAlpha(50)),
                 backgroundColor: WidgetStatePropertyAll(
-                    ((resetPasswordStatus == ResetPasswordStatus.loading) ||
-                            (resetPasswordStatus ==
-                                ResetPasswordStatus.waitingTimer))
+                    (isLoading || (resetPasswordState.isWaitingTimer))
                         ? Color(0xff7FACFF)
                         : themeData.primaryColor)),
-            onPressed: ((resetPasswordStatus == ResetPasswordStatus.loading) ||
-                    (resetPasswordStatus == ResetPasswordStatus.waitingTimer))
+            onPressed: (isLoading || (resetPasswordState.isWaitingTimer))
                 ? null
                 : () => onPressed(),
-            child: (resetPasswordStatus == ResetPasswordStatus.loading)
+            child: (isLoading)
                 ? CircularProgressIndicator(color: Colors.white)
                 : Text('Send code',
                     style: themeData.textTheme.bodyMedium

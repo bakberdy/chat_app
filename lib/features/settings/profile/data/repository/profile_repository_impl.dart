@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/core/core.dart';
-import 'package:chat_app/core/shared/entities/user_entity.dart';
 
-import 'package:chat_app/core/utils/typedef.dart';
 import 'package:chat_app/features/settings/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -21,6 +19,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
     try {
       final user = await _dataSource.getUserProfile(userId: userId);
       return Right(user);
+    } on AppException catch (e) {
+      return Left(UnknownFailure(e.message));
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -41,6 +41,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
         birthDate: birtDate,
       );
       return Right(null);
+    } on AppException catch (e) {
+      return Left(UnknownFailure(e.message));
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -52,6 +54,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
     try {
       await _dataSource.updateProfilePicture(userId: userId, picture: picture);
       return Right(null);
+    } on AppException catch (e) {
+      return Left(UnknownFailure(e.message));
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }

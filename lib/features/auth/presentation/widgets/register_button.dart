@@ -5,14 +5,16 @@ import 'package:flutter/material.dart';
 class RegisterButton extends StatelessWidget {
   const RegisterButton(
       {super.key,
-      required this.signUpStatus,
+      required this.registrationState,
       required this.onRegisterPressed,
       required this.onNextPressed,
-      required this.bgColor});
+      required this.bgColor,
+      required this.isLoaging});
 
-  final SignUpStatus signUpStatus;
+  final RegistrationState registrationState;
   final VoidCallback onRegisterPressed;
   final VoidCallback onNextPressed;
+  final bool isLoaging;
   final Color bgColor;
 
   @override
@@ -20,11 +22,13 @@ class RegisterButton extends StatelessWidget {
     return SizedBox(
         height: 55,
         child: CustomFilledButton(
-            isLoading: signUpStatus == SignUpStatus.loading,
+            isLoading: isLoaging,
             titleColor: Colors.white,
-            title: (signUpStatus == SignUpStatus.initial) ? "Next" : 'Register',
+            title: (registrationState == RegistrationState.nameInput)
+                ? "Next"
+                : 'Register',
             onPressed: () {
-              if (signUpStatus == SignUpStatus.initial) {
+              if (registrationState == RegistrationState.nameInput) {
                 onNextPressed();
               } else {
                 onRegisterPressed();

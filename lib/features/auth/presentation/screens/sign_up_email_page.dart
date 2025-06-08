@@ -1,3 +1,4 @@
+import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -33,12 +34,14 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
   final _confirmPasswordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _firstFormKey = GlobalKey<FormState>();
   final _secondFormKey = GlobalKey<FormState>();
 
   void _onNextPressed() {
     if (_firstFormKey.currentState?.validate() ?? false) {
-      _authBloc.add(AuthEvent.changeSignUpStatus(status: SignUpStatus.nameGot));
+      _authBloc.add(
+          AuthEvent.changeRegisterStatus(status: RegistrationState.emailInput));
     }
   }
 
@@ -47,25 +50,22 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
     final password = _passwordController.text.trim();
+    final username = _usernameController.text.trim();
 
     if (_secondFormKey.currentState?.validate() ?? false) {
-      _authBloc.add(AuthEvent.signUp(
+      _authBloc.add(AuthEvent.register(
           email: email,
           password: password,
           firstName: firstName,
-          lastName: lastName));
+          lastName: lastName,
+          username: username));
     }
   }
 
   @override
   void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
     _authBloc = context.read<AuthBloc>();
-    super.didChangeDependencies();
+    super.initState();
   }
 
   @override
@@ -75,18 +75,21 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
     _confirmPasswordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _usernameController.dispose();
     super.dispose();
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.signUpStatus == SignUpStatus.error) {
-      showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
+    if (state.status.isError) {
+      showErrorToast(message: state.message ?? 'Неизвестная ошибка', context);
+    } else if (state.status.isLoaded && state.message != null) {
+      showInfoToast(context, message: state.message!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final themeData = context.theme;
     return BlocConsumer<AuthBloc, AuthState>(
       bloc: _authBloc,
       listener: _authBlocListener,
@@ -94,9 +97,9 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
         appBar: CustomAppBar(
           pageContext: context,
           onBackTap: () {
-            if (state.signUpStatus != SignUpStatus.initial) {
-              _authBloc.add(
-                  AuthEvent.changeSignUpStatus(status: SignUpStatus.initial));
+            if (state.registrationState.isEmailInput) {
+              _authBloc.add(AuthEvent.changeRegisterStatus(
+                  status: RegistrationState.nameInput));
             } else {
               GoRouter.of(context).pop();
             }
@@ -107,26 +110,24 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
             padding: EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                SizedBox(height: context.mediaHeight * 0.02),
                 AppLogoType(),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                Text(
-                  'Sign up with email',
-                  style: themeData.textTheme.bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
+                SizedBox(height: context.mediaHeight * 0.05),
+                Text('Sign up with email',
+                    style: themeData.textTheme.bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.w600)),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                 BlocBuilder<AuthBloc, AuthState>(
                   bloc: _authBloc,
                   builder: (context, state) {
-                    switch (state.signUpStatus) {
-                      case SignUpStatus.initial:
+                    switch (state.registrationState) {
+                      case RegistrationState.nameInput:
                         return NamesInputForm(
                           formKey: _firstFormKey,
                           firstNameController: _firstNameController,
                           lastNameController: _lastNameController,
                         );
-                      default:
+                      case RegistrationState.emailInput:
                         return EmailAndPasswordInputForm(
                             formKey: _secondFormKey,
                             emailController: _emailController,
@@ -142,8 +143,9 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                     return RegisterButton(
                       onNextPressed: _onNextPressed,
                       onRegisterPressed: () => _register(context),
-                      signUpStatus: state.signUpStatus,
+                      registrationState: state.registrationState,
                       bgColor: themeData.primaryColor,
+                      isLoaging: state.status.isLoading,
                     );
                   },
                 ),

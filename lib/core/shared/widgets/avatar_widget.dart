@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AvatarWidget extends StatelessWidget {
+  final bool showOnlineIndicator;
   final double size;
 
   final UserEntity user;
@@ -27,7 +28,7 @@ class AvatarWidget extends StatelessWidget {
     this.borderColor = Colors.white,
     this.borderWidth = 2.0,
     this.useHeroAnimation = false,
-    this.heroTag,
+    this.heroTag, this.showOnlineIndicator = true,
   });
 
   @override
@@ -64,7 +65,7 @@ class AvatarWidget extends StatelessWidget {
           ClipOval(
             child: _buildNetworkAvatarOrFallback(avatarUrl),
           ),
-          if (_checkIsonline(user)) _buildOnlineIndicator(),
+          if (_checkIsonline(user)&&showOnlineIndicator) _buildOnlineIndicator(),
         ],
       ),
     );
@@ -72,7 +73,7 @@ class AvatarWidget extends StatelessWidget {
 
   _checkIsonline(final UserEntity user) {
     final now = DateTime.now();
-    final diff = now.difference(user.lastOnline);
+    final diff = now.difference(user.lastOnlineAt);
     return diff.inSeconds < 60;
   }
 
@@ -82,7 +83,7 @@ class AvatarWidget extends StatelessWidget {
     }
 
     return Image.network(
-      avatarUrl,
+      'https://ktmqyvdfdqyvrtcreddr.supabase.co/storage/v1/object/$avatarUrl',
       width: size * 2,
       height: size * 2,
       fit: BoxFit.cover,

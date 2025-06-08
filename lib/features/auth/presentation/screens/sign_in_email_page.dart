@@ -1,4 +1,5 @@
 import 'package:chat_app/core/core.dart';
+import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:chat_app/features/auth/presentation/widgets/widgets.dart';
 import 'package:chat_app/injection/injection.dart';
@@ -28,7 +29,7 @@ class SignInEmailContent extends StatefulWidget {
 class _SignInEmailContentState extends State<SignInEmailContent> {
   late final AuthBloc _authBloc;
 
-  final _emailController = TextEditingController();
+  final _emailOrUsernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -41,14 +42,14 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _emailOrUsernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final themeData = context.theme;
     return BlocListener<AuthBloc, AuthState>(
       bloc: _authBloc,
       listener: _authBlocListener,
@@ -73,7 +74,7 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
                       AuthInputField(
                         keyBoardType: TextInputType.emailAddress,
                         validator: validateEmail,
-                        controller: _emailController,
+                        controller: _emailOrUsernameController,
                         hintText: 'Enter your email address',
                       ),
                       SizedBox(height: 15),
@@ -97,8 +98,7 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
                       builder: (context, state) {
                         return CustomFilledButton(
                             titleColor: Colors.white,
-                            isLoading:
-                                state.signInStatus == StateStatus.loading,
+                            isLoading: state.status.isLoading,
                             title: 'Sign in',
                             onPressed: () => _onLoginPressed(bloc: _authBloc),
                             backgroundColor: themeData.primaryColor);
@@ -125,16 +125,19 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
   }
 
   void _onLoginPressed({required AuthBloc bloc}) {
-    final email = _emailController.text;
+    final emailOrUsername = _emailOrUsernameController.text;
     final password = _passwordController.text;
 
     if (_formKey.currentState!.validate()) {
-      bloc.add(AuthEvent.signIn(email: email, password: password));
+      bloc.add(AuthEvent.login(
+        emailOrUsername: emailOrUsername,
+        password: password,
+      ));
     }
   }
 
   void _onForgotPasswordPressed() {
-    final email = _emailController.text;
+    final email = _emailOrUsernameController.text;
     context.push(
         '${AppPaths.auth}${AppPaths.signIn}${AppPaths.resetPassword}?email=$email');
   }
@@ -144,8 +147,13 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.signInStatus == StateStatus.error) {
-      showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
+    if (state.status.isError) {
+      showErrorToast(
+        context,
+        message: state.message ?? 'Неизвестная ошибка',
+      );
+    } else if (state.status.isLoaded && state.message != null) {
+      showInfoToast(context, message: state.message!);
     }
   }
 }

@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 
 class ResetPasswordInfoText extends StatelessWidget {
   const ResetPasswordInfoText({super.key, required this.resetPasswordStatus});
-  final ResetPasswordStatus resetPasswordStatus;
+  final ResetPasswordState resetPasswordStatus;
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    if ((resetPasswordStatus == ResetPasswordStatus.waitingTimer)) {
+    if ((resetPasswordStatus.isWaitingTimer)) {
       return Text(
           "We've sent a code to your email. Please check your inbox and reset your password. Then, try logging in with your new password.",
           style: themeData.textTheme.bodySmall?.copyWith(
             color: themeData.canvasColor,
             fontSize: 12,
           ));
-    } else if (resetPasswordStatus == ResetPasswordStatus.tryAgain) {
+    } else if (resetPasswordStatus.isTryAgain) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

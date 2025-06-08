@@ -1,4 +1,6 @@
 import 'package:chat_app/core/core.dart';
+import 'package:chat_app/core/extensions/context_extension.dart';
+import 'package:chat_app/core/utils/info_toast.dart';
 import '../auth_bloc/auth_bloc.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,7 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    final themeData = context.theme;
     return Scaffold(
       appBar: CustomAppBar(pageContext: context),
       body: Padding(
@@ -62,9 +64,8 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
           bloc: _authBloc,
           listener: _authBlocListener,
           builder: (context, state) {
-            final isInputEnabled =
-                state.resetPassword == ResetPasswordStatus.initial ||
-                    state.resetPassword == ResetPasswordStatus.tryAgain;
+            final isInputEnabled = state.resetPasswordState.isInitial ||
+                state.resetPasswordState.isTryAgain;
             return Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
@@ -87,16 +88,17 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
                 ),
                 SizedBox(height: 5),
                 ResetPasswordInfoText(
-                  resetPasswordStatus: state.resetPassword,
+                  resetPasswordStatus: state.resetPasswordState,
                 ),
                 SizedBox(height: 20),
                 SendCodeButton(
-                  resetPasswordStatus: state.resetPassword,
+                  resetPasswordState: state.resetPasswordState,
                   onPressed: () => _onSendCode(bloc: _authBloc),
+                  isLoading: state.status.isLoading,
                 ),
                 SizedBox(height: 20),
                 ResetPasswordTimerText(
-                  resetPasswordStatus: state.resetPassword,
+                  resetPasswordStatus: state.resetPasswordState,
                   themeData: themeData,
                   remainingTimeInSeconds: state.timerDuration,
                 )
@@ -110,14 +112,16 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
 
   void _onSendCode({required AuthBloc bloc}) async {
     final email = _emailController.text;
-    if (_formKey.currentState!.validate()) {
-      bloc.add(AuthEvent.sendResetMessageToEmail(email: email));
-    }
+    // if (_formKey.currentState!.validate()) {
+    //   bloc.add(AuthEvent.sendResetMessageToEmail(email: email));
+    // }
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.resetPassword == ResetPasswordStatus.error) {
-      showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
+    if (state.status.isError) {
+      showErrorToast(context, message: state.message ?? 'Неизвестная ошибка');
+    } else if (state.status.isLoaded && state.message != null) {
+      showInfoToast(context, message: state.message!);
     }
   }
 }

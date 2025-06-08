@@ -16,7 +16,7 @@ class UsersList extends StatelessWidget {
   });
 
   final List<UserEntity> users;
-  final Function(String uuid) onTap;
+  final Function(int userId) onTap;
   final Function(String uuid)? onAddToFriend;
   final Future<void> Function() onRefresh;
   final bool isLoading;
@@ -42,7 +42,8 @@ class UsersList extends StatelessWidget {
           onTap: onTap,
           onAddToFriend: onAddToFriend,
         );
-      }, itemCount: users.length,
+      },
+      itemCount: users.length,
     );
   }
 }

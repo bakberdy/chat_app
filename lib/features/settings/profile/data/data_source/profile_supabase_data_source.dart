@@ -7,6 +7,7 @@ import 'package:mime/mime.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 
 @Singleton(as: ProfileRemoteDataSource)
 class ProfileSupabaseDataSource implements ProfileRemoteDataSource {
@@ -27,6 +28,9 @@ class ProfileSupabaseDataSource implements ProfileRemoteDataSource {
         "last_name": lastName,
         "birth_date": birthDate,
       }).eq('uid', userId);
+    } on PostgrestException catch (e) {
+      talker.error(e.message);
+      throw Exception(e.message);
     } catch (e) {
       talker.error(e.toString());
     }
@@ -41,19 +45,28 @@ class ProfileSupabaseDataSource implements ProfileRemoteDataSource {
       final contentType = lookupMimeType(fileExtention);
 
       //upload picture to the storage
-      final fullPath = await client.storage.from('profile_pictures').upload(
-          'public/profile_picture_$userId', picture,
+      final fullPath = await client.storage.from('profile').upload(
+          Uuid().v4(), picture,
           fileOptions: FileOptions(contentType: contentType));
+      talker.info('Profile picture uploaded: $fullPath');
 
       //save picture path to database
       await client.rest
-          .from('public.profiles')
+          .from('profiles')
           .update({'profile_picture': fullPath}).eq('uid', userId);
+      talker.info('Profile picture path updated in database');
 
       //update last_online
-      await client.rpc('mark_as_online', params: {'uid': userId});
+      await client.rpc('update_last_online', params: {'p_uid': userId});
+    } on PostgrestException catch (e) {
+      talker.error(e.message);
+      throw Exception(e.message);
+    } on StorageException catch (e) {
+      talker.error(e.toString());
+      throw Exception(e.message);
     } catch (e) {
       talker.error(e.toString());
+      throw Exception('Failed to update profile picture');
     }
   }
 
@@ -63,11 +76,14 @@ class ProfileSupabaseDataSource implements ProfileRemoteDataSource {
       final response =
           await client.rest.from('profiles').select('*').eq('uid', userId);
       if (response.isNotEmpty) {
-        final user = UserModel.fromMap(response[0]);
+        final user = UserModel.fromJson(response[0]);
         return user;
       } else {
-        throw ServerException('The user doesn\'t exist');
+        throw Exception('The user doesn\'t exist');
       }
+    } on PostgrestException catch (e) {
+      talker.error(e.message);
+      throw Exception(e.message);
     } catch (e) {
       talker.error(e.toString());
       rethrow;

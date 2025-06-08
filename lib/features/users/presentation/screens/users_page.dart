@@ -121,9 +121,9 @@ class _UsersPageContentState extends State<UsersPageContent>
                             children: [
                               UsersList(
                                 users: friends,
-                                onTap: (String uuid) {
+                                onTap: (int userId) {
                                   context.push(
-                                      '${AppPaths.users}${AppPaths.profile}/$uuid');
+                                      '${AppPaths.users}${AppPaths.profile}/$userId');
                                 },
                                 onRefresh: () async {
                                   context
@@ -135,7 +135,7 @@ class _UsersPageContentState extends State<UsersPageContent>
                               ),
                               UsersList(
                                 users: allUsers,
-                                onTap: (String uuid) {},
+                                onTap: (int userId) {},
                                 onAddToFriend: (String uuid) {},
                                 onRefresh: () async {
                                   context

@@ -37,65 +37,65 @@ class $AuthEventCopyWith<$Res> {
 
 /// @nodoc
 
-class _SignIn implements AuthEvent {
-  const _SignIn({required this.email, required this.password});
+class _Login implements AuthEvent {
+  const _Login({required this.emailOrUsername, required this.password});
 
-  final String email;
+  final String emailOrUsername;
   final String password;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SignInCopyWith<_SignIn> get copyWith =>
-      __$SignInCopyWithImpl<_SignIn>(this, _$identity);
+  _$LoginCopyWith<_Login> get copyWith =>
+      __$LoginCopyWithImpl<_Login>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _SignIn &&
-            (identical(other.email, email) || other.email == email) &&
+            other is _Login &&
+            (identical(other.emailOrUsername, emailOrUsername) ||
+                other.emailOrUsername == emailOrUsername) &&
             (identical(other.password, password) ||
                 other.password == password));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, email, password);
+  int get hashCode => Object.hash(runtimeType, emailOrUsername, password);
 
   @override
   String toString() {
-    return 'AuthEvent.signIn(email: $email, password: $password)';
+    return 'AuthEvent.login(emailOrUsername: $emailOrUsername, password: $password)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$SignInCopyWith<$Res>
-    implements $AuthEventCopyWith<$Res> {
-  factory _$SignInCopyWith(_SignIn value, $Res Function(_SignIn) _then) =
-      __$SignInCopyWithImpl;
+abstract mixin class _$LoginCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory _$LoginCopyWith(_Login value, $Res Function(_Login) _then) =
+      __$LoginCopyWithImpl;
   @useResult
-  $Res call({String email, String password});
+  $Res call({String emailOrUsername, String password});
 }
 
 /// @nodoc
-class __$SignInCopyWithImpl<$Res> implements _$SignInCopyWith<$Res> {
-  __$SignInCopyWithImpl(this._self, this._then);
+class __$LoginCopyWithImpl<$Res> implements _$LoginCopyWith<$Res> {
+  __$LoginCopyWithImpl(this._self, this._then);
 
-  final _SignIn _self;
-  final $Res Function(_SignIn) _then;
+  final _Login _self;
+  final $Res Function(_Login) _then;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? email = null,
+    Object? emailOrUsername = null,
     Object? password = null,
   }) {
-    return _then(_SignIn(
-      email: null == email
-          ? _self.email
-          : email // ignore: cast_nullable_to_non_nullable
+    return _then(_Login(
+      emailOrUsername: null == emailOrUsername
+          ? _self.emailOrUsername
+          : emailOrUsername // ignore: cast_nullable_to_non_nullable
               as String,
       password: null == password
           ? _self.password
@@ -107,64 +107,73 @@ class __$SignInCopyWithImpl<$Res> implements _$SignInCopyWith<$Res> {
 
 /// @nodoc
 
-class _SignUp implements AuthEvent {
-  const _SignUp(
+class _Register implements AuthEvent {
+  const _Register(
       {required this.email,
       required this.password,
       required this.firstName,
-      required this.lastName});
+      required this.lastName,
+      required this.username});
 
   final String email;
   final String password;
   final String firstName;
   final String lastName;
+  final String username;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SignUpCopyWith<_SignUp> get copyWith =>
-      __$SignUpCopyWithImpl<_SignUp>(this, _$identity);
+  _$RegisterCopyWith<_Register> get copyWith =>
+      __$RegisterCopyWithImpl<_Register>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _SignUp &&
+            other is _Register &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
-                other.lastName == lastName));
+                other.lastName == lastName) &&
+            (identical(other.username, username) ||
+                other.username == username));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, email, password, firstName, lastName);
+      Object.hash(runtimeType, email, password, firstName, lastName, username);
 
   @override
   String toString() {
-    return 'AuthEvent.signUp(email: $email, password: $password, firstName: $firstName, lastName: $lastName)';
+    return 'AuthEvent.register(email: $email, password: $password, firstName: $firstName, lastName: $lastName, username: $username)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$SignUpCopyWith<$Res>
+abstract mixin class _$RegisterCopyWith<$Res>
     implements $AuthEventCopyWith<$Res> {
-  factory _$SignUpCopyWith(_SignUp value, $Res Function(_SignUp) _then) =
-      __$SignUpCopyWithImpl;
+  factory _$RegisterCopyWith(_Register value, $Res Function(_Register) _then) =
+      __$RegisterCopyWithImpl;
   @useResult
-  $Res call({String email, String password, String firstName, String lastName});
+  $Res call(
+      {String email,
+      String password,
+      String firstName,
+      String lastName,
+      String username});
 }
 
 /// @nodoc
-class __$SignUpCopyWithImpl<$Res> implements _$SignUpCopyWith<$Res> {
-  __$SignUpCopyWithImpl(this._self, this._then);
+class __$RegisterCopyWithImpl<$Res> implements _$RegisterCopyWith<$Res> {
+  __$RegisterCopyWithImpl(this._self, this._then);
 
-  final _SignUp _self;
-  final $Res Function(_SignUp) _then;
+  final _Register _self;
+  final $Res Function(_Register) _then;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -174,8 +183,9 @@ class __$SignUpCopyWithImpl<$Res> implements _$SignUpCopyWith<$Res> {
     Object? password = null,
     Object? firstName = null,
     Object? lastName = null,
+    Object? username = null,
   }) {
-    return _then(_SignUp(
+    return _then(_Register(
       email: null == email
           ? _self.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -192,29 +202,34 @@ class __$SignUpCopyWithImpl<$Res> implements _$SignUpCopyWith<$Res> {
           ? _self.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
+      username: null == username
+          ? _self.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _ChangeSignUpStatus implements AuthEvent {
-  const _ChangeSignUpStatus({required this.status});
+class _ChangeRegistrationStatus implements AuthEvent {
+  const _ChangeRegistrationStatus({required this.status});
 
-  final SignUpStatus status;
+  final RegistrationState status;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ChangeSignUpStatusCopyWith<_ChangeSignUpStatus> get copyWith =>
-      __$ChangeSignUpStatusCopyWithImpl<_ChangeSignUpStatus>(this, _$identity);
+  _$ChangeRegistrationStatusCopyWith<_ChangeRegistrationStatus> get copyWith =>
+      __$ChangeRegistrationStatusCopyWithImpl<_ChangeRegistrationStatus>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ChangeSignUpStatus &&
+            other is _ChangeRegistrationStatus &&
             (identical(other.status, status) || other.status == status));
   }
 
@@ -223,27 +238,27 @@ class _ChangeSignUpStatus implements AuthEvent {
 
   @override
   String toString() {
-    return 'AuthEvent.changeSignUpStatus(status: $status)';
+    return 'AuthEvent.changeRegisterStatus(status: $status)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$ChangeSignUpStatusCopyWith<$Res>
+abstract mixin class _$ChangeRegistrationStatusCopyWith<$Res>
     implements $AuthEventCopyWith<$Res> {
-  factory _$ChangeSignUpStatusCopyWith(
-          _ChangeSignUpStatus value, $Res Function(_ChangeSignUpStatus) _then) =
-      __$ChangeSignUpStatusCopyWithImpl;
+  factory _$ChangeRegistrationStatusCopyWith(_ChangeRegistrationStatus value,
+          $Res Function(_ChangeRegistrationStatus) _then) =
+      __$ChangeRegistrationStatusCopyWithImpl;
   @useResult
-  $Res call({SignUpStatus status});
+  $Res call({RegistrationState status});
 }
 
 /// @nodoc
-class __$ChangeSignUpStatusCopyWithImpl<$Res>
-    implements _$ChangeSignUpStatusCopyWith<$Res> {
-  __$ChangeSignUpStatusCopyWithImpl(this._self, this._then);
+class __$ChangeRegistrationStatusCopyWithImpl<$Res>
+    implements _$ChangeRegistrationStatusCopyWith<$Res> {
+  __$ChangeRegistrationStatusCopyWithImpl(this._self, this._then);
 
-  final _ChangeSignUpStatus _self;
-  final $Res Function(_ChangeSignUpStatus) _then;
+  final _ChangeRegistrationStatus _self;
+  final $Res Function(_ChangeRegistrationStatus) _then;
 
   /// Create a copy of AuthEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -251,116 +266,11 @@ class __$ChangeSignUpStatusCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
   }) {
-    return _then(_ChangeSignUpStatus(
+    return _then(_ChangeRegistrationStatus(
       status: null == status
           ? _self.status
           : status // ignore: cast_nullable_to_non_nullable
-              as SignUpStatus,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _GoogleSignIn implements AuthEvent {
-  const _GoogleSignIn();
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _GoogleSignIn);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  String toString() {
-    return 'AuthEvent.googleSignIn()';
-  }
-}
-
-/// @nodoc
-
-class _AppleSignIn implements AuthEvent {
-  const _AppleSignIn();
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _AppleSignIn);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  String toString() {
-    return 'AuthEvent.appleSignIn()';
-  }
-}
-
-/// @nodoc
-
-class _SendResetMessageToEmail implements AuthEvent {
-  const _SendResetMessageToEmail({required this.email});
-
-  final String email;
-
-  /// Create a copy of AuthEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$SendResetMessageToEmailCopyWith<_SendResetMessageToEmail> get copyWith =>
-      __$SendResetMessageToEmailCopyWithImpl<_SendResetMessageToEmail>(
-          this, _$identity);
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _SendResetMessageToEmail &&
-            (identical(other.email, email) || other.email == email));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, email);
-
-  @override
-  String toString() {
-    return 'AuthEvent.sendResetMessageToEmail(email: $email)';
-  }
-}
-
-/// @nodoc
-abstract mixin class _$SendResetMessageToEmailCopyWith<$Res>
-    implements $AuthEventCopyWith<$Res> {
-  factory _$SendResetMessageToEmailCopyWith(_SendResetMessageToEmail value,
-          $Res Function(_SendResetMessageToEmail) _then) =
-      __$SendResetMessageToEmailCopyWithImpl;
-  @useResult
-  $Res call({String email});
-}
-
-/// @nodoc
-class __$SendResetMessageToEmailCopyWithImpl<$Res>
-    implements _$SendResetMessageToEmailCopyWith<$Res> {
-  __$SendResetMessageToEmailCopyWithImpl(this._self, this._then);
-
-  final _SendResetMessageToEmail _self;
-  final $Res Function(_SendResetMessageToEmail) _then;
-
-  /// Create a copy of AuthEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? email = null,
-  }) {
-    return _then(_SendResetMessageToEmail(
-      email: null == email
-          ? _self.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
+              as RegistrationState,
     ));
   }
 }
@@ -431,12 +341,290 @@ class __$ChangeTimeDurationCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _ChangePassword implements AuthEvent {
+  const _ChangePassword({required this.newPassword, required this.oldPassword});
+
+  final String newPassword;
+  final String oldPassword;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ChangePasswordCopyWith<_ChangePassword> get copyWith =>
+      __$ChangePasswordCopyWithImpl<_ChangePassword>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ChangePassword &&
+            (identical(other.newPassword, newPassword) ||
+                other.newPassword == newPassword) &&
+            (identical(other.oldPassword, oldPassword) ||
+                other.oldPassword == oldPassword));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, newPassword, oldPassword);
+
+  @override
+  String toString() {
+    return 'AuthEvent.changePassword(newPassword: $newPassword, oldPassword: $oldPassword)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ChangePasswordCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$ChangePasswordCopyWith(
+          _ChangePassword value, $Res Function(_ChangePassword) _then) =
+      __$ChangePasswordCopyWithImpl;
+  @useResult
+  $Res call({String newPassword, String oldPassword});
+}
+
+/// @nodoc
+class __$ChangePasswordCopyWithImpl<$Res>
+    implements _$ChangePasswordCopyWith<$Res> {
+  __$ChangePasswordCopyWithImpl(this._self, this._then);
+
+  final _ChangePassword _self;
+  final $Res Function(_ChangePassword) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? newPassword = null,
+    Object? oldPassword = null,
+  }) {
+    return _then(_ChangePassword(
+      newPassword: null == newPassword
+          ? _self.newPassword
+          : newPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+      oldPassword: null == oldPassword
+          ? _self.oldPassword
+          : oldPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _GetMe implements AuthEvent {
+  const _GetMe();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _GetMe);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'AuthEvent.getMe()';
+  }
+}
+
+/// @nodoc
+
+class _Logout implements AuthEvent {
+  const _Logout();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Logout);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'AuthEvent.logOut()';
+  }
+}
+
+/// @nodoc
+
+class _UpdateProfilePicture implements AuthEvent {
+  const _UpdateProfilePicture({required this.file});
+
+  final File? file;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateProfilePictureCopyWith<_UpdateProfilePicture> get copyWith =>
+      __$UpdateProfilePictureCopyWithImpl<_UpdateProfilePicture>(
+          this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UpdateProfilePicture &&
+            (identical(other.file, file) || other.file == file));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, file);
+
+  @override
+  String toString() {
+    return 'AuthEvent.updateProfilePicture(file: $file)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$UpdateProfilePictureCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$UpdateProfilePictureCopyWith(_UpdateProfilePicture value,
+          $Res Function(_UpdateProfilePicture) _then) =
+      __$UpdateProfilePictureCopyWithImpl;
+  @useResult
+  $Res call({File? file});
+}
+
+/// @nodoc
+class __$UpdateProfilePictureCopyWithImpl<$Res>
+    implements _$UpdateProfilePictureCopyWith<$Res> {
+  __$UpdateProfilePictureCopyWithImpl(this._self, this._then);
+
+  final _UpdateProfilePicture _self;
+  final $Res Function(_UpdateProfilePicture) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? file = freezed,
+  }) {
+    return _then(_UpdateProfilePicture(
+      file: freezed == file
+          ? _self.file
+          : file // ignore: cast_nullable_to_non_nullable
+              as File?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _UpdateUserData implements AuthEvent {
+  const _UpdateUserData(
+      {required this.username,
+      required this.lastName,
+      required this.firstName,
+      required this.birthDate});
+
+  final String? username;
+  final String? lastName;
+  final String? firstName;
+  final String? birthDate;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$UpdateUserDataCopyWith<_UpdateUserData> get copyWith =>
+      __$UpdateUserDataCopyWithImpl<_UpdateUserData>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _UpdateUserData &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.lastName, lastName) ||
+                other.lastName == lastName) &&
+            (identical(other.firstName, firstName) ||
+                other.firstName == firstName) &&
+            (identical(other.birthDate, birthDate) ||
+                other.birthDate == birthDate));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, username, lastName, firstName, birthDate);
+
+  @override
+  String toString() {
+    return 'AuthEvent.updateUserData(username: $username, lastName: $lastName, firstName: $firstName, birthDate: $birthDate)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$UpdateUserDataCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$UpdateUserDataCopyWith(
+          _UpdateUserData value, $Res Function(_UpdateUserData) _then) =
+      __$UpdateUserDataCopyWithImpl;
+  @useResult
+  $Res call(
+      {String? username,
+      String? lastName,
+      String? firstName,
+      String? birthDate});
+}
+
+/// @nodoc
+class __$UpdateUserDataCopyWithImpl<$Res>
+    implements _$UpdateUserDataCopyWith<$Res> {
+  __$UpdateUserDataCopyWithImpl(this._self, this._then);
+
+  final _UpdateUserData _self;
+  final $Res Function(_UpdateUserData) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? username = freezed,
+    Object? lastName = freezed,
+    Object? firstName = freezed,
+    Object? birthDate = freezed,
+  }) {
+    return _then(_UpdateUserData(
+      username: freezed == username
+          ? _self.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastName: freezed == lastName
+          ? _self.lastName
+          : lastName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      firstName: freezed == firstName
+          ? _self.firstName
+          : firstName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      birthDate: freezed == birthDate
+          ? _self.birthDate
+          : birthDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$AuthState {
-  StateStatus get signInStatus;
-  SignUpStatus get signUpStatus;
-  ResetPasswordStatus get resetPassword;
+  AuthStatus get authState;
+  RegistrationState get registrationState;
+  StateStatus get status;
+  ResetPasswordState get resetPasswordState;
+  UserEntity? get currentUser;
   int? get timerDuration;
-  String? get errorMessage;
+  String? get message;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -450,25 +638,27 @@ mixin _$AuthState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is AuthState &&
-            (identical(other.signInStatus, signInStatus) ||
-                other.signInStatus == signInStatus) &&
-            (identical(other.signUpStatus, signUpStatus) ||
-                other.signUpStatus == signUpStatus) &&
-            (identical(other.resetPassword, resetPassword) ||
-                other.resetPassword == resetPassword) &&
+            (identical(other.authState, authState) ||
+                other.authState == authState) &&
+            (identical(other.registrationState, registrationState) ||
+                other.registrationState == registrationState) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.resetPasswordState, resetPasswordState) ||
+                other.resetPasswordState == resetPasswordState) &&
+            (identical(other.currentUser, currentUser) ||
+                other.currentUser == currentUser) &&
             (identical(other.timerDuration, timerDuration) ||
                 other.timerDuration == timerDuration) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, signInStatus, signUpStatus,
-      resetPassword, timerDuration, errorMessage);
+  int get hashCode => Object.hash(runtimeType, authState, registrationState,
+      status, resetPasswordState, currentUser, timerDuration, message);
 
   @override
   String toString() {
-    return 'AuthState(signInStatus: $signInStatus, signUpStatus: $signUpStatus, resetPassword: $resetPassword, timerDuration: $timerDuration, errorMessage: $errorMessage)';
+    return 'AuthState(authState: $authState, registrationState: $registrationState, status: $status, resetPasswordState: $resetPasswordState, currentUser: $currentUser, timerDuration: $timerDuration, message: $message)';
   }
 }
 
@@ -478,11 +668,13 @@ abstract mixin class $AuthStateCopyWith<$Res> {
       _$AuthStateCopyWithImpl;
   @useResult
   $Res call(
-      {StateStatus signInStatus,
-      SignUpStatus signUpStatus,
-      ResetPasswordStatus resetPassword,
+      {AuthStatus authState,
+      RegistrationState registrationState,
+      StateStatus status,
+      ResetPasswordState resetPasswordState,
+      UserEntity? currentUser,
       int? timerDuration,
-      String? errorMessage});
+      String? message});
 }
 
 /// @nodoc
@@ -497,32 +689,42 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? signInStatus = null,
-    Object? signUpStatus = null,
-    Object? resetPassword = null,
+    Object? authState = null,
+    Object? registrationState = null,
+    Object? status = null,
+    Object? resetPasswordState = null,
+    Object? currentUser = freezed,
     Object? timerDuration = freezed,
-    Object? errorMessage = freezed,
+    Object? message = freezed,
   }) {
     return _then(_self.copyWith(
-      signInStatus: null == signInStatus
-          ? _self.signInStatus
-          : signInStatus // ignore: cast_nullable_to_non_nullable
+      authState: null == authState
+          ? _self.authState
+          : authState // ignore: cast_nullable_to_non_nullable
+              as AuthStatus,
+      registrationState: null == registrationState
+          ? _self.registrationState
+          : registrationState // ignore: cast_nullable_to_non_nullable
+              as RegistrationState,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
               as StateStatus,
-      signUpStatus: null == signUpStatus
-          ? _self.signUpStatus
-          : signUpStatus // ignore: cast_nullable_to_non_nullable
-              as SignUpStatus,
-      resetPassword: null == resetPassword
-          ? _self.resetPassword
-          : resetPassword // ignore: cast_nullable_to_non_nullable
-              as ResetPasswordStatus,
+      resetPasswordState: null == resetPasswordState
+          ? _self.resetPasswordState
+          : resetPasswordState // ignore: cast_nullable_to_non_nullable
+              as ResetPasswordState,
+      currentUser: freezed == currentUser
+          ? _self.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
       timerDuration: freezed == timerDuration
           ? _self.timerDuration
           : timerDuration // ignore: cast_nullable_to_non_nullable
               as int?,
-      errorMessage: freezed == errorMessage
-          ? _self.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      message: freezed == message
+          ? _self.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -532,25 +734,32 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
 
 class _AuthState implements AuthState {
   const _AuthState(
-      {this.signInStatus = StateStatus.initial,
-      this.signUpStatus = SignUpStatus.initial,
-      this.resetPassword = ResetPasswordStatus.initial,
+      {this.authState = AuthStatus.notAuthorized,
+      this.registrationState = RegistrationState.nameInput,
+      this.status = StateStatus.initial,
+      this.resetPasswordState = ResetPasswordState.initial,
+      this.currentUser,
       this.timerDuration,
-      this.errorMessage});
+      this.message});
 
   @override
   @JsonKey()
-  final StateStatus signInStatus;
+  final AuthStatus authState;
   @override
   @JsonKey()
-  final SignUpStatus signUpStatus;
+  final RegistrationState registrationState;
   @override
   @JsonKey()
-  final ResetPasswordStatus resetPassword;
+  final StateStatus status;
+  @override
+  @JsonKey()
+  final ResetPasswordState resetPasswordState;
+  @override
+  final UserEntity? currentUser;
   @override
   final int? timerDuration;
   @override
-  final String? errorMessage;
+  final String? message;
 
   /// Create a copy of AuthState
   /// with the given fields replaced by the non-null parameter values.
@@ -565,25 +774,27 @@ class _AuthState implements AuthState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _AuthState &&
-            (identical(other.signInStatus, signInStatus) ||
-                other.signInStatus == signInStatus) &&
-            (identical(other.signUpStatus, signUpStatus) ||
-                other.signUpStatus == signUpStatus) &&
-            (identical(other.resetPassword, resetPassword) ||
-                other.resetPassword == resetPassword) &&
+            (identical(other.authState, authState) ||
+                other.authState == authState) &&
+            (identical(other.registrationState, registrationState) ||
+                other.registrationState == registrationState) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.resetPasswordState, resetPasswordState) ||
+                other.resetPasswordState == resetPasswordState) &&
+            (identical(other.currentUser, currentUser) ||
+                other.currentUser == currentUser) &&
             (identical(other.timerDuration, timerDuration) ||
                 other.timerDuration == timerDuration) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, signInStatus, signUpStatus,
-      resetPassword, timerDuration, errorMessage);
+  int get hashCode => Object.hash(runtimeType, authState, registrationState,
+      status, resetPasswordState, currentUser, timerDuration, message);
 
   @override
   String toString() {
-    return 'AuthState(signInStatus: $signInStatus, signUpStatus: $signUpStatus, resetPassword: $resetPassword, timerDuration: $timerDuration, errorMessage: $errorMessage)';
+    return 'AuthState(authState: $authState, registrationState: $registrationState, status: $status, resetPasswordState: $resetPasswordState, currentUser: $currentUser, timerDuration: $timerDuration, message: $message)';
   }
 }
 
@@ -596,11 +807,13 @@ abstract mixin class _$AuthStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {StateStatus signInStatus,
-      SignUpStatus signUpStatus,
-      ResetPasswordStatus resetPassword,
+      {AuthStatus authState,
+      RegistrationState registrationState,
+      StateStatus status,
+      ResetPasswordState resetPasswordState,
+      UserEntity? currentUser,
       int? timerDuration,
-      String? errorMessage});
+      String? message});
 }
 
 /// @nodoc
@@ -615,32 +828,42 @@ class __$AuthStateCopyWithImpl<$Res> implements _$AuthStateCopyWith<$Res> {
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? signInStatus = null,
-    Object? signUpStatus = null,
-    Object? resetPassword = null,
+    Object? authState = null,
+    Object? registrationState = null,
+    Object? status = null,
+    Object? resetPasswordState = null,
+    Object? currentUser = freezed,
     Object? timerDuration = freezed,
-    Object? errorMessage = freezed,
+    Object? message = freezed,
   }) {
     return _then(_AuthState(
-      signInStatus: null == signInStatus
-          ? _self.signInStatus
-          : signInStatus // ignore: cast_nullable_to_non_nullable
+      authState: null == authState
+          ? _self.authState
+          : authState // ignore: cast_nullable_to_non_nullable
+              as AuthStatus,
+      registrationState: null == registrationState
+          ? _self.registrationState
+          : registrationState // ignore: cast_nullable_to_non_nullable
+              as RegistrationState,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
               as StateStatus,
-      signUpStatus: null == signUpStatus
-          ? _self.signUpStatus
-          : signUpStatus // ignore: cast_nullable_to_non_nullable
-              as SignUpStatus,
-      resetPassword: null == resetPassword
-          ? _self.resetPassword
-          : resetPassword // ignore: cast_nullable_to_non_nullable
-              as ResetPasswordStatus,
+      resetPasswordState: null == resetPasswordState
+          ? _self.resetPasswordState
+          : resetPasswordState // ignore: cast_nullable_to_non_nullable
+              as ResetPasswordState,
+      currentUser: freezed == currentUser
+          ? _self.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
       timerDuration: freezed == timerDuration
           ? _self.timerDuration
           : timerDuration // ignore: cast_nullable_to_non_nullable
               as int?,
-      errorMessage: freezed == errorMessage
-          ? _self.errorMessage
-          : errorMessage // ignore: cast_nullable_to_non_nullable
+      message: freezed == message
+          ? _self.message
+          : message // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }

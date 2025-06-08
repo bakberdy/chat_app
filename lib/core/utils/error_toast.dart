@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
-void showErrorToast(String message, context) {
+void showErrorToast(
+  BuildContext context, {
+  required String message,
+}) {
   toastification.show(
     alignment: Alignment.bottomCenter,
     type: ToastificationType.error,
     context: context,
-    title: Text(message),
+    title: Text(message, maxLines: 4),
     icon: const Icon(Icons.error),
     style: ToastificationStyle.flat,
     backgroundColor: Colors.white,

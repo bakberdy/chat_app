@@ -1,4 +1,5 @@
 import 'package:chat_app/core/core.dart';
+import 'package:chat_app/core/utils/select_user_avatar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../bloc/profile/profile_bloc.dart';
@@ -73,7 +74,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
           birthDate: birthDate));
     } else {
       sl<Talker>().error("profile form is not correct");
-      showErrorToast('Please enter correct data', context);
+      showErrorToast(message: 'Please enter correct data', context);
     }
   }
 
@@ -120,90 +121,88 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
             child: BlocBuilder<ProfileBloc, ProfileState>(
               bloc: _profileBloc,
               builder: (context, state) {
-                switch (state) {
-                  case ProfileLoading():
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  case ProfileLoaded():
-                    if (state.currentUserProfile != null) {
-                      final user = state.currentUserProfile!;
-                      _nameController.text = user.firstName ?? '';
-                      _lastNameController.text = user.lastName ?? '';
-                      _emailController.text = user.email;
-                      _birthDateController.text = user.birthDate ?? '';
+                if (ProfileStateStatus.loading == state.status) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  if (state.user != null) {
+                    final user = state.user;
+                    _nameController.text = user!.firstName ?? '';
+                    _lastNameController.text = user.lastName ?? '';
+                    _emailController.text = user.email;
+                    _birthDateController.text = user.birthDate ?? '';
 
-                      return Form(
-                        autovalidateMode: AutovalidateMode.onUnfocus,
-                        key: _formKey,
-                        child: ListView(
-                          children: [
-                            SizedBox(height: 15),
-                            ProfileAvatarWidget(
-                              onTap: _showChangeAvatarBottomSheet,
-                              user: user,
-                            ),
-                            SizedBox(height: 20),
-                            Text('Main info',
-                                style: themeData.textTheme.bodyMedium
-                                    ?.copyWith(color: themeData.canvasColor)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            LabeledTextFormField(
-                              label: 'Name',
-                              themeData: themeData,
-                              controller: _nameController,
-                              validator: validateName,
-                            ),
-                            Divider(
-                              height: 1,
-                              color: themeData.hintColor.withAlpha(70),
-                            ),
-                            LabeledTextFormField(
-                              label: 'Last Name',
-                              themeData: themeData,
-                              validator: validateName,
-                              controller: _lastNameController,
-                            ),
-                            Divider(
-                              height: 1,
-                              color: themeData.hintColor.withAlpha(70),
-                            ),
-                            LabeledTextFormField(
-                              enabled: false,
-                              keyboardType: TextInputType.emailAddress,
-                              label: 'Email',
-                              themeData: themeData,
-                              controller: _emailController,
-                              validator: validateEmail,
-                            ),
-                            Divider(
-                              height: 1,
-                              color: themeData.hintColor.withAlpha(70),
-                            ),
-                            LabeledTextFormField(
-                              keyboardType: TextInputType.datetime,
-                              label: 'Date of Birth',
-                              hintText: 'dd/mm/yyyy',
-                              themeData: themeData,
-                              controller: _birthDateController,
-                              validator: validateDate,
-                              inputFormatters: [_dateTimeFormatter],
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return SizedBox();
-                    }
-                  default:
-                    String message = "Unknown error occured, try again";
-                    if (state is ProfileError) message = state.message;
-                    return InfoWidget(
-                      title: 'Oops, something happened',
-                      subtitle: message,
+                    return Form(
+                      autovalidateMode: AutovalidateMode.onUnfocus,
+                      key: _formKey,
+                      child: ListView(
+                        children: [
+                          SizedBox(height: 15),
+                          ProfileAvatarWidget(
+                            onTap: () =>
+                                _showChangeAvatarBottomSheet(userId: user.id),
+                            user: user,
+                          ),
+                          SizedBox(height: 20),
+                          Text('Main info',
+                              style: themeData.textTheme.bodyMedium
+                                  ?.copyWith(color: themeData.canvasColor)),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          LabeledTextFormField(
+                            label: 'Name',
+                            themeData: themeData,
+                            controller: _nameController,
+                            validator: validateName,
+                          ),
+                          Divider(
+                            height: 1,
+                            color: themeData.hintColor.withAlpha(70),
+                          ),
+                          LabeledTextFormField(
+                            label: 'Last Name',
+                            themeData: themeData,
+                            validator: validateName,
+                            controller: _lastNameController,
+                          ),
+                          Divider(
+                            height: 1,
+                            color: themeData.hintColor.withAlpha(70),
+                          ),
+                          LabeledTextFormField(
+                            enabled: false,
+                            keyboardType: TextInputType.emailAddress,
+                            label: 'Email',
+                            themeData: themeData,
+                            controller: _emailController,
+                            validator: validateEmail,
+                          ),
+                          Divider(
+                            height: 1,
+                            color: themeData.hintColor.withAlpha(70),
+                          ),
+                          LabeledTextFormField(
+                            keyboardType: TextInputType.datetime,
+                            label: 'Date of Birth',
+                            hintText: 'dd/mm/yyyy',
+                            themeData: themeData,
+                            controller: _birthDateController,
+                            validator: validateDate,
+                            inputFormatters: [_dateTimeFormatter],
+                          ),
+                        ],
+                      ),
                     );
+                  } else {
+                    return Center(
+                      child: InfoWidget(
+                        title: 'User not found',
+                        subtitle: 'The user you are looking for does not exist',
+                      ),
+                    );
+                  }
                 }
               },
             ),
@@ -211,22 +210,39 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
     );
   }
 
-  void _showChangeAvatarBottomSheet() {
+  void _showChangeAvatarBottomSheet({required int userId}) {
     showBottomSheetWithButtons(context, title: 'Avatar', actions: [
       BottomSheetActionItem(
-          onTap: () {}, text: 'Take a photo', icon: Icons.camera_alt_rounded),
+        onTap: () async {
+          final file = await selectUserAvatarFromCamera();
+          if (file != null) {
+            _profileBloc.add(ProfileEvent.updateProfilePicture(
+                userId: userId.toString(), picture: file));
+          }
+        },
+        text: 'Take a photo',
+        icon: Icons.camera_alt_rounded,
+      ),
       BottomSheetActionItem(
-          onTap: () {},
+          onTap: () {
+            selectUserAvatarFromGallery().then((file) {
+              if (file != null) {
+                _profileBloc.add(ProfileEvent.updateProfilePicture(
+                    userId: userId.toString(), picture: file));
+              }
+            });
+          },
           text: 'Select from gallery',
           icon: Icons.photo_album_rounded)
     ]);
   }
 
   void _profileBlocListener(BuildContext context, ProfileState state) {
-    if (state is ProfileSuccess) {
+    if (state.status == ProfileStateStatus.success) {
       context.pop();
-    } else if (state is ProfileError) {
-      showErrorToast(state.message, context);
+    } else if (state.status == ProfileStateStatus.error) {
+      debugPrint('Error: ${state.errorMessage}');
+      showErrorToast(message: state.errorMessage, context);
     }
   }
 }

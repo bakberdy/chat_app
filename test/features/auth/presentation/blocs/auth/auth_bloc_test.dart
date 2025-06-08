@@ -63,8 +63,8 @@ void main() {
         act: (bloc) => bloc.add(
             AuthEvent.signIn(email: 'testEmail', password: 'testPassword')),
         expect: () => const <AuthState>[
-          AuthState(signInStatus: StateStatus.loading),
-          AuthState(signInStatus: StateStatus.loaded)
+          AuthState(loginStatus: StateStatus.loading),
+          AuthState(loginStatus: StateStatus.loaded)
         ],
       );
 
@@ -78,9 +78,9 @@ void main() {
         act: (bloc) => bloc.add(
             AuthEvent.signIn(email: 'testEmail', password: 'testPassword')),
         expect: () => const <AuthState>[
-          AuthState(signInStatus: StateStatus.loading),
+          AuthState(loginStatus: StateStatus.loading),
           AuthState(
-              signInStatus: StateStatus.error,
+              loginStatus: StateStatus.error,
               errorMessage: 'Authentification failed')
         ],
       );
@@ -99,8 +99,8 @@ void main() {
               firstName: 'firstName',
               lastName: 'lastName')),
           expect: () => [
-                AuthState(signUpStatus: SignUpStatus.loading),
-                AuthState(signUpStatus: SignUpStatus.success),
+                AuthState(registrationStatus: RegistrationStatus.loading),
+                AuthState(registrationStatus: RegistrationStatus.success),
               ]);
 
       blocTest(
@@ -116,11 +116,13 @@ void main() {
               firstName: 'firstName',
               lastName: 'lastName')),
           expect: () => [
-                AuthState(signUpStatus: SignUpStatus.loading),
+                AuthState(registrationStatus: RegistrationStatus.loading),
                 AuthState(
-                    signUpStatus: SignUpStatus.error, errorMessage: 'error'),
+                    registrationStatus: RegistrationStatus.error,
+                    errorMessage: 'error'),
                 AuthState(
-                    signUpStatus: SignUpStatus.nameGot, errorMessage: 'error'),
+                    registrationStatus: RegistrationStatus.nameGot,
+                    errorMessage: 'error'),
               ]);
     });
 
@@ -133,8 +135,8 @@ void main() {
           },
           act: (bloc) => bloc.add(AuthEvent.appleSignIn()),
           expect: () => [
-                AuthState(signInStatus: StateStatus.loading),
-                AuthState(signInStatus: StateStatus.loaded)
+                AuthState(loginStatus: StateStatus.loading),
+                AuthState(loginStatus: StateStatus.loaded)
               ]);
 
       blocTest(
@@ -146,9 +148,9 @@ void main() {
           },
           act: (AuthBloc authBloc) => authBloc.add(AuthEvent.appleSignIn()),
           expect: () => [
-                AuthState(signInStatus: StateStatus.loading),
+                AuthState(loginStatus: StateStatus.loading),
                 AuthState(
-                    signInStatus: StateStatus.error, errorMessage: 'error'),
+                    loginStatus: StateStatus.error, errorMessage: 'error'),
               ]);
     });
     group('google sign in', () {
@@ -161,8 +163,8 @@ void main() {
           },
           act: (bloc) => bloc.add(AuthEvent.googleSignIn()),
           expect: () => [
-                AuthState(signInStatus: StateStatus.loading),
-                AuthState(signInStatus: StateStatus.loaded),
+                AuthState(loginStatus: StateStatus.loading),
+                AuthState(loginStatus: StateStatus.loaded),
               ]);
 
       blocTest(
@@ -174,9 +176,9 @@ void main() {
           },
           act: (AuthBloc authBloc) => authBloc.add(AuthEvent.googleSignIn()),
           expect: () => [
-                AuthState(signInStatus: StateStatus.loading),
+                AuthState(loginStatus: StateStatus.loading),
                 AuthState(
-                    signInStatus: StateStatus.error, errorMessage: 'error'),
+                    loginStatus: StateStatus.error, errorMessage: 'error'),
               ]);
     });
 
@@ -191,12 +193,12 @@ void main() {
           act: (bloc) =>
               bloc.add(AuthEvent.sendResetMessageToEmail(email: 'email')),
           expect: () => [
-                AuthState(resetPassword: ResetPasswordStatus.loading),
+                AuthState(resetPassword: ResetPasswordState.loading),
                 AuthState(
-                  resetPassword: ResetPasswordStatus.waitingTimer,
+                  resetPassword: ResetPasswordState.waitingTimer,
                 ),
                 AuthState(
-                    resetPassword: ResetPasswordStatus.waitingTimer,
+                    resetPassword: ResetPasswordState.waitingTimer,
                     timerDuration: 60),
               ]);
 
@@ -210,9 +212,9 @@ void main() {
           act: (AuthBloc authBloc) =>
               authBloc.add(AuthEvent.sendResetMessageToEmail(email: 'email')),
           expect: () => [
-                AuthState(resetPassword: ResetPasswordStatus.loading),
+                AuthState(resetPassword: ResetPasswordState.loading),
                 AuthState(
-                    resetPassword: ResetPasswordStatus.error,
+                    resetPassword: ResetPasswordState.error,
                     errorMessage: 'error'),
               ]);
     });

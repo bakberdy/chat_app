@@ -1,48 +1,27 @@
-import 'exception.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class Failure extends Equatable {
-  final String message;
+import 'package:chat_app/core/error/exception.dart';
 
-  const Failure(this.message);
+abstract class Failure {
+  String get message;
+  const Failure();
+}
+
+class UnknownFailure extends Failure{
+  final String _message;
+
+  UnknownFailure(this._message);
   @override
-  List<Object?> get props => [message];
+  String get message => _message;
+}
 
-  factory Failure.fromAppException(AppException e) {
-    if (e is NetworkConnectionException) {
-      return NetworkConnectionFailure(e.message);
-    } else if (e is ServerException) {
-      return ServerFailure(e.message);
-    } else if (e is TimeoutException) {
-      return TimeoutFailure(e.message);
-      // } else if (e is AuthException) {
-      //   return AuthFailure(e.message);
-    } else {
-      return UnknownFailure(e.message);
-    }
+class TokenFailure extends Failure{
+  final String _message;
+
+  TokenFailure(this._message);
+  @override
+  String get message => _message;
+  factory TokenFailure.fromTokenException(TokenException e){
+    return TokenFailure(e.message);
   }
-}
 
-class UnknownFailure extends Failure {
-  const UnknownFailure(super.message);
-}
-
-class TimeoutFailure extends Failure {
-  const TimeoutFailure(super.message);
-}
-
-class AuthFailure extends Failure {
-  const AuthFailure(super.message);
-}
-
-class ServerFailure extends Failure {
-  const ServerFailure(super.message, [this.code]);
-  final int? code;
-
-  @override
-  List<Object?> get props => [message, code];
-}
-
-class NetworkConnectionFailure extends Failure {
-  const NetworkConnectionFailure(super.message);
 }

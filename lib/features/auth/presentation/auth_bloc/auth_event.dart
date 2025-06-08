@@ -2,16 +2,35 @@ part of 'auth_bloc.dart';
 
 @freezed
 class AuthEvent with _$AuthEvent {
-  const factory AuthEvent.signIn(
-      {required String email, required String password}) = _SignIn;
-  const factory AuthEvent.signUp(
-      {required String email,
-      required String password,
-      required String firstName,
-      required String lastName}) = _SignUp;
-  const factory AuthEvent.changeSignUpStatus({required SignUpStatus status}) = _ChangeSignUpStatus;
-  const factory AuthEvent.googleSignIn() = _GoogleSignIn;
-  const factory AuthEvent.appleSignIn() = _AppleSignIn;
-  const factory AuthEvent.sendResetMessageToEmail({required String email}) = _SendResetMessageToEmail;
-  const factory AuthEvent.changeTimeDuration({required int timeDuration}) = _ChangeTimeDuration;
+  const factory AuthEvent.login(
+      {required String emailOrUsername, required String password}) = _Login;
+  const factory AuthEvent.register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String username,
+  }) = _Register;
+  const factory AuthEvent.changeRegisterStatus(
+      {required RegistrationState status}) = _ChangeRegistrationStatus;
+
+  const factory AuthEvent.changeTimeDuration({required int timeDuration}) =
+      _ChangeTimeDuration;
+
+  const factory AuthEvent.changePassword(
+      {required String newPassword,
+      required String oldPassword}) = _ChangePassword;
+
+  const factory AuthEvent.getMe() = _GetMe;
+
+  const factory AuthEvent.logOut() = _Logout;
+
+  const factory AuthEvent.updateProfilePicture({required File? file}) =
+      _UpdateProfilePicture;
+
+  const factory AuthEvent.updateUserData(
+      {required String? username,
+      required String? lastName,
+      required String? firstName,
+      required String? birthDate}) = _UpdateUserData;
 }

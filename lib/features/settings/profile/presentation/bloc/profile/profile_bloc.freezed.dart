@@ -316,209 +316,165 @@ class __$UpdateProfilePictureCopyWithImpl<$Res>
 
 /// @nodoc
 mixin _$ProfileState {
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is ProfileState);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  String toString() {
-    return 'ProfileState()';
-  }
-}
-
-/// @nodoc
-class $ProfileStateCopyWith<$Res> {
-  $ProfileStateCopyWith(ProfileState _, $Res Function(ProfileState) __);
-}
-
-/// @nodoc
-
-class ProfileInitial implements ProfileState {
-  ProfileInitial();
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is ProfileInitial);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  String toString() {
-    return 'ProfileState.initial()';
-  }
-}
-
-/// @nodoc
-
-class ProfileLoading implements ProfileState {
-  ProfileLoading();
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is ProfileLoading);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  String toString() {
-    return 'ProfileState.loading()';
-  }
-}
-
-/// @nodoc
-
-class ProfileLoaded implements ProfileState {
-  ProfileLoaded({required this.currentUserProfile});
-
-  final UserEntity currentUserProfile;
+  ProfileStateStatus get status;
+  UserEntity? get user;
+  String get errorMessage;
 
   /// Create a copy of ProfileState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $ProfileLoadedCopyWith<ProfileLoaded> get copyWith =>
-      _$ProfileLoadedCopyWithImpl<ProfileLoaded>(this, _$identity);
+  $ProfileStateCopyWith<ProfileState> get copyWith =>
+      _$ProfileStateCopyWithImpl<ProfileState>(
+          this as ProfileState, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is ProfileLoaded &&
-            (identical(other.currentUserProfile, currentUserProfile) ||
-                other.currentUserProfile == currentUserProfile));
+            other is ProfileState &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, currentUserProfile);
+  int get hashCode => Object.hash(runtimeType, status, user, errorMessage);
 
   @override
   String toString() {
-    return 'ProfileState.loaded(currentUserProfile: $currentUserProfile)';
+    return 'ProfileState(status: $status, user: $user, errorMessage: $errorMessage)';
   }
 }
 
 /// @nodoc
-abstract mixin class $ProfileLoadedCopyWith<$Res>
-    implements $ProfileStateCopyWith<$Res> {
-  factory $ProfileLoadedCopyWith(
-          ProfileLoaded value, $Res Function(ProfileLoaded) _then) =
-      _$ProfileLoadedCopyWithImpl;
+abstract mixin class $ProfileStateCopyWith<$Res> {
+  factory $ProfileStateCopyWith(
+          ProfileState value, $Res Function(ProfileState) _then) =
+      _$ProfileStateCopyWithImpl;
   @useResult
-  $Res call({UserEntity currentUserProfile});
+  $Res call({ProfileStateStatus status, UserEntity? user, String errorMessage});
 }
 
 /// @nodoc
-class _$ProfileLoadedCopyWithImpl<$Res>
-    implements $ProfileLoadedCopyWith<$Res> {
-  _$ProfileLoadedCopyWithImpl(this._self, this._then);
+class _$ProfileStateCopyWithImpl<$Res> implements $ProfileStateCopyWith<$Res> {
+  _$ProfileStateCopyWithImpl(this._self, this._then);
 
-  final ProfileLoaded _self;
-  final $Res Function(ProfileLoaded) _then;
+  final ProfileState _self;
+  final $Res Function(ProfileState) _then;
 
   /// Create a copy of ProfileState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  @override
   $Res call({
-    Object? currentUserProfile = null,
+    Object? status = null,
+    Object? user = freezed,
+    Object? errorMessage = null,
   }) {
-    return _then(ProfileLoaded(
-      currentUserProfile: null == currentUserProfile
-          ? _self.currentUserProfile
-          : currentUserProfile // ignore: cast_nullable_to_non_nullable
-              as UserEntity,
+    return _then(_self.copyWith(
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProfileStateStatus,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
+      errorMessage: null == errorMessage
+          ? _self.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class ProfileSuccess implements ProfileState {
-  ProfileSuccess();
+class _ProfileState implements ProfileState {
+  _ProfileState(
+      {this.status = ProfileStateStatus.loading,
+      this.user,
+      this.errorMessage = ''});
 
   @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is ProfileSuccess);
-  }
-
+  @JsonKey()
+  final ProfileStateStatus status;
   @override
-  int get hashCode => runtimeType.hashCode;
-
+  final UserEntity? user;
   @override
-  String toString() {
-    return 'ProfileState.success()';
-  }
-}
-
-/// @nodoc
-
-class ProfileError implements ProfileState {
-  ProfileError({required this.message});
-
-  final String message;
+  @JsonKey()
+  final String errorMessage;
 
   /// Create a copy of ProfileState
   /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $ProfileErrorCopyWith<ProfileError> get copyWith =>
-      _$ProfileErrorCopyWithImpl<ProfileError>(this, _$identity);
+  _$ProfileStateCopyWith<_ProfileState> get copyWith =>
+      __$ProfileStateCopyWithImpl<_ProfileState>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is ProfileError &&
-            (identical(other.message, message) || other.message == message));
+            other is _ProfileState &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.user, user) || other.user == user) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(runtimeType, status, user, errorMessage);
 
   @override
   String toString() {
-    return 'ProfileState.error(message: $message)';
+    return 'ProfileState(status: $status, user: $user, errorMessage: $errorMessage)';
   }
 }
 
 /// @nodoc
-abstract mixin class $ProfileErrorCopyWith<$Res>
+abstract mixin class _$ProfileStateCopyWith<$Res>
     implements $ProfileStateCopyWith<$Res> {
-  factory $ProfileErrorCopyWith(
-          ProfileError value, $Res Function(ProfileError) _then) =
-      _$ProfileErrorCopyWithImpl;
+  factory _$ProfileStateCopyWith(
+          _ProfileState value, $Res Function(_ProfileState) _then) =
+      __$ProfileStateCopyWithImpl;
+  @override
   @useResult
-  $Res call({String message});
+  $Res call({ProfileStateStatus status, UserEntity? user, String errorMessage});
 }
 
 /// @nodoc
-class _$ProfileErrorCopyWithImpl<$Res> implements $ProfileErrorCopyWith<$Res> {
-  _$ProfileErrorCopyWithImpl(this._self, this._then);
+class __$ProfileStateCopyWithImpl<$Res>
+    implements _$ProfileStateCopyWith<$Res> {
+  __$ProfileStateCopyWithImpl(this._self, this._then);
 
-  final ProfileError _self;
-  final $Res Function(ProfileError) _then;
+  final _ProfileState _self;
+  final $Res Function(_ProfileState) _then;
 
   /// Create a copy of ProfileState
   /// with the given fields replaced by the non-null parameter values.
+  @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? message = null,
+    Object? status = null,
+    Object? user = freezed,
+    Object? errorMessage = null,
   }) {
-    return _then(ProfileError(
-      message: null == message
-          ? _self.message
-          : message // ignore: cast_nullable_to_non_nullable
+    return _then(_ProfileState(
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ProfileStateStatus,
+      user: freezed == user
+          ? _self.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
+      errorMessage: null == errorMessage
+          ? _self.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }

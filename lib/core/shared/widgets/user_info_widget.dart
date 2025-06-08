@@ -7,11 +7,12 @@ class UserInfoWidget extends StatelessWidget {
   const UserInfoWidget({
     super.key,
     required this.user,
-    required this.isLoading,
+    required this.isLoading, required this.showOnlineIndicator,
   });
 
   final UserEntity? user;
   final bool isLoading;
+  final bool showOnlineIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class UserInfoWidget extends StatelessWidget {
                   width: 160,
                 ),
               )
-            : Center(child: AvatarWidget(user: user!, size: 80)),
+            : Center(child: AvatarWidget(user: user!, size: 80, showOnlineIndicator: showOnlineIndicator)), 
         SizedBox(height: 10),
         Center(
           child: Column(

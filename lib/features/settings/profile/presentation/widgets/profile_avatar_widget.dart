@@ -16,7 +16,7 @@ class ProfileAvatarWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AvatarWidget(size: 80, user: user),
+            AvatarWidget(size: 80, user: user, showOnlineIndicator: false,),
             SizedBox(height: 10),
             Text(
               'Change user avatar',

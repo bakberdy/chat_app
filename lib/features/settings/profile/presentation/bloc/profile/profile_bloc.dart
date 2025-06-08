@@ -18,7 +18,7 @@ part 'profile_bloc.freezed.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc(
       this._updateProfileData, this._updateProfilePicture, this._getUserProfile)
-      : super(ProfileState.initial()) {
+      : super(ProfileState()) {
     on<ProfileEvent>(_eventHandler);
   }
 
@@ -30,18 +30,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ProfileEvent event, Emitter<ProfileState> emit) async {
     switch (event) {
       case _GetCurrentUserProfile(userId: final String userId):
-        emit(ProfileState.loading());
+        emit(state.copyWith(status: ProfileStateStatus.loading));
         final failureOrSuccess = await _getUserProfile(userId);
         failureOrSuccess.fold(
-            (failure) => emit(ProfileState.error(message: failure.message)),
-            (user) => emit(ProfileState.loaded(currentUserProfile: user)));
+            (failure) => emit(state.copyWith(errorMessage: failure.message)),
+            (user) => emit(state.copyWith(
+                status: ProfileStateStatus.loaded,
+                user: user)));
       case _UpdateProfileData(
           userId: final String userId,
           firstName: final String? firstName,
           lastName: final String? lastName,
           birthDate: final String? birthDate
         ):
-        emit(ProfileState.loading());
+        emit(ProfileState(status: ProfileStateStatus.loading));
         final failureOrSuccess = await _updateProfileData(
             UpdateProfileDataParams(
                 firstName: firstName,
@@ -49,21 +51,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
                 lastName: lastName,
                 birthDate: birthDate));
         failureOrSuccess.fold((e) {
-          emit(ProfileState.error(message: e.message));
+          emit(state.copyWith(errorMessage: e.message));
         }, (_) {
-          emit(ProfileState.success());
+          emit(state.copyWith(status: ProfileStateStatus.success));
         });
       case _UpdateProfilePicture(
           userId: final String userId,
           picture: final File picture
         ):
-        emit(ProfileState.loading());
+        emit(state.copyWith(status: ProfileStateStatus.loading));
         final failureOrSuccess = await _updateProfilePicture(
             UpdateProfilePictureParams(userId: userId, picture: picture));
         failureOrSuccess.fold((e) {
-          emit(ProfileState.error(message: e.message));
+          emit(state.copyWith(status: ProfileStateStatus.error,errorMessage: e.message));
         }, (_) {
-          emit(ProfileState.success());
+          emit(state.copyWith(status: ProfileStateStatus.success));
+          add(ProfileEvent.getCurrentUserProfile(userId: userId));
         });
     }
   }

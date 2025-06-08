@@ -1,8 +1,5 @@
 import 'dart:async';
 
-import 'package:chat_app/core/error/error.dart';
-import 'package:chat_app/core/shared/entities/entities.dart';
-import 'package:chat_app/core/shared/models/user_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';

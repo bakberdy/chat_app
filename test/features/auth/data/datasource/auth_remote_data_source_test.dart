@@ -1,5 +1,5 @@
 import 'package:chat_app/core/error/exception.dart';
-import 'package:chat_app/features/auth/data/datasource/auth_remote_data_source.dart';
+import 'package:chat_app/features/auth/data/datasource/remote/auth_remote_data_source.dart';
 import 'package:chat_app/features/auth/domain/usecases/sign_in_with_apple.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';

@@ -1,4 +1,3 @@
-
 import 'package:chat_app/core/extensions/time_extensions.dart';
 import 'package:chat_app/core/shared/entities/user_entity.dart';
 import 'package:chat_app/core/shared/widgets/avatar_widget.dart';
@@ -9,26 +8,28 @@ class UserCard extends StatelessWidget {
   const UserCard({
     super.key,
     required this.user,
-    required this.themeData, required this.onTap, this.onAddToFriend,
+    required this.themeData,
+    required this.onTap,
+    this.onAddToFriend,
   });
 
   final UserEntity user;
   final ThemeData themeData;
- final Function(String uuid) onTap;
+  final Function(int userId) onTap;
   final Function(String uuid)? onAddToFriend;
 
   @override
   Widget build(BuildContext context) {
-    return  CupertinoContextMenu(
+    return CupertinoContextMenu(
       actions: [
-       CupertinoContextMenuAction(
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).maybePop();
-            },
-            isDestructiveAction: true,
-            trailingIcon: CupertinoIcons.delete,
-            child: const Text('Delete  From Friends'),
-          ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).maybePop();
+          },
+          isDestructiveAction: true,
+          trailingIcon: CupertinoIcons.delete,
+          child: const Text('Delete  From Friends'),
+        ),
       ],
       child: Container(
         clipBehavior: Clip.hardEdge,
@@ -49,7 +50,7 @@ class UserCard extends StatelessWidget {
           child: ListTile(
             minTileHeight: 75,
             dense: true,
-            onTap: () => onTap(user.uid),
+            onTap: () => onTap(user.id),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             leading: AvatarWidget(size: 25, user: user),
@@ -60,7 +61,7 @@ class UserCard extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              user.lastOnline.toLastActiveString(),
+              user.lastOnlineAt.toLastActiveString(),
               style: themeData.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w400,
                 color: const Color(0xff7D04FF),

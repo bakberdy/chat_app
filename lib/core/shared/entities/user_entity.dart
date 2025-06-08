@@ -1,61 +1,46 @@
 import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
-  final String uid;
+  final int id;
   final String? firstName;
   final String? lastName;
   final String email;
   final String? profilePicture;
   final DateTime createdAt;
-  final DateTime lastOnline;
   final String? birthDate;
+  final DateTime lastOnlineAt; // default to now
   final String? userStatus; //banned, active
-  final String? birthDateFormatted; // format this to dd/MM/yyyy
+  final String? birthDateFormatted; // format this to dd/MM/yyyy\
+  final String username;
 
   const UserEntity(
-      {required this.uid,
+      {required this.id,
+      required this.lastOnlineAt,
       required this.firstName,
+      required this.username, 
       required this.lastName,
       required this.email,
       this.profilePicture,
       required this.createdAt,
-      required this.lastOnline,
       required this.birthDate,
       required this.userStatus,
       this.birthDateFormatted});
 
   @override
-  List<Object?> get props => [uid];
+  List<Object?> get props => [id];
 
   factory UserEntity.empty() {
     return UserEntity(
-      uid: '_empty.Uid',
+      id: 0,
       firstName: '_empty.FirstName',
       lastName: '_empty.LastName',
       email: '_empty.Email',
       profilePicture: null,
       createdAt: DateTime(0),
-      lastOnline: DateTime(0),
       birthDate: null,
-      userStatus: null,
+      userStatus: null, username: '_empty.Username', 
+      lastOnlineAt: DateTime.now(),
     );
   }
 
-  @override
-  String toString() {
-    return '''
-${{
-      'uid': uid,
-      'firstName': firstName,
-      'lastName': lastName,
-      'email': email,
-      'profilePicture': profilePicture,
-      'createdAt': createdAt.toIso8601String(),
-      'lastOnline': lastOnline.toIso8601String(),
-      'birthDate': birthDate,
-      'userStatus': userStatus,
-      'birthDateFormatted': birthDateFormatted,
-    }}
-''';
-  }
 }

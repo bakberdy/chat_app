@@ -49,8 +49,8 @@ class _SettingsPageContentState extends State<SettingsPageContent> {
     return BlocListener<ProfileBloc, ProfileState>(
       bloc: _profileBloc,
       listener: (context, state) {
-        if (state is ProfileLoaded || _refreshController.isLoading) {
-          debugPrint('dede');
+        if (state.status == ProfileStateStatus.loading ||
+            _refreshController.isLoading) {
           _refreshController.refreshCompleted();
         }
       },
@@ -82,7 +82,7 @@ class _SettingsPageContentState extends State<SettingsPageContent> {
                   _profileBloc.add(ProfileEvent.getCurrentUserProfile(
                       userId: _currentUserId!));
                 } else {
-                  showErrorToast("You aren't authorized", context);
+                  showErrorToast(message: "You aren't authorized", context);
                 }
               },
               header: ClassicHeader(
@@ -103,9 +103,8 @@ class _SettingsPageContentState extends State<SettingsPageContent> {
                   BlocBuilder<ProfileBloc, ProfileState>(
                     builder: (context, state) {
                       return UserInfoWidget(
-                        user: (state is ProfileLoaded)
-                            ? state.currentUserProfile
-                            : null,
+                        showOnlineIndicator: false,
+                        user: state.user,
                         isLoading: _currentUserId == null,
                       );
                     },

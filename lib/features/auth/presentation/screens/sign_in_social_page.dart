@@ -1,3 +1,4 @@
+import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,17 +8,28 @@ import '../../../../core/core.dart';
 import '../auth_bloc/auth_bloc.dart';
 import '../widgets/widgets.dart';
 
-class SignInSocial extends StatelessWidget {
+class SignInSocial extends StatefulWidget {
   const SignInSocial({super.key});
 
   @override
+  State<SignInSocial> createState() => _SignInSocialState();
+}
+
+class _SignInSocialState extends State<SignInSocial> {
+  late final AuthBloc _authBloc;
+  @override
+  void initState() {
+    _authBloc = sl<AuthBloc>();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
-    final authBloc = sl<AuthBloc>();
+    final themeData = context.theme;
     return BlocProvider(
-      create: (context) => authBloc,
+      create: (context) => _authBloc,
       child: BlocListener<AuthBloc, AuthState>(
-        bloc: authBloc,
+        bloc: _authBloc,
         listener: _authBlocListener,
         child: Scaffold(
             backgroundColor: Color(0xffF7F7F9),
@@ -42,21 +54,21 @@ class SignInSocial extends StatelessWidget {
                   CustomFilledButton(
                     svgIconPath: 'lib/assets/icons/iconGoogle.svg',
                     title: 'Sign in with Google',
-                    onPressed: () => _onSignInWithGoogle(bloc: authBloc),
+                    onPressed: () => _onSignInWithGoogle(bloc: _authBloc),
                     backgroundColor: Colors.white,
                   ),
                   SizedBox(height: 15),
                   CustomFilledButton(
                     svgIconPath: 'lib/assets/icons/Facebook.svg',
                     title: 'Sign in with Facebook',
-                    onPressed: () => _onSignInWithMeta(bloc: authBloc),
+                    onPressed: () => _onSignInWithMeta(bloc: _authBloc),
                     backgroundColor: Colors.white,
                   ),
                   SizedBox(height: 15),
                   CustomFilledButton(
                     svgIconPath: 'lib/assets/icons/Apple.svg',
                     title: 'Sign in with Apple',
-                    onPressed: () => _onSignInWithApple(bloc: authBloc),
+                    onPressed: () => _onSignInWithApple(bloc: _authBloc),
                     backgroundColor: Colors.white,
                   ),
                   SizedBox(height: 30),
@@ -77,11 +89,11 @@ class SignInSocial extends StatelessWidget {
   }
 
   void _onSignInWithGoogle({required AuthBloc bloc}) {
-    bloc.add(AuthEvent.googleSignIn());
+    // bloc.add(AuthEvent.googleSignIn());
   }
 
   void _onSignInWithApple({required AuthBloc bloc}) {
-    bloc.add(AuthEvent.appleSignIn());
+    // bloc.add(AuthEvent.appleSignIn());
   }
 
   void _onSignInWithMeta({required AuthBloc bloc}) {
@@ -93,8 +105,10 @@ class SignInSocial extends StatelessWidget {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.signInStatus == StateStatus.error) {
-      showErrorToast(state.errorMessage ?? 'Неизвестная ошибка', context);
+    if (state.status.isError) {
+      showErrorToast(context, message: state.message ?? 'Неизвестная ошибка');
+    } else if (state.status.isLoaded && state.message != null) {
+      showInfoToast(context, message: state.message!);
     }
   }
 }
