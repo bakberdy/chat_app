@@ -22,7 +22,7 @@ class UpdateProfileParams {
   final String? username;
   final String? firstName;
   final String? lastName;
-  final String? birthDate;
+  final DateTime? birthDate;
 
   UpdateProfileParams(
       {required this.username,

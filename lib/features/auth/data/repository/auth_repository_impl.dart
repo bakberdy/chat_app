@@ -112,7 +112,7 @@ class AuthRepositoryImpl implements AuthRepository {
       {String? firstName,
       String? lastName,
       String? username,
-      String? birthDate}) async {
+      DateTime? birthDate}) async {
     try {
       return await _authRemoteDataSource
           .updateUserData(
@@ -120,7 +120,9 @@ class AuthRepositoryImpl implements AuthRepository {
               firstName: firstName,
               lastName: lastName,
               username: username)
-          .then((message) => Right(message));
+          .then((message) {
+        return Right(message);
+      });
     } on DioException catch (e) {
       return Future.value(Left(DioFailure.fromDioException(e)));
     } catch (e) {
@@ -138,6 +140,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return Future.value(Left(DioFailure.fromDioException(e)));
     } catch (e) {
       return Future.value(Left(UnknownFailure(e.toString())));
+    }
+  }
+
+  @override
+  ResultFuture<String> resetPassword({required String email}) async {
+    try {
+      return await _authRemoteDataSource
+          .resetPassword(email: email)
+          .then((message) => Right(message));
+    } on DioException catch (e) {
+      return Left(DioFailure.fromDioException(e));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
     }
   }
 }

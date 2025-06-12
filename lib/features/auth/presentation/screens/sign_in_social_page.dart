@@ -26,65 +26,62 @@ class _SignInSocialState extends State<SignInSocial> {
   @override
   Widget build(BuildContext context) {
     final themeData = context.theme;
-    return BlocProvider(
-      create: (context) => _authBloc,
-      child: BlocListener<AuthBloc, AuthState>(
-        bloc: _authBloc,
-        listener: _authBlocListener,
-        child: Scaffold(
-            backgroundColor: Color(0xffF7F7F9),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: ListView(
-                children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.12),
-                  Center(
-                    child: RichText(
-                        text: TextSpan(
-                            style: themeData.textTheme.bodyMedium?.copyWith(
-                                fontSize: 60, fontWeight: FontWeight.w700),
-                            children: [
-                          TextSpan(text: 'Talky'),
-                          TextSpan(
-                              text: '.',
-                              style: TextStyle(color: themeData.primaryColor))
-                        ])),
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                  CustomFilledButton(
-                    svgIconPath: 'lib/assets/icons/iconGoogle.svg',
-                    title: 'Sign in with Google',
-                    onPressed: () => _onSignInWithGoogle(bloc: _authBloc),
-                    backgroundColor: Colors.white,
-                  ),
-                  SizedBox(height: 15),
-                  CustomFilledButton(
-                    svgIconPath: 'lib/assets/icons/Facebook.svg',
-                    title: 'Sign in with Facebook',
-                    onPressed: () => _onSignInWithMeta(bloc: _authBloc),
-                    backgroundColor: Colors.white,
-                  ),
-                  SizedBox(height: 15),
-                  CustomFilledButton(
-                    svgIconPath: 'lib/assets/icons/Apple.svg',
-                    title: 'Sign in with Apple',
-                    onPressed: () => _onSignInWithApple(bloc: _authBloc),
-                    backgroundColor: Colors.white,
-                  ),
-                  SizedBox(height: 30),
-                  DividerWithText(text: 'or'),
-                  SizedBox(height: 30),
-                  CustomFilledButton(
-                      title: 'Continue with email',
-                      onPressed: () => _onContinueWithEmail(context),
-                      backgroundColor: Colors.white),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                  ),
-                ],
-              ),
-            )),
-      ),
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: _authBloc,
+      listener: _authBlocListener,
+      child: Scaffold(
+          backgroundColor: Color(0xffF7F7F9),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: ListView(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                Center(
+                  child: RichText(
+                      text: TextSpan(
+                          style: themeData.textTheme.bodyMedium?.copyWith(
+                              fontSize: 60, fontWeight: FontWeight.w700),
+                          children: [
+                        TextSpan(text: 'Talky'),
+                        TextSpan(
+                            text: '.',
+                            style: TextStyle(color: themeData.primaryColor))
+                      ])),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                CustomFilledButton(
+                  svgIconPath: 'lib/assets/icons/iconGoogle.svg',
+                  title: 'Sign in with Google',
+                  onPressed: () => _onSignInWithGoogle(bloc: _authBloc),
+                  backgroundColor: Colors.white,
+                ),
+                SizedBox(height: 15),
+                CustomFilledButton(
+                  svgIconPath: 'lib/assets/icons/Facebook.svg',
+                  title: 'Sign in with Facebook',
+                  onPressed: () => _onSignInWithMeta(bloc: _authBloc),
+                  backgroundColor: Colors.white,
+                ),
+                SizedBox(height: 15),
+                CustomFilledButton(
+                  svgIconPath: 'lib/assets/icons/Apple.svg',
+                  title: 'Sign in with Apple',
+                  onPressed: () => _onSignInWithApple(bloc: _authBloc),
+                  backgroundColor: Colors.white,
+                ),
+                SizedBox(height: 30),
+                DividerWithText(text: 'or'),
+                SizedBox(height: 30),
+                CustomFilledButton(
+                    title: 'Continue with email',
+                    onPressed: () => _onContinueWithEmail(context),
+                    backgroundColor: Colors.white),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                ),
+              ],
+            ),
+          )),
     );
   }
 

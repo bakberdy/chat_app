@@ -25,13 +25,14 @@ abstract class AuthRepository {
     String? firstName,
     String? lastName,
     String? username,
-    String? birthDate,
+    DateTime? birthDate,
   });
 
-  ResultFuture<String> changeUserPassword( {
+  ResultFuture<String> changeUserPassword({
     required String oldPassword,
     required String newPassword,
   });
   ResultFuture<String> logout();
 
+  ResultFuture<String> resetPassword({required String email});
 }

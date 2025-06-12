@@ -1,3 +1,4 @@
+import 'package:chat_app/core/network/network.dart';
 import 'package:chat_app/core/shared/entities/entities.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -28,7 +29,8 @@ class AvatarWidget extends StatelessWidget {
     this.borderColor = Colors.white,
     this.borderWidth = 2.0,
     this.useHeroAnimation = false,
-    this.heroTag, this.showOnlineIndicator = true,
+    this.heroTag,
+    this.showOnlineIndicator = true,
   });
 
   @override
@@ -65,7 +67,8 @@ class AvatarWidget extends StatelessWidget {
           ClipOval(
             child: _buildNetworkAvatarOrFallback(avatarUrl),
           ),
-          if (_checkIsonline(user)&&showOnlineIndicator) _buildOnlineIndicator(),
+          if (_checkIsonline(user) && showOnlineIndicator)
+            _buildOnlineIndicator(),
         ],
       ),
     );
@@ -83,7 +86,7 @@ class AvatarWidget extends StatelessWidget {
     }
 
     return Image.network(
-      'https://ktmqyvdfdqyvrtcreddr.supabase.co/storage/v1/object/$avatarUrl',
+      '${ApiEndpoints.baseUrl}$avatarUrl',
       width: size * 2,
       height: size * 2,
       fit: BoxFit.cover,

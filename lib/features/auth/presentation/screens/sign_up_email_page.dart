@@ -1,4 +1,3 @@
-import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +12,7 @@ class SignUpEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (_) => sl<AuthBloc>(),
-      child: SignUpEmailContent(),
-    );
+    return SignUpEmailContent();
   }
 }
 
@@ -64,8 +60,8 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
 
   @override
   void initState() {
-    _authBloc = context.read<AuthBloc>();
     super.initState();
+    _authBloc = context.read<AuthBloc>();
   }
 
   @override
@@ -80,11 +76,11 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.status.isError) {
-      showErrorToast(message: state.message ?? 'Неизвестная ошибка', context);
-    } else if (state.status.isLoaded && state.message != null) {
-      showInfoToast(context, message: state.message!);
-    }
+    // if (state.status.isError) {
+    //   showErrorToast(message: state.message ?? 'Неизвестная ошибка', context);
+    // } else if (state.status.isLoaded && state.message != null) {
+    //   showInfoToast(context, message: state.message!);
+    // }
   }
 
   @override
@@ -132,6 +128,7 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
                             formKey: _secondFormKey,
                             emailController: _emailController,
                             passwordController: _passwordController,
+                            usernameController: _usernameController,
                             confirmPasswordController:
                                 _confirmPasswordController);
                     }

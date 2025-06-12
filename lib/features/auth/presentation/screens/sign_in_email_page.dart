@@ -12,10 +12,7 @@ class SignInEmail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>.value(
-      value: sl<AuthBloc>(),
-      child: SignInEmailContent(),
-    );
+    return SignInEmailContent();
   }
 }
 
@@ -147,13 +144,13 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.status.isError) {
-      showErrorToast(
-        context,
-        message: state.message ?? 'Неизвестная ошибка',
-      );
-    } else if (state.status.isLoaded && state.message != null) {
-      showInfoToast(context, message: state.message!);
-    }
+    // if (state.status.isError) {
+    //   showErrorToast(
+    //     context,
+    //     message: state.message ?? 'Неизвестная ошибка',
+    //   );
+    // } else if (state.status.isLoaded && state.message != null) {
+    //   showInfoToast(context, message: state.message!);
+    // }
   }
 }

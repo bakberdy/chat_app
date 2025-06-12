@@ -26,7 +26,7 @@ abstract class AuthRemoteDataSource {
     String? firstName,
     String? lastName,
     String? username,
-    String? birthDate,
+    DateTime? birthDate,
   });
 
   Future<String> uploadProfilePicture({required File file});
@@ -39,6 +39,8 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<String> logout();
+
+  Future<String> resetPassword({required String email});
 }
 
 @Singleton(as: AuthRemoteDataSource)
@@ -51,7 +53,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<String> changePassword(
       {required String oldPassword, required String newPassword}) async {
     try {
-      final response = await _dioClient.patch(
+      final response = await _dioClient.post(
         ApiEndpoints.changePassword,
         data: {
           'old_password': oldPassword,
@@ -64,8 +66,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         ),
       );
 
-      final message = response.data['message'] as String? ??
-          'Password changed successfully';
+      final message =
+          response.data['detail'] as String? ?? 'Password changed successfully';
       return message;
     } catch (e) {
       rethrow;
@@ -73,8 +75,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> getMe() {
-    return _dioClient
+  Future<UserModel> getMe() async {
+    return await _dioClient
         .get(
       ApiEndpoints.me,
       options: Options(extra: {'enableAuthInterceptor': true}),
@@ -86,8 +88,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<TokensModel> login(
-      {required String emailOrUsername, required String password}) {
-    return _dioClient.post(
+      {required String emailOrUsername, required String password}) async {
+    return await _dioClient.post(
       ApiEndpoints.login,
       data: {
         'email_or_username': emailOrUsername,
@@ -99,8 +101,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> logout() {
-    return _dioClient
+  Future<String> logout() async {
+    return await _dioClient
         .post(
       ApiEndpoints.logout,
       options: Options(
@@ -108,15 +110,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       ),
     )
         .then((response) {
-      return response.data['message'] as String? ?? 'Logged out successfully';
+      return response.data['detail'] as String? ?? 'Logged out successfully';
     }).catchError((error) {
       throw Exception('Error logging out: $error');
     });
   }
 
   @override
-  Future<TokensModel> refreshToken({required String refreshToken}) {
-    return _dioClient
+  Future<TokensModel> refreshToken({required String refreshToken}) async {
+    return await _dioClient
         .post(
       ApiEndpoints.refreshToken,
       data: {'refresh_token': refreshToken},
@@ -135,8 +137,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       required String password,
       required String firstName,
       required String lastName,
-      required String username}) {
-    return _dioClient.post(
+      required String username}) async {
+    return await _dioClient.post(
       ApiEndpoints.register,
       data: {
         'email': email,
@@ -155,34 +157,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       {String? firstName,
       String? lastName,
       String? username,
-      String? birthDate}) {
-    return _dioClient
+      DateTime? birthDate}) async {
+    print({
+      'first_name': firstName,
+      'last_name': lastName,
+      'username': username,
+      'birth_date': birthDate,
+    });
+    return await _dioClient
         .patch(
       ApiEndpoints.userData,
       data: {
         'first_name': firstName,
         'last_name': lastName,
         'username': username,
-        'birth_date': birthDate,
+        'birth_date': birthDate?.toIso8601String(),
       },
       options: Options(
         extra: {'enableAuthInterceptor': true},
       ),
     )
         .then((response) {
-      return response.data['message'];
+      return response.data['detail'];
     });
   }
 
   @override
-  Future<String> uploadProfilePicture({required File file}) {
+  Future<String> uploadProfilePicture({required File file}) async {
     final fileName =
         '${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(10000)}.${file.path.split('.').last}';
     final formData = FormData.fromMap({
       'picture': MultipartFile.fromFileSync(file.path, filename: fileName),
     });
 
-    return _dioClient
+    return await _dioClient
         .post(
       ApiEndpoints.uploadProfilePicture,
       data: formData,
@@ -191,8 +199,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       ),
     )
         .then((response) {
-      return response.data['message'] as String? ??
+      return response.data['detail'] as String? ??
           'Image uploaded successfully';
+    });
+  }
+
+  @override
+  Future<String> resetPassword({required String email}) async {
+    return await _dioClient.post(ApiEndpoints.resetPassword,
+        data: {"email": email}).then((response) {
+      return response.data['detail'];
     });
   }
 }

@@ -15,12 +15,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:google_sign_in/google_sign_in.dart' as _i116;
 import 'package:injectable/injectable.dart' as _i526;
-import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart' as _i162;
 import 'package:talker_flutter/talker_flutter.dart' as _i207;
 
-import '../core/auth/auth_listener.dart' as _i900;
-import '../core/auth/auth_service.dart' as _i542;
 import '../core/core.dart' as _i156;
 import '../core/network/dio_client.dart' as _i393;
 import '../features/auth/data/datasource/local/token_secure_storage_impl.dart'
@@ -34,28 +31,13 @@ import '../features/auth/domain/usecases/get_me_usecase.dart' as _i446;
 import '../features/auth/domain/usecases/login_usecase.dart' as _i406;
 import '../features/auth/domain/usecases/logout_usecase.dart' as _i11;
 import '../features/auth/domain/usecases/register_usecase.dart' as _i819;
+import '../features/auth/domain/usecases/reset_password_usecase.dart' as _i685;
 import '../features/auth/domain/usecases/update_profile_picture_usecase.dart'
     as _i957;
 import '../features/auth/domain/usecases/update_user_data_usecase.dart'
     as _i599;
 import '../features/auth/domain/usecases/usecases.dart' as _i11;
 import '../features/auth/presentation/auth_bloc/auth_bloc.dart' as _i186;
-import '../features/settings/profile/data/data_source/profile_remote_data_source.dart'
-    as _i1001;
-import '../features/settings/profile/data/data_source/profile_supabase_data_source.dart'
-    as _i815;
-import '../features/settings/profile/data/repository/profile_repository_impl.dart'
-    as _i793;
-import '../features/settings/profile/domain/repository/profile_repository.dart'
-    as _i988;
-import '../features/settings/profile/domain/usecases/get_user_profile.dart'
-    as _i454;
-import '../features/settings/profile/domain/usecases/update_profile_data.dart'
-    as _i941;
-import '../features/settings/profile/domain/usecases/update_profile_picture.dart'
-    as _i358;
-import '../features/settings/profile/presentation/bloc/profile/profile_bloc.dart'
-    as _i717;
 import '../features/users/presentation/blocs/users_bloc/users_bloc.dart'
     as _i900;
 import 'injection.dart' as _i464;
@@ -73,7 +55,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     final appModule = _$AppModule();
     gh.factory<_i900.UsersBloc>(() => _i900.UsersBloc());
-    gh.singleton<_i454.SupabaseClient>(() => appModule.supabaseClient);
     gh.singleton<_i116.GoogleSignIn>(() => appModule.googleSignIn);
     gh.singleton<_i207.Talker>(() => appModule.talker);
     gh.singleton<_i331.BlocObserver>(() => appModule.talkerBlocLogger);
@@ -81,29 +62,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i361.Dio>(() => appModule.dio);
     gh.singleton<_i162.TalkerDioLogger>(() => appModule.talkerDioLogger);
     gh.singleton<_i558.FlutterSecureStorage>(() => appModule.secureStorage);
-    gh.singleton<_i1001.ProfileRemoteDataSource>(
-        () => _i815.ProfileSupabaseDataSource(
-              gh<_i454.SupabaseClient>(),
-              gh<_i207.Talker>(),
-            ));
     gh.singleton<_i156.TokenStorage>(() => _i652.TokenSecureStorageImpl(
           gh<_i558.FlutterSecureStorage>(),
           gh<_i207.Talker>(),
         ));
-    gh.singleton<_i542.AuthService>(() => _i542.AuthService(
-          gh<_i454.SupabaseClient>(),
-          gh<_i207.Talker>(),
-        ));
-    gh.singleton<_i900.AuthListener>(
-        () => _i900.AuthListener(gh<_i542.AuthService>()));
-    gh.lazySingleton<_i988.ProfileRepository>(() =>
-        _i793.ProfileRepositoryImpl(gh<_i1001.ProfileRemoteDataSource>()));
-    gh.lazySingleton<_i454.GetUserProfile>(
-        () => _i454.GetUserProfile(gh<_i988.ProfileRepository>()));
-    gh.lazySingleton<_i941.UpdateProfileData>(
-        () => _i941.UpdateProfileData(gh<_i988.ProfileRepository>()));
-    gh.lazySingleton<_i358.UpdateProfilePicture>(
-        () => _i358.UpdateProfilePicture(gh<_i988.ProfileRepository>()));
     gh.singleton<_i393.DioClient>(() => _i393.DioClient(
           gh<_i361.Dio>(),
           gh<_i156.TokenStorage>(),
@@ -114,11 +76,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i267.AuthRepository>(() => _i920.AuthRepositoryImpl(
           gh<_i723.AuthRemoteDataSource>(),
           gh<_i156.TokenStorage>(),
-        ));
-    gh.factory<_i717.ProfileBloc>(() => _i717.ProfileBloc(
-          gh<_i941.UpdateProfileData>(),
-          gh<_i358.UpdateProfilePicture>(),
-          gh<_i454.GetUserProfile>(),
         ));
     gh.lazySingleton<_i599.UpdateUserDataUsecase>(
         () => _i599.UpdateUserDataUsecase(gh<_i267.AuthRepository>()));
@@ -132,9 +89,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i957.UpdateProfilePictureUsecase(gh<_i267.AuthRepository>()));
     gh.lazySingleton<_i59.ChangePasswordUsecase>(
         () => _i59.ChangePasswordUsecase(gh<_i267.AuthRepository>()));
+    gh.lazySingleton<_i685.ResetPasswordUsecase>(
+        () => _i685.ResetPasswordUsecase(gh<_i267.AuthRepository>()));
     gh.lazySingleton<_i446.GetMeUsecase>(
         () => _i446.GetMeUsecase(gh<_i267.AuthRepository>()));
-    gh.factory<_i186.AuthBloc>(() => _i186.AuthBloc(
+    gh.singleton<_i186.AuthBloc>(() => _i186.AuthBloc(
+          gh<_i685.ResetPasswordUsecase>(),
           gh<_i11.ChangePasswordUsecase>(),
           gh<_i11.GetMeUsecase>(),
           gh<_i11.LoginUsecase>(),

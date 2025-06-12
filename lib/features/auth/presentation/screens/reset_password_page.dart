@@ -1,8 +1,5 @@
 import 'package:chat_app/core/core.dart';
-import 'package:chat_app/core/extensions/context_extension.dart';
-import 'package:chat_app/core/utils/info_toast.dart';
 import '../auth_bloc/auth_bloc.dart';
-import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,10 +11,7 @@ class ResetPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: sl<AuthBloc>(),
-      child: ResetPasswordPageContent(email: email),
-    );
+    return ResetPasswordPageContent(email: email);
   }
 }
 
@@ -112,16 +106,16 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
 
   void _onSendCode({required AuthBloc bloc}) async {
     final email = _emailController.text;
-    // if (_formKey.currentState!.validate()) {
-    //   bloc.add(AuthEvent.sendResetMessageToEmail(email: email));
-    // }
+    if (_formKey.currentState!.validate()) {
+      bloc.add(AuthEvent.resetPassword(email: email));
+    }
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.status.isError) {
-      showErrorToast(context, message: state.message ?? 'Неизвестная ошибка');
-    } else if (state.status.isLoaded && state.message != null) {
-      showInfoToast(context, message: state.message!);
-    }
+    // if (state.status.isError) {
+    //   showErrorToast(context, message: state.message ?? 'Неизвестная ошибка');
+    // } else if (state.status.isLoaded && state.message != null) {
+    //   showInfoToast(context, message: state.message!);
+    // }
   }
 }

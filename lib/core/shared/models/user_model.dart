@@ -11,10 +11,11 @@ class UserModel extends UserEntity {
       required super.createdAt,
       super.profilePicture,
       super.birthDate,
-      super.userStatus, required super.lastOnlineAt});
+      super.userStatus,
+      required super.lastOnlineAt});
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
-    try{
+    try {
       return UserModel(
         id: map['id'] as int,
         firstName: map['first_name'] as String,
@@ -22,13 +23,29 @@ class UserModel extends UserEntity {
         email: map['email'] as String,
         createdAt: DateTime.parse(map['created_at'] as String),
         profilePicture: map['profile_picture'] as String?,
-        birthDate: map['birth_date'] as String?,
-        userStatus: map['user_status'] as String?, 
-        username: '${map['username']}', 
+        birthDate: _parseBirthDate(map['birth_date'] as String?),
+        userStatus: map['user_status'] as String?,
+        username: '${map['username']}',
         lastOnlineAt: DateTime.parse('${map['last_online_at']}'),
-    );
+      );
     } catch (e) {
       throw ParsingDataException('Error parsing UserModel from map: $e');
+    }
+  }
+
+  static String? _parseBirthDate(String? birthDate) {
+    if (birthDate == null) {
+      return null;
+    } else {
+      try {
+        final date = DateTime.parse(birthDate);
+        final day = date.day.toString().padLeft(2, '0');
+        final month = date.month.toString().padLeft(2, '0');
+        final year = date.year.toString();
+        return '$day/$month/$year';
+      } catch (e) {
+        return null;
+      }
     }
   }
 
@@ -68,8 +85,8 @@ class UserModel extends UserEntity {
       createdAt: createdAt ?? this.createdAt,
       profilePicture: profilePicture ?? this.profilePicture,
       birthDate: birthDate ?? this.birthDate,
-      userStatus: userStatus ?? this.userStatus, lastOnlineAt: 
-      lastOnlineAt ?? this.lastOnlineAt,
+      userStatus: userStatus ?? this.userStatus,
+      lastOnlineAt: lastOnlineAt ?? this.lastOnlineAt,
     );
   }
 }

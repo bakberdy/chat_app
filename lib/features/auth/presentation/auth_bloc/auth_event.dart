@@ -33,4 +33,7 @@ class AuthEvent with _$AuthEvent {
       required String? lastName,
       required String? firstName,
       required String? birthDate}) = _UpdateUserData;
+
+  const factory AuthEvent.resetPassword({required String email}) =
+      _ResetPassword;
 }

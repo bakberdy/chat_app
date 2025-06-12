@@ -14,6 +14,26 @@ String? validateEmail(String? value) {
   return null;
 }
 
+String? validateUsername(String? input) {
+  if (input == null) {
+    return 'Username can not be empty';
+  }
+  if (input.length < 4) {
+    return 'Username can not be less than 4';
+  }
+  if (input.isNotEmpty && int.tryParse(input[0]) != null) {
+    return 'Username cannot start with a digit';
+  }
+  for (int i = 0; i < input.length; i++) {
+    if (input[i].toLowerCase() != input[i]) {
+      return 'Username can not contain uppercase letters';
+    }
+    if (!RegExp(r'^[a-z0-9_]+$').hasMatch(input[i])) {
+      return 'Username can only contain lowercase letters, numbers, and underscores';
+    }
+  }
+}
+
 String? validateDate(String? input) {
   if (input == null || input.length < 10) return 'Please enter full date';
 

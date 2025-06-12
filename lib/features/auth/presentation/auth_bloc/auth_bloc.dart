@@ -3,6 +3,7 @@ import 'dart:io';
 
 //app dependencies
 import 'package:chat_app/core/core.dart';
+import 'package:chat_app/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:chat_app/features/auth/domain/usecases/usecases.dart';
 
 //external dependencies
@@ -15,7 +16,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 part 'auth_bloc.freezed.dart';
 
-@injectable
+@singleton
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ChangePasswordUsecase _changePasswordUsecase;
   final GetMeUsecase _getMeUsecase;
@@ -24,8 +25,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUsecase _registerUsecase;
   final UpdateProfilePictureUsecase _updateProfilePictureUsecase;
   final UpdateUserDataUsecase _updateUserDataUsecase;
+  final ResetPasswordUsecase _resetPasswordUsecase;
 
   AuthBloc(
+      this._resetPasswordUsecase,
       this._changePasswordUsecase,
       this._getMeUsecase,
       this._loginUsecase,
@@ -86,15 +89,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           oldPassword: final oldPassword
         ) =>
           _onChangePassword(emit, oldPassword, newPassword),
+        _ResetPassword(email: final email) =>
+          _onResetPassword(emit, email: email),
         AuthEvent() => () {},
       };
 
   Future<void> _startTimer(Emitter emit) async {
-    throw UnimplementedError();
-    // emit(state.copyWith(resetPassword: ResetPasswordStatus.waitingTimer));
-    // await for (int i in _timerStream(60)) {
-    //   add(AuthEvent.changeTimeDuration(timeDuration: i));
-    // }
+    emit(state.copyWith(
+        resetPasswordState: ResetPasswordState.waitingTimer, message: null));
+    await for (int i in _timerStream(60)) {
+      add(AuthEvent.changeTimeDuration(timeDuration: i));
+    }
   }
 
   Stream<int> _timerStream(int durationInSecond) async* {
@@ -105,12 +110,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onChangeTimeDuration(Emitter<AuthState> emit, int timeDuration) {
-    throw UnimplementedError();
-    // if (timeDuration == 0) {
-    //   emit(state.copyWith(resetPassword: ResetPasswordStatus.tryAgain));
-    // } else {
-    //   emit(state.copyWith(timerDuration: timeDuration));
-    // }
+    if (timeDuration == 0) {
+      emit(state.copyWith(resetPasswordState: ResetPasswordState.tryAgain));
+    } else {
+      emit(state.copyWith(timerDuration: timeDuration));
+    }
   }
 
   _onlogin(Emitter<AuthState> emit,
@@ -174,7 +178,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             status: StateStatus.error, message: failure.message));
       }
     }, (user) {
-      emit(state.copyWith(currentUser: user, status: StateStatus.loaded));
+      emit(state.copyWith(
+          currentUser: user,
+          status: StateStatus.loaded,
+          message: null,
+          authState: AuthStatus.authorized));
     });
   }
 
@@ -193,6 +201,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               status: StateStatus.error, message: failure.message));
         }
       }, (message) {
+        add(AuthEvent.getMe());
         emit(state.copyWith(message: message, status: StateStatus.loaded));
       });
     } else {
@@ -208,11 +217,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       required String? firstName,
       required String? birthDate}) async {
     emit(state.copyWith(status: StateStatus.loading));
+    DateTime? parsedBirthDate;
+    if (birthDate != null) {
+      parsedBirthDate = DateTime.parse(
+        birthDate.split('/').reversed.join('-'),
+      );
+    }
     final failureOrSuccess = await _updateUserDataUsecase(UpdateProfileParams(
       username: username,
       firstName: firstName,
       lastName: lastName,
-      birthDate: birthDate,
+      birthDate: parsedBirthDate,
     ));
     failureOrSuccess.fold((failure) {
       if (failure is UnauthorizedFailure) {
@@ -225,6 +240,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             status: StateStatus.error, message: failure.message));
       }
     }, (message) {
+      add(AuthEvent.getMe());
       emit(state.copyWith(message: message, status: StateStatus.loaded));
     });
   }
@@ -243,7 +259,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             status: StateStatus.error, message: failure.message));
       }
     }, (message) {
-      emit(state.copyWith(message: message, status: StateStatus.loaded));
+      emit(state.copyWith(
+          message: message,
+          status: StateStatus.loaded,
+          authState: AuthStatus.notAuthorized));
     });
   }
 
@@ -271,5 +290,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _onChangeRegistrationStatus(Emitter<AuthState> emit,
       {required RegistrationState registrationState}) {
     emit(state.copyWith(registrationState: registrationState));
+  }
+
+  _onResetPassword(Emitter<AuthState> emit, {required String email}) async {
+    emit(state.copyWith(status: StateStatus.loading));
+    final failureOrSuccess = await _resetPasswordUsecase(email);
+    failureOrSuccess.fold((failure) {
+      emit(state.copyWith(status: StateStatus.error, message: failure.message));
+    }, (message) async {
+      emit(state.copyWith(message: message, status: StateStatus.loaded));
+      emit(state.copyWith(message: null));
+      await _startTimer(emit);
+    });
   }
 }

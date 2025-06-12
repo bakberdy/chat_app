@@ -32,12 +32,12 @@ class AppRoutes {
             path: AppPaths.users,
             builder: (context, state) => UsersPage(),
             routes: [
-              GoRoute(
-                  path: '${AppPaths.profile}/:user_id',
-                  pageBuilder: (context, state) => SwipeablePage(
-                      canOnlySwipeFromEdge: true,
-                      builder: (context) => ProfilePage(
-                          userId: state.pathParameters['user_id']))),
+              // GoRoute(
+              //     path: '${AppPaths.profile}/:user_id',
+              //     pageBuilder: (context, state) => SwipeablePage(
+              //         canOnlySwipeFromEdge: true,
+              //         builder: (context) => ProfilePage(
+              //             userId: state.pathParameters['user_id']))),
             ]),
       ]);
 
@@ -68,10 +68,10 @@ class AppRoutes {
               builder: (context, state) => SettingsPage(),
               routes: [
                 GoRoute(
-                    path: '${AppPaths.profile}/:user_id',
+                    path: AppPaths.profile,
                     pageBuilder: (context, state) => SwipeablePage(
                         canOnlySwipeFromEdge: true,
-                        builder: (context) => ProfilePage(userId: 'me'))),
+                        builder: (context) => ProfilePage())),
               ]),
         ],
       );

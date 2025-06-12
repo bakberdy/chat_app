@@ -10,7 +10,8 @@ class CustomFilledButton extends StatelessWidget {
       required this.backgroundColor,
       this.withShadow = true,
       this.titleColor = const Color(0xff243443),
-      this.isLoading = false});
+      this.isLoading = false,
+      this.borderColor});
 
   final String title;
   final String? svgIconPath;
@@ -19,6 +20,7 @@ class CustomFilledButton extends StatelessWidget {
   final bool withShadow;
   final Color titleColor;
   final bool isLoading;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,11 @@ class CustomFilledButton extends StatelessWidget {
       height: 60,
       child: FilledButton(
           style: ButtonStyle(
+              shape: borderColor == null
+                  ? null
+                  : WidgetStatePropertyAll(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(width: 1, color: borderColor!))),
               elevation: WidgetStatePropertyAll(withShadow ? 6 : 0),
               overlayColor: WidgetStateProperty.resolveWith(
                 (Set<WidgetState> states) {

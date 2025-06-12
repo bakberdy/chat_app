@@ -617,6 +617,70 @@ class __$UpdateUserDataCopyWithImpl<$Res>
 }
 
 /// @nodoc
+
+class _ResetPassword implements AuthEvent {
+  const _ResetPassword({required this.email});
+
+  final String email;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ResetPasswordCopyWith<_ResetPassword> get copyWith =>
+      __$ResetPasswordCopyWithImpl<_ResetPassword>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ResetPassword &&
+            (identical(other.email, email) || other.email == email));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, email);
+
+  @override
+  String toString() {
+    return 'AuthEvent.resetPassword(email: $email)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ResetPasswordCopyWith<$Res>
+    implements $AuthEventCopyWith<$Res> {
+  factory _$ResetPasswordCopyWith(
+          _ResetPassword value, $Res Function(_ResetPassword) _then) =
+      __$ResetPasswordCopyWithImpl;
+  @useResult
+  $Res call({String email});
+}
+
+/// @nodoc
+class __$ResetPasswordCopyWithImpl<$Res>
+    implements _$ResetPasswordCopyWith<$Res> {
+  __$ResetPasswordCopyWithImpl(this._self, this._then);
+
+  final _ResetPassword _self;
+  final $Res Function(_ResetPassword) _then;
+
+  /// Create a copy of AuthEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? email = null,
+  }) {
+    return _then(_ResetPassword(
+      email: null == email
+          ? _self.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
 mixin _$AuthState {
   AuthStatus get authState;
   RegistrationState get registrationState;

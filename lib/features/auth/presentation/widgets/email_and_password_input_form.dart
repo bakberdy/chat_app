@@ -8,7 +8,9 @@ class EmailAndPasswordInputForm extends StatelessWidget {
       this.emailController,
       this.passwordController,
       this.confirmPasswordController,
+      this.usernameController,
       this.formKey});
+  final TextEditingController? usernameController;
   final TextEditingController? emailController;
   final TextEditingController? passwordController;
   final TextEditingController? confirmPasswordController;
@@ -20,6 +22,14 @@ class EmailAndPasswordInputForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
+          AuthInputField(
+            keyBoardType: TextInputType.emailAddress,
+            key: ValueKey('username'),
+            validator: validateUsername,
+            controller: usernameController,
+            hintText: 'Enter username',
+          ),
+          SizedBox(height: 15),
           AuthInputField(
             keyBoardType: TextInputType.emailAddress,
             key: ValueKey('email'),
