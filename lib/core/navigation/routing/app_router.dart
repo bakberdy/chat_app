@@ -6,11 +6,9 @@ class AppRouter {
   final _shellNavigatorSettings = GlobalKey<NavigatorState>();
   final _shellNavigatorGoals = GlobalKey<NavigatorState>();
 
-  final bool isAuthenticated;
   final Talker talker;
 
   AppRouter({
-    required this.isAuthenticated,
     required this.talker,
   });
 
@@ -19,15 +17,8 @@ class AppRouter {
         navigatorKey: _rootKey,
         initialLocation: AppPaths.settings,
         routes: [
-          AppRoutes.authRoutes(_rootKey),
           _bottomNavShellRoute(
             branches: [
-              // AppRoutes.usersBranch(
-              //     observer: TalkerRouteObserver(talker),
-              //     key: _shellNavigatorUsers),
-              // AppRoutes.chatsAndCallsBranch(
-              //     observer: TalkerRouteObserver(talker),
-              //     key: _shellNavigatorChatsAndCalls),
               AppRoutes.homeBranch(
                   observer: TalkerRouteObserver(talker),
                   key: _shellNavigatorHome),
@@ -38,7 +29,6 @@ class AppRouter {
                   observer: TalkerRouteObserver(talker),
                   key: _shellNavigatorSettings),
             ],
-            isAuthenticated: isAuthenticated,
           ),
         ],
         errorBuilder: (context, state) {
@@ -47,18 +37,10 @@ class AppRouter {
       );
 
   StatefulShellRoute _bottomNavShellRoute(
-          {required bool isAuthenticated,
-          required List<StatefulShellBranch> branches}) =>
+          {required List<StatefulShellBranch> branches}) =>
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             BottomNavigationBarPage(navigationShell: navigationShell),
-        redirect: (context, state) {
-          if (!isAuthenticated) {
-            return AppPaths.auth;
-          } else {
-            return null;
-          }
-        },
         branches: branches,
       );
 }
