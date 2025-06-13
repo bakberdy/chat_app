@@ -2,9 +2,9 @@ part of 'routing.dart';
 
 class AppRouter {
   final _rootKey = GlobalKey<NavigatorState>();
-  final _shellNavigatorUsers = GlobalKey<NavigatorState>();
+  final _shellNavigatorHome = GlobalKey<NavigatorState>();
   final _shellNavigatorSettings = GlobalKey<NavigatorState>();
-  final _shellNavigatorChatsAndCalls = GlobalKey<NavigatorState>();
+  final _shellNavigatorGoals = GlobalKey<NavigatorState>();
 
   final bool isAuthenticated;
   final Talker talker;
@@ -17,17 +17,23 @@ class AppRouter {
   GoRouter get router => GoRouter(
         observers: [TalkerRouteObserver(talker)],
         navigatorKey: _rootKey,
-        initialLocation: AppPaths.chatsAndCalls,
+        initialLocation: AppPaths.settings,
         routes: [
           AppRoutes.authRoutes(_rootKey),
           _bottomNavShellRoute(
             branches: [
-              AppRoutes.usersBranch(
+              // AppRoutes.usersBranch(
+              //     observer: TalkerRouteObserver(talker),
+              //     key: _shellNavigatorUsers),
+              // AppRoutes.chatsAndCallsBranch(
+              //     observer: TalkerRouteObserver(talker),
+              //     key: _shellNavigatorChatsAndCalls),
+              AppRoutes.homeBranch(
                   observer: TalkerRouteObserver(talker),
-                  key: _shellNavigatorUsers),
-              AppRoutes.chatsAndCallsBranch(
+                  key: _shellNavigatorHome),
+              AppRoutes.goalsBranch(
                   observer: TalkerRouteObserver(talker),
-                  key: _shellNavigatorChatsAndCalls),
+                  key: _shellNavigatorGoals),
               AppRoutes.settingsBranch(
                   observer: TalkerRouteObserver(talker),
                   key: _shellNavigatorSettings),

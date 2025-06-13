@@ -57,9 +57,9 @@ class _SignInEmailContentState extends State<SignInEmailContent> {
             padding: EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                SizedBox(height: 40),
                 Center(child: AppLogoType()),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: 10),
                 Text('Sign in with email',
                     style: themeData.textTheme.bodyLarge
                         ?.copyWith(fontWeight: FontWeight.w600)),

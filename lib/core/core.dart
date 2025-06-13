@@ -1,4 +1,3 @@
-export 'auth/auth.dart';
 export 'bloc/bloc.dart';
 export 'error/error.dart';
 export 'extensions/extensions.dart';

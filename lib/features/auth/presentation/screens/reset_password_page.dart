@@ -64,13 +64,13 @@ class _ResetPasswordPageContentState extends State<ResetPasswordPageContent> {
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Center(child: AppLogoType()),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: 10),
                 Text(
                   'Reset password',
                   style: themeData.textTheme.bodyLarge
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 50),
                 Form(
                   key: _formKey,
                   child: AuthInputField(

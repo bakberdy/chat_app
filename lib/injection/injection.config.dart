@@ -38,8 +38,6 @@ import '../features/auth/domain/usecases/update_user_data_usecase.dart'
     as _i599;
 import '../features/auth/domain/usecases/usecases.dart' as _i11;
 import '../features/auth/presentation/auth_bloc/auth_bloc.dart' as _i186;
-import '../features/users/presentation/blocs/users_bloc/users_bloc.dart'
-    as _i900;
 import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -54,7 +52,6 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final appModule = _$AppModule();
-    gh.factory<_i900.UsersBloc>(() => _i900.UsersBloc());
     gh.singleton<_i116.GoogleSignIn>(() => appModule.googleSignIn);
     gh.singleton<_i207.Talker>(() => appModule.talker);
     gh.singleton<_i331.BlocObserver>(() => appModule.talkerBlocLogger);

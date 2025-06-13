@@ -1,3 +1,4 @@
+import 'package:chat_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
@@ -12,7 +13,7 @@ void showErrorToast(
     title: Text(message, maxLines: 4),
     icon: const Icon(Icons.error),
     style: ToastificationStyle.flat,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.white,
     showProgressBar: false,
     foregroundColor: Colors.red,
     borderSide: BorderSide(width: 1, color: Colors.red),

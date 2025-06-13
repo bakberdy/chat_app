@@ -1,3 +1,4 @@
+import 'package:chat_app/core/theme/app_colors.dart';
 import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/injection/injection.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,17 @@ class _SignInSocialState extends State<SignInSocial> {
             padding: const EdgeInsets.symmetric(horizontal: 28),
             child: ListView(
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.12),
+                SizedBox(height: context.mediaHeight * 0.12),
                 Center(
                   child: RichText(
                       text: TextSpan(
-                          style: themeData.textTheme.bodyMedium?.copyWith(
-                              fontSize: 60, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            fontSize: 60,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
                           children: [
-                        TextSpan(text: 'Talky'),
+                        TextSpan(text: 'Shift'),
                         TextSpan(
                             text: '.',
                             style: TextStyle(color: themeData.primaryColor))
@@ -53,21 +57,21 @@ class _SignInSocialState extends State<SignInSocial> {
                   svgIconPath: 'lib/assets/icons/iconGoogle.svg',
                   title: 'Sign in with Google',
                   onPressed: () => _onSignInWithGoogle(bloc: _authBloc),
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                 ),
                 SizedBox(height: 15),
                 CustomFilledButton(
                   svgIconPath: 'lib/assets/icons/Facebook.svg',
                   title: 'Sign in with Facebook',
                   onPressed: () => _onSignInWithMeta(bloc: _authBloc),
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                 ),
                 SizedBox(height: 15),
                 CustomFilledButton(
                   svgIconPath: 'lib/assets/icons/Apple.svg',
                   title: 'Sign in with Apple',
                   onPressed: () => _onSignInWithApple(bloc: _authBloc),
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                 ),
                 SizedBox(height: 30),
                 DividerWithText(text: 'or'),
@@ -75,9 +79,9 @@ class _SignInSocialState extends State<SignInSocial> {
                 CustomFilledButton(
                     title: 'Continue with email',
                     onPressed: () => _onContinueWithEmail(context),
-                    backgroundColor: Colors.white),
+                    backgroundColor: AppColors.white),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.08,
+                  height: context.mediaHeight * 0.08,
                 ),
               ],
             ),

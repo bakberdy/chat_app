@@ -1,3 +1,4 @@
+import 'package:chat_app/core/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -24,7 +25,6 @@ class CustomFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
     return SizedBox(
       height: 60,
       child: FilledButton(
@@ -59,11 +59,9 @@ class CustomFilledButton extends StatelessWidget {
                   ? CircularProgressIndicator(
                       color: titleColor,
                     )
-                  : Text(
-                      title,
-                      style: themeData.textTheme.bodyMedium
-                          ?.copyWith(color: titleColor),
-                    ),
+                  : Text(title,
+                      style:
+                          AppTextTheme.bodySmall.copyWith(color: titleColor)),
               SizedBox()
             ],
           )),

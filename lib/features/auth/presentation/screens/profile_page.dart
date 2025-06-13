@@ -1,5 +1,6 @@
 import 'package:chat_app/core/core.dart';
 import 'package:chat_app/core/shared/widgets/custom_adaptive_dialog_window.dart';
+import 'package:chat_app/core/utils/info_toast.dart';
 import 'package:chat_app/core/utils/select_user_avatar.dart';
 import 'package:chat_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:chat_app/features/auth/presentation/widgets/change_password_bottom_sheet_content.dart';
@@ -104,6 +105,9 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: BlocBuilder<AuthBloc, AuthState>(
+              buildWhen: (previous, current) =>
+                  (previous.currentUser != current.currentUser ||
+                      previous.status != current.status),
               bloc: _authBloc,
               builder: (context, state) {
                 if (state.status.isLoading) {
@@ -244,9 +248,11 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
   }
 
   void _authBlocListener(BuildContext context, AuthState state) {
-    if (state.status.isError) {
-      showErrorToast(message: state.message ?? 'Occured error', context);
-    }
+    // if (state.status.isError) {
+    //   showErrorToast(message: state.message ?? 'Occured error', context);
+    // } else if (state.status.isLoaded && state.message != null) {
+    //   showInfoToast(context, message: state.message!);
+    // }
   }
 
   Future<void> _onChangePassword() async {

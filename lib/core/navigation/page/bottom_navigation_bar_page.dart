@@ -63,12 +63,12 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
                       unselectedLabelStyle:
                           themeData.textTheme.bodySmall?.copyWith(fontSize: 12),
                       items: [
-                        _navigationBarItem(currentIndex, themeData, 'Friends',
-                            'lib/assets/icons/friends.svg', 0),
-                        _navigationBarItem(currentIndex, themeData, 'Chats',
-                            'lib/assets/icons/message.svg', 1),
+                        _navigationBarItem(currentIndex, themeData, 'Home',
+                            'lib/assets/icons/home.png', 0),
+                        _navigationBarItem(currentIndex, themeData, 'Goals',
+                            'lib/assets/icons/goals.png', 1),
                         _navigationBarItem(currentIndex, themeData, 'Settings',
-                            'lib/assets/icons/settings.svg', 2),
+                            'lib/assets/icons/settings.png', 2),
                       ]),
                 ),
               ),
@@ -80,13 +80,15 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   BottomNavigationBarItem _navigationBarItem(int currentIndex,
       ThemeData themeData, String label, String svgIconPath, int index) {
     return BottomNavigationBarItem(
-        icon: SvgPicture.asset(
-          svgIconPath,
-          colorFilter: ColorFilter.mode(
-              currentIndex == index
-                  ? themeData.primaryColor
-                  : themeData.canvasColor,
-              BlendMode.srcIn),
+        icon: SizedBox(
+          height: 25,
+          width: 25,
+          child: Image.asset(
+            svgIconPath,
+            color: currentIndex == index
+                ? themeData.primaryColor
+                : themeData.canvasColor,
+          ),
         ),
         label: label);
   }

@@ -22,38 +22,7 @@ class AppRoutes {
           ]);
 
   ///branches for bottom navigation bar
-  static StatefulShellBranch usersBranch(
-          {required TalkerRouteObserver observer,
-          required GlobalKey<NavigatorState> key}) =>
-      StatefulShellBranch(navigatorKey: key, observers: [
-        observer
-      ], routes: [
-        GoRoute(
-            path: AppPaths.users,
-            builder: (context, state) => UsersPage(),
-            routes: [
-              // GoRoute(
-              //     path: '${AppPaths.profile}/:user_id',
-              //     pageBuilder: (context, state) => SwipeablePage(
-              //         canOnlySwipeFromEdge: true,
-              //         builder: (context) => ProfilePage(
-              //             userId: state.pathParameters['user_id']))),
-            ]),
-      ]);
-
-  static StatefulShellBranch chatsAndCallsBranch(
-          {required TalkerRouteObserver observer,
-          required GlobalKey<NavigatorState> key}) =>
-      StatefulShellBranch(
-        navigatorKey: key,
-        observers: [observer],
-        routes: [
-          GoRoute(
-            path: AppPaths.chatsAndCalls,
-            builder: (context, state) => ChatsAndCalls(),
-          ),
-        ],
-      );
+  ///
 
   static StatefulShellBranch settingsBranch(
           {required TalkerRouteObserver observer,
@@ -73,6 +42,36 @@ class AppRoutes {
                         canOnlySwipeFromEdge: true,
                         builder: (context) => ProfilePage())),
               ]),
+        ],
+      );
+
+  static StatefulShellBranch homeBranch(
+          {required TalkerRouteObserver observer,
+          required GlobalKey<NavigatorState> key}) =>
+      StatefulShellBranch(
+        navigatorKey: key,
+        observers: [observer],
+        routes: [
+          GoRoute(
+            name: 'home',
+            path: AppPaths.home,
+            builder: (context, state) => HomeScreen(),
+          )
+        ],
+      );
+
+  static StatefulShellBranch goalsBranch(
+          {required TalkerRouteObserver observer,
+          required GlobalKey<NavigatorState> key}) =>
+      StatefulShellBranch(
+        navigatorKey: key,
+        observers: [observer],
+        routes: [
+          GoRoute(
+            name: 'goals',
+            path: AppPaths.goals,
+            builder: (context, state) => GoalsScreen(),
+          )
         ],
       );
 }

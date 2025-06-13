@@ -13,7 +13,6 @@ class CustomSearchBar extends StatelessWidget {
     final ThemeData themeData = Theme.of(context);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 28, vertical: 5),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
             offset: Offset(0, 0),

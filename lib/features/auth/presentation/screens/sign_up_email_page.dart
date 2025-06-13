@@ -106,9 +106,9 @@ class _SignUpEmailContentState extends State<SignUpEmailContent> {
             padding: EdgeInsets.symmetric(horizontal: 28),
             child: Column(
               children: [
-                SizedBox(height: context.mediaHeight * 0.02),
+                SizedBox(height: 40),
                 AppLogoType(),
-                SizedBox(height: context.mediaHeight * 0.05),
+                SizedBox(height: 10),
                 Text('Sign up with email',
                     style: themeData.textTheme.bodyLarge
                         ?.copyWith(fontWeight: FontWeight.w600)),

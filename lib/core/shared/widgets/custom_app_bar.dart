@@ -1,3 +1,4 @@
+import 'package:chat_app/core/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -36,8 +37,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       title: widget.title != null
           ? Text(
               widget.title!,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: AppTextTheme.h5.copyWith(fontWeight: FontWeight.w700),
             )
           : null,
       scrolledUnderElevation: 10,

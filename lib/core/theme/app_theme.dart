@@ -1,38 +1,22 @@
+import 'package:chat_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
-    primaryColor: Color(0xff377DFF),
+    primaryColor: AppColors.primary,
     appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: Color(0xff377DFF),
-        elevation: 0,
-        surfaceTintColor: Colors.transparent),
-    scaffoldBackgroundColor: Colors.white,
-    hintColor: Color(0xffAAB0B7),
-    canvasColor: Color(0xff58616A),
-    colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff377DFF)),
-    useMaterial3: true,
-    textTheme: GoogleFonts.interTextTheme()
-        .apply(
-          bodyColor: Color(0xff243443),
-          displayColor: Color(0xff243443),
-        )
-        .copyWith(
-          bodySmall: TextStyle(
-              fontSize: 14,
-              color: Color(0xff243443),
-              overflow: TextOverflow.ellipsis),
-          bodyMedium: TextStyle(
-              fontSize: 16,
-              color: Color(0xff243443),
-              overflow: TextOverflow.ellipsis),
-          bodyLarge: TextStyle(
-              fontSize: 18,
-              color: Color(0xff243443),
-              overflow: TextOverflow.ellipsis),
-        ),
+      backgroundColor: AppColors.white,
+      foregroundColor: AppColors.primary,
+      surfaceTintColor: AppColors.transparent,
+    ),
+    scaffoldBackgroundColor: AppColors.white,
+    hintColor: AppColors.hint,
+    canvasColor: AppColors.grey,
+    textTheme: GoogleFonts.interTextTheme().apply(
+      bodyColor: AppColors.textPrimary,
+      displayColor: AppColors.textPrimary,
+    ),
     filledButtonTheme: FilledButtonThemeData(
       style: ButtonStyle(
         shape: WidgetStatePropertyAll(

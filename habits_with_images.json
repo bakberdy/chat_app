@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "title": "Здоровье",
+    "subsections": [
+      {
+        "id": 101,
+        "title": "Утренние привычки",
+        "habits": [
+          {
+            "id": 1001,
+            "title": "Пить воду после пробуждения",
+            "description": "Один стакан воды после сна активизирует обмен веществ и пробуждает тело.",
+            "why": "Ночью организм теряет жидкость. Гидратация утром помогает мозгу и пищеварению.",
+            "tip": "Держи бутылку воды рядом с кроватью, чтобы выпить сразу после пробуждения.",
+            "frequency": "3 time in 1 day",
+            "estimated_time_min": 1,
+            "image_url": "https://cdn-icons-png.flaticon.com/512/728/728093.png",
+            "source": "https://pubmed.ncbi.nlm.nih.gov/23438448/"
+          },
+          {
+            "id": 1002,
+            "title": "Разминка по утрам",
+            "description": "Легкая зарядка помогает улучшить кровообращение и уровень энергии.",
+            "why": "Физическая активность утром бодрит и запускает обмен веществ.",
+            "tip": "Начни с 5 минут простой разминки: повороты головы, махи руками, наклоны.",
+            "frequency": "daily",
+            "estimated_time_min": 5,
+            "image_url": "https://cdn-icons-png.flaticon.com/512/811/811471.png",
+            "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6019055/"
+          }
+        ]
+      },
+      {
+        "id": 102,
+        "title": "Питание",
+        "habits": [
+          {
+            "id": 1003,
+            "title": "Есть овощи каждый день",
+            "description": "Овощи — источник витаминов, клетчатки и антиоксидантов.",
+            "why": "Они снижают риск хронических заболеваний и помогают пищеварению.",
+            "tip": "Добавь овощи в каждый прием пищи: салаты, гарниры, смузи.",
+            "frequency": "daily",
+            "estimated_time_min": 10,
+            "image_url": "https://cdn-icons-png.flaticon.com/512/135/135620.png",
+            "source": "https://www.cdc.gov/nutrition/data-statistics/vegetables.html"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Образование",
+    "subsections": [
+      {
+        "id": 201,
+        "title": "Изучение английского",
+        "habits": [
+          {
+            "id": 2001,
+            "title": "Слушать подкаст на английском",
+            "description": "Регулярное аудирование развивает восприятие речи и словарный запас.",
+            "why": "Понимание на слух — ключевой навык владения языком.",
+            "tip": "Выбирай темы, которые тебе интересны, и слушай 10-15 минут в день.",
+            "frequency": "daily",
+            "estimated_time_min": 15,
+            "image_url": "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
+            "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8866105/"
+          },
+          {
+            "id": 2002,
+            "title": "Учить 5 новых слов в день",
+            "description": "Расширение словарного запаса — фундамент изучения любого языка.",
+            "why": "Чем больше слов, тем свободнее выражать мысли.",
+            "tip": "Веди словарь или используй приложения типа Anki или Quizlet.",
+            "frequency": "daily",
+            "estimated_time_min": 10,
+            "image_url": "https://cdn-icons-png.flaticon.com/512/4105/4105444.png",
+            "source": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8996260/"
+          }
+        ]
+      }
+    ]
+  }
+]

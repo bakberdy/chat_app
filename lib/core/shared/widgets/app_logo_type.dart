@@ -1,3 +1,5 @@
+import 'package:chat_app/core/theme/app_colors.dart';
+import 'package:chat_app/core/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppLogoType extends StatelessWidget {
@@ -12,10 +14,10 @@ class AppLogoType extends StatelessWidget {
     final themeData = Theme.of(context);
     return RichText(
         text: TextSpan(
-            style: themeData.textTheme.bodyMedium
-                ?.copyWith(fontSize: fontSize, fontWeight: FontWeight.w700),
+            style: AppTextTheme.bodyMedium
+                .copyWith(fontSize: fontSize, fontWeight: FontWeight.w700),
             children: [
-          TextSpan(text: 'Talky'),
+          TextSpan(text: 'Shift'),
           TextSpan(text: '.', style: TextStyle(color: themeData.primaryColor))
         ]));
   }
